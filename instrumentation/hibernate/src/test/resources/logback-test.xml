@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<configuration>
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+  <root level="warn">
+    <appender-ref ref="CONSOLE" />
+  </root>
+  <!-- this is needed to suppress a harmless error messages -->
+  <logger name="org.hibernate.tool.hbm2ddl.SchemaExport" level="off"></logger>
+  <!-- this is needed to suppress a harmless warning messages in hibernate 5.x -->
+  <logger name="org.hibernate.tool.schema.internal.ExceptionHandlerLoggedImpl" level="error" />
+</configuration>

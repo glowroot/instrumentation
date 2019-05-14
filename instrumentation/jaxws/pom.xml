@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.glowroot.instrumentation</groupId>
+    <artifactId>instrumentation-parent</artifactId>
+    <version>0.14.0-SNAPSHOT</version>
+    <relativePath>../..</relativePath>
+  </parent>
+
+  <artifactId>instrumentation-jaxws</artifactId>
+
+  <name>Instrumentation for JAX-WS</name>
+  <description>Instrumentation for JAX-WS</description>
+
+  <properties>
+    <!-- cxf 3.2.0+ requires Java 8+, which would prevent any jaxws plugin tests from being able to
+      run when building with Java 7 -->
+    <cxf.version>3.1.15</cxf.version>
+    <!-- need to use a spring version that is supported by cxf.version version above
+      (see cxf-parent pom.xml for supported spring version range) -->
+    <spring.version>4.3.22.RELEASE</spring.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.glowroot.instrumentation</groupId>
+      <artifactId>instrumentation-api</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.glowroot.instrumentation</groupId>
+      <artifactId>instrumentation-test-harness</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.ning</groupId>
+      <artifactId>async-http-client</artifactId>
+      <!-- async-http-client 1.9.0+ requires Java 7+ -->
+      <version>1.8.17</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-core</artifactId>
+      <!-- tomcat 8.0.0+ requires Java 7+ -->
+      <version>7.0.91</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-jasper</artifactId>
+      <!-- tomcat 8.0.0+ requires Java 7+ -->
+      <version>7.0.91</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-logging-juli</artifactId>
+      <!-- tomcat 8.0.0+ requires Java 7+ -->
+      <version>7.0.91</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- this is needed because logback classic 1.1.10+ contains
+        META-INF/services/javax.servlet.ServletContainerInitializer which causes issues when running
+        tests with embedded tomcat inside JavaagentContainer because logback is loaded in the
+        bootstrap class loader (see JavaagentContainer.java) and so
+        LogbackServletContainerInitializer is loaded in the bootstrap class loader which then
+        looks for ServletContainerInitializer in the bootstrap class loader, but it is not, and
+        adding tomcat-embed-core (which has ServletContainerInitializer) to the bootstrap class
+        loader causes NullPointerException in org.apache.catalina.startup.ContextConfig
+
+        to get around this problem, javax.servlet-api artifact is included, and put in the bootstrap
+        class loader (see JavaagentContainer.java) so that logback's ServletContainerInitializer
+        can load in the the bootstrap class loader successfully
+      -->
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <!-- Tomcat 7 (above) uses Servlet API 3.0 -->
+      <version>3.0.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-frontend-jaxws</artifactId>
+      <version>${cxf.version}</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <!-- new jaxb runtime is included below -->
+          <groupId>com.sun.xml.bind</groupId>
+          <artifactId>jaxb-impl</artifactId>
+        </exclusion>
+        <exclusion>
+          <!-- new jaxb runtime is included below -->
+          <groupId>com.sun.xml.bind</groupId>
+          <artifactId>jaxb-core</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-transports-http</artifactId>
+      <version>${cxf.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <version>${spring.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- servlet plugin is included to capture transactions -->
+      <groupId>org.glowroot.instrumentation</groupId>
+      <artifactId>instrumentation-servlet</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- this is to resolve maven enforcer RequireUpperBoundDeps error -->
+      <groupId>org.ow2.asm</groupId>
+      <artifactId>asm</artifactId>
+      <version>7.0</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <profiles>
+    <profile>
+      <id>not-test-java6</id>
+      <activation>
+        <property>
+          <name>!test.java6</name>
+        </property>
+      </activation>
+      <dependencies>
+        <!-- these dependencies require Java 7+ -->
+        <dependency>
+          <!-- this is needed for running tests on Java 9 -->
+          <groupId>javax.xml.ws</groupId>
+          <artifactId>jaxws-api</artifactId>
+          <version>2.3.1</version>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <!-- this is needed for running tests on Java 9 -->
+          <groupId>javax.jws</groupId>
+          <artifactId>jsr181-api</artifactId>
+          <version>1.0-MR1</version>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <!-- this is needed for running tests on Java 9 -->
+          <groupId>org.glassfish.jaxb</groupId>
+          <artifactId>jaxb-runtime</artifactId>
+          <version>2.3.1</version>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <!-- this is needed for running tests on Java 9 -->
+          <groupId>com.sun.activation</groupId>
+          <artifactId>javax.activation</artifactId>
+          <version>1.2.0</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
+</project>

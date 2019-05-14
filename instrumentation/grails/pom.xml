@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.glowroot.instrumentation</groupId>
+    <artifactId>instrumentation-parent</artifactId>
+    <version>0.14.0-SNAPSHOT</version>
+    <relativePath>../..</relativePath>
+  </parent>
+
+  <artifactId>instrumentation-grails</artifactId>
+
+  <name>Instrumentation for Grails</name>
+  <description>Instrumentation for Grails</description>
+
+  <properties>
+    <grails.version>3.3.9</grails.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.glowroot.instrumentation</groupId>
+      <artifactId>instrumentation-api</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.glowroot.instrumentation</groupId>
+      <artifactId>instrumentation-test-harness</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.ning</groupId>
+      <artifactId>async-http-client</artifactId>
+      <!-- async-http-client 1.9.0+ requires Java 7+ -->
+      <version>1.8.17</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-core</artifactId>
+      <!-- tomcat 8.0.0+ requires Java 7+ -->
+      <version>7.0.91</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-jasper</artifactId>
+      <!-- tomcat 8.0.0+ requires Java 7+ -->
+      <version>7.0.91</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-logging-juli</artifactId>
+      <!-- tomcat 8.0.0+ requires Java 7+ -->
+      <version>7.0.91</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- this is needed because logback classic 1.1.10+ contains
+        META-INF/services/javax.servlet.ServletContainerInitializer which causes issues when running
+        tests with embedded tomcat inside JavaagentContainer because logback is loaded in the
+        bootstrap class loader (see JavaagentContainer.java) and so
+        LogbackServletContainerInitializer is loaded in the bootstrap class loader which then
+        looks for ServletContainerInitializer in the bootstrap class loader, but it is not, and
+        adding tomcat-embed-core (which has ServletContainerInitializer) to the bootstrap class
+        loader causes NullPointerException in org.apache.catalina.startup.ContextConfig
+
+        to get around this problem, javax.servlet-api artifact is included, and put in the bootstrap
+        class loader (see JavaagentContainer.java) so that logback's ServletContainerInitializer
+        can load in the the bootstrap class loader successfully
+      -->
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <!-- Tomcat 7 (above) uses Servlet API 3.0 -->
+      <version>3.0.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.grails</groupId>
+      <artifactId>grails-web-boot</artifactId>
+      <version>${grails.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.grails</groupId>
+      <artifactId>grails-dependencies</artifactId>
+      <version>${grails.version}</version>
+      <type>pom</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- servlet plugin is included to capture transactions -->
+      <groupId>org.glowroot.instrumentation</groupId>
+      <artifactId>instrumentation-servlet</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- this is to resolve maven enforcer RequireUpperBoundDeps error -->
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjweaver</artifactId>
+      <version>1.9.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- this is to resolve maven enforcer RequireUpperBoundDeps error -->
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <!-- Spring 5+ requires Java 8+ -->
+      <version>4.3.22.RELEASE</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- this is to resolve maven enforcer RequireUpperBoundDeps error -->
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <!-- Spring 5+ requires Java 8+ -->
+      <version>4.3.22.RELEASE</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- this is to resolve maven enforcer RequireUpperBoundDeps error -->
+      <groupId>commons-validator</groupId>
+      <artifactId>commons-validator</artifactId>
+      <version>1.6</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <repositories>
+    <repository>
+      <!-- this is needed for some versions of grails that are not in central -->
+      <id>grails</id>
+      <url>https://repo.grails.org/grails/core</url>
+    </repository>
+  </repositories>
+</project>

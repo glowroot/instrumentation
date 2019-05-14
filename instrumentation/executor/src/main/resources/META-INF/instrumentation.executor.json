@@ -1,0 +1,7 @@
+{
+  "name": "Executor",
+  "id": "executor",
+  "classes": [
+    "org.glowroot.instrumentation.executor.ExecutorInstrumentation"
+  ]
+}

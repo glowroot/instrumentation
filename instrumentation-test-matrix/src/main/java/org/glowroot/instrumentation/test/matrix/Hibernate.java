@@ -1,0 +1,106 @@
+/**
+ * Copyright 2016-2019 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.glowroot.instrumentation.test.matrix;
+
+import static org.glowroot.instrumentation.test.matrix.JavaVersion.JAVA6;
+import static org.glowroot.instrumentation.test.matrix.JavaVersion.JAVA7;
+import static org.glowroot.instrumentation.test.matrix.JavaVersion.JAVA8;
+
+public class Hibernate {
+
+    private static final String MODULE_PATH = "instrumentation/hibernate";
+
+    public static void main(String[] args) throws Exception {
+        if (args.length == 1 && args[0].contentEquals("short")) {
+            runShort();
+        } else {
+            runAll();
+        }
+    }
+
+    static void runShort() throws Exception {
+        run("3.3.0.GA", "3.3.0.ga", "hibernate-3.x", "hibernate-3.3.0.ga");
+        run("3.3.1.GA", "3.3.1.GA", "hibernate-3.x");
+        run("3.6.0.Final", "", "hibernate-3.6.x");
+        run("4.0.0.Final");
+        runJava7("5.1.4.Final");
+        runJava8("5.1.17.Final");
+    }
+
+    static void runAll() throws Exception {
+        run("3.3.0.GA", "3.3.0.ga", "hibernate-3.x", "hibernate-3.3.0.ga");
+        run("3.3.1.GA", "3.3.1.GA", "hibernate-3.x");
+        run("3.3.2.GA", "3.3.1.GA", "hibernate-3.x");
+        for (int i = 0; i <= 6; i++) {
+            run("3.5." + i + "-Final", "3.5." + i + "-Final", "hibernate-3.x");
+        }
+        for (int i = 0; i <= 10; i++) {
+            run("3.6." + i + ".Final", "", "hibernate-3.6.x");
+        }
+        run("4.0.0.Final");
+        run("4.0.1.Final");
+        for (int i = 0; i <= 12; i++) {
+            run("4.1." + i + ".Final");
+        }
+        for (int i = 0; i <= 21; i++) {
+            run("4.2." + i + ".Final");
+        }
+        for (int i = 0; i <= 11; i++) {
+            run("4.3." + i + ".Final");
+        }
+        for (int i = 0; i <= 12; i++) {
+            run("5.0." + i + ".Final");
+        }
+        for (int i = 0; i <= 3; i++) {
+            run("5.1." + i + ".Final");
+        }
+        for (int i = 4; i <= 16; i++) {
+            runJava7("5.1." + i + ".Final");
+        }
+        runJava8("5.1.17.Final");
+        for (int i = 0; i <= 17; i++) {
+            runJava8("5.2." + i + ".Final");
+        }
+        for (int i = 0; i <= 7; i++) {
+            runJava8("5.3." + i + ".Final");
+        }
+        runJava8("5.4.0.Final");
+    }
+
+    private static void run(String version, String annotationsVersion, String... profiles)
+            throws Exception {
+        Util.updateLibVersion(MODULE_PATH, "hibernate.version", version);
+        if (!annotationsVersion.isEmpty()) {
+            Util.updateLibVersion(MODULE_PATH, "hibernate.annotations.version", annotationsVersion);
+        }
+        Util.runTests(MODULE_PATH, profiles, JAVA8, JAVA7, JAVA6);
+    }
+
+    private static void run(String version) throws Exception {
+        Util.updateLibVersion(MODULE_PATH, "hibernate.version", version);
+        Util.runTests(MODULE_PATH, JAVA8, JAVA7, JAVA6);
+    }
+
+    private static void runJava7(String version) throws Exception {
+        Util.updateLibVersion(MODULE_PATH, "hibernate.version", version);
+        Util.runTests(MODULE_PATH, JAVA8, JAVA7);
+    }
+
+    private static void runJava8(String version) throws Exception {
+        Util.updateLibVersion(MODULE_PATH, "hibernate.version", version);
+        Util.runTests(MODULE_PATH, JAVA8);
+    }
+}

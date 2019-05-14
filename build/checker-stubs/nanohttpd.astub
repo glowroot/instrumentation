@@ -1,0 +1,10 @@
+import org.checkerframework.checker.nullness.qual.*;
+
+/* ========================================================================== */
+package fi.iki.elonen;
+
+public abstract class NanoHTTPD {
+
+    public static Response newFixedLengthResponse(IStatus status, String mimeType,
+            @Nullable InputStream data, long totalBytes);
+}

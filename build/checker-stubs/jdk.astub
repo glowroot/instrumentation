@@ -1,0 +1,177 @@
+import org.checkerframework.checker.nullness.qual.*;
+import org.checkerframework.checker.tainting.qual.PolyTainted;
+
+/* ========================================================================== */
+package java.lang;
+
+public class ClassLoader {
+    // see https://code.google.com/p/checker-framework/issues/detail?id=316
+    protected Package definePackage(String name, @Nullable String specTitle,
+            @Nullable String specVersion, @Nullable String specVendor, @Nullable String implTitle,
+            @Nullable String implVersion, @Nullable String implVendor, @Nullable URL sealBase);
+}
+
+public class Object {
+    // this is needed for plugins that call toString() on application objects
+    public @Nullable String toString();
+}
+
+public class String {
+    public @PolyTainted String toLowerCase(@PolyTainted String this, Locale locale);
+}
+
+public class Class<T> {
+    public @NonNull T[] getEnumConstants();
+}
+
+public class StackTraceElement {
+    // methodName can be null after hotswapping under Eclipse debugger
+    public @Nullable String getMethodName();
+}
+
+public class StringBuilder {
+    // this overrides Object toString() above to specify that it never returns null
+    public String toString();
+}
+
+public class Throwable {
+    // subclasses can override this and return null
+    public StackTraceElement @Nullable [] getStackTrace();
+}
+
+/* ========================================================================== */
+package java.lang.instrument;
+
+public interface ClassFileTransformer {
+    // see https://code.google.com/p/checker-framework/issues/detail?id=316
+    byte @Nullable [] transform(@Nullable ClassLoader loader, @Nullable String className,
+            @Nullable Class<?> classBeingRedefined, @Nullable ProtectionDomain protectionDomain,
+            byte[] classfileBuffer);
+}
+
+public interface Instrumentation {
+    Class[] getInitiatedClasses(@Nullable ClassLoader loader);
+}
+
+/* ========================================================================== */
+package java.lang.management;
+
+public interface ThreadMXBean {
+    public @Nullable ThreadInfo getThreadInfo(long id, int maxDepth);
+    public @Nullable ThreadInfo[] getThreadInfo(long[] ids, int maxDepth);
+}
+
+/* ========================================================================== */
+package java.lang.reflect;
+
+public class Method {
+    public @Nullable Object invoke(@Nullable Object obj, @Nullable Object... args);
+}
+
+public class InvocationTargetException {
+    public @Nullable Throwable getCause();
+}
+
+/* ========================================================================== */
+package java.net;
+
+public class URI {
+    public URI(@Nullable String scheme, @Nullable String host, @Nullable String path,
+            @Nullable String fragment);
+}
+
+public class URL {
+    // see https://code.google.com/p/checker-framework/issues/detail?id=371
+    public boolean equals(@Nullable Object obj);
+}
+
+public class URLClassLoader {
+    public URLClassLoader(URL[] urls, @Nullable ClassLoader parent);
+}
+
+/* ========================================================================== */
+package java.nio.channels;
+
+public class FileChannel {
+    public @Nullable FileLock tryLock();
+}
+
+/* ========================================================================== */
+package java.security;
+
+public class CodeSource {
+    public CodeSource(URL url, Certificate @Nullable [] signers);
+    public CodeSource(URL url, CodeSigner @Nullable [] signers);
+}
+
+/* ========================================================================== */
+package java.text;
+
+public class MessageFormat {
+    public static String format(String pattern, @Nullable Object ... arguments);
+}
+
+/* ========================================================================== */
+package java.util;
+
+public class Arrays {
+    // see https://code.google.com/p/checker-framework/issues/detail?id=370
+    public static <T extends @Nullable Object> List<T> asList(T... a);
+}
+
+/* ========================================================================== */
+package java.util.concurrent;
+
+public interface ConcurrentMap<K, V> {
+    @Nullable V putIfAbsent(K key, V value);
+}
+
+public interface ExecutorService {
+    <T extends @Nullable Object> Future<T> submit(Callable<T> task);
+}
+
+public interface Future<V extends @Nullable Object> {
+}
+
+/* ========================================================================== */
+package java.util.jar;
+
+public class Attributes {
+    public @Nullable String getValue(String name);
+}
+
+public class JarInputStream {
+    public @Nullable Manifest getManifest();
+    public @Nullable JarEntry getNextJarEntry();
+}
+
+/* ========================================================================== */
+package javax.management;
+
+public class MBeanServerFactory {
+    public static ArrayList<MBeanServer> findMBeanServer(@Nullable String agentId);
+}
+
+public class MBeanServer {
+    public Object invoke(ObjectName name, String operationName, @Nullable Object[] params,
+            String[] signature);
+}
+
+/* ========================================================================== */
+package javax.management.openmbean;
+
+public class CompositeType {
+    public @Nullable OpenType<?> getType(String itemName);
+}
+
+/* ========================================================================== */
+package javax.tools;
+
+public interface JavaCompiler {
+    CompilationTask getTask(@Nullable Writer out,
+                            @Nullable JavaFileManager fileManager,
+                            @Nullable DiagnosticListener<? super JavaFileObject> diagnosticListener,
+                            @Nullable Iterable<String> options,
+                            @Nullable Iterable<String> classes,
+                            @Nullable Iterable<? extends JavaFileObject> compilationUnits);
+}

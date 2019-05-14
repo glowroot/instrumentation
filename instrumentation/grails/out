@@ -1,0 +1,1101 @@
+[INFO] Scanning for projects...
+[INFO] Inspecting build with total of 1 modules...
+[INFO] Installing Nexus Staging features:
+[INFO]   ... total of 1 executions of maven-deploy-plugin replaced with nexus-staging-maven-plugin
+[WARNING] The POM for org.eclipse.m2e:lifecycle-mapping:jar:1.0.0 is missing, no dependency information available
+[WARNING] Failed to retrieve plugin descriptor for org.eclipse.m2e:lifecycle-mapping:1.0.0: Plugin org.eclipse.m2e:lifecycle-mapping:1.0.0 or one of its dependencies could not be resolved: Failure to find org.eclipse.m2e:lifecycle-mapping:jar:1.0.0 in https://repo.maven.apache.org/maven2 was cached in the local repository, resolution will not be reattempted until the update interval of central has elapsed or updates are forced
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-help-plugin/maven-metadata.xml
+Progress (1): 590 B                   Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-help-plugin/maven-metadata.xml (590 B at 1.8 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-help-plugin/3.1.0/maven-help-plugin-3.1.0.pom
+Progress (1): 2.5/9.5 kBProgress (1): 5.3/9.5 kBProgress (1): 8.0/9.5 kBProgress (1): 9.5 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-help-plugin/3.1.0/maven-help-plugin-3.1.0.pom (9.5 kB at 118 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-help-plugin/3.1.0/maven-help-plugin-3.1.0.jar
+Progress (1): 2.5/64 kBProgress (1): 5.2/64 kBProgress (1): 8.0/64 kBProgress (1): 11/64 kB Progress (1): 13/64 kBProgress (1): 16/64 kBProgress (1): 19/64 kBProgress (1): 22/64 kBProgress (1): 23/64 kBProgress (1): 26/64 kBProgress (1): 27/64 kBProgress (1): 30/64 kBProgress (1): 31/64 kBProgress (1): 34/64 kBProgress (1): 35/64 kBProgress (1): 38/64 kBProgress (1): 39/64 kBProgress (1): 42/64 kBProgress (1): 43/64 kBProgress (1): 46/64 kBProgress (1): 48/64 kBProgress (1): 50/64 kBProgress (1): 52/64 kBProgress (1): 54/64 kBProgress (1): 56/64 kBProgress (1): 58/64 kBProgress (1): 60/64 kBProgress (1): 63/64 kBProgress (1): 64 kB                      Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-help-plugin/3.1.0/maven-help-plugin-3.1.0.jar (64 kB at 464 kB/s)
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Glowroot Agent Grails Plugin 0.10.13-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[WARNING] The POM for org.eclipse.m2e:lifecycle-mapping:jar:1.0.0 is missing, no dependency information available
+[WARNING] Failed to retrieve plugin descriptor for org.eclipse.m2e:lifecycle-mapping:1.0.0: Plugin org.eclipse.m2e:lifecycle-mapping:1.0.0 or one of its dependencies could not be resolved: Failure to find org.eclipse.m2e:lifecycle-mapping:jar:1.0.0 in https://repo.maven.apache.org/maven2 was cached in the local repository, resolution will not be reattempted until the update interval of central has elapsed or updates are forced
+[INFO] 
+[INFO] --- maven-help-plugin:3.1.0:effective-pom (default-cli) @ glowroot-agent-grails-plugin ---
+Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-component-annotations/1.7.1/plexus-component-annotations-1.7.1.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-component-annotations/1.7.1/plexus-component-annotations-1.7.1.pom (0 B at 0 B/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-containers/1.7.1/plexus-containers-1.7.1.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-containers/1.7.1/plexus-containers-1.7.1.pom (0 B at 0 B/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-generators/3.5.1/maven-plugin-tools-generators-3.5.1.pom
+Progress (1): 2.8/4.2 kBProgress (1): 4.2 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-generators/3.5.1/maven-plugin-tools-generators-3.5.1.pom (4.2 kB at 59 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-api/3.5.1/maven-plugin-tools-api-3.5.1.pom
+Progress (1): 2.8/2.9 kBProgress (1): 2.9 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-api/3.5.1/maven-plugin-tools-api-3.5.1.pom (2.9 kB at 37 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/reporting/maven-reporting-exec/1.4/maven-reporting-exec-1.4.pom
+Progress (1): 2.8/12 kBProgress (1): 5.5/12 kBProgress (1): 8.3/12 kBProgress (1): 11/12 kB Progress (1): 12 kB                      Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/reporting/maven-reporting-exec/1.4/maven-reporting-exec-1.4.pom (12 kB at 142 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/com/thoughtworks/xstream/xstream/1.4.10/xstream-1.4.10.pom
+Progress (1): 2.2/15 kBProgress (1): 3.6/15 kBProgress (1): 6.3/15 kBProgress (1): 7.7/15 kBProgress (1): 10/15 kB Progress (1): 13/15 kBProgress (1): 15 kB                      Downloaded from central: https://repo.maven.apache.org/maven2/com/thoughtworks/xstream/xstream/1.4.10/xstream-1.4.10.pom (15 kB at 194 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/com/thoughtworks/xstream/xstream-parent/1.4.10/xstream-parent-1.4.10.pom
+Progress (1): 0.5/35 kBProgress (1): 3.3/35 kBProgress (1): 4.6/35 kBProgress (1): 7.4/35 kBProgress (1): 8.7/35 kBProgress (1): 11/35 kB Progress (1): 13/35 kBProgress (1): 16/35 kBProgress (1): 17/35 kBProgress (1): 20/35 kBProgress (1): 21/35 kBProgress (1): 24/35 kBProgress (1): 25/35 kBProgress (1): 28/35 kBProgress (1): 31/35 kBProgress (1): 33/35 kBProgress (1): 35 kB                      Downloaded from central: https://repo.maven.apache.org/maven2/com/thoughtworks/xstream/xstream-parent/1.4.10/xstream-parent-1.4.10.pom (35 kB at 250 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-component-annotations/1.7.1/plexus-component-annotations-1.7.1.jar
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-generators/3.5.1/maven-plugin-tools-generators-3.5.1.jar
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/reporting/maven-reporting-exec/1.4/maven-reporting-exec-1.4.jar
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-api/3.5.1/maven-plugin-tools-api-3.5.1.jar
+Downloading from central: https://repo.maven.apache.org/maven2/com/thoughtworks/xstream/xstream/1.4.10/xstream-1.4.10.jar
+Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-component-annotations/1.7.1/plexus-component-annotations-1.7.1.jar (0 B at 0 B/s)
+Progress (1): 2.2/24 kBProgress (1): 5.0/24 kBProgress (1): 7.7/24 kBProgress (1): 10/24 kB Progress (1): 13/24 kBProgress (2): 13/24 kB | 2.2/30 kBProgress (3): 13/24 kB | 2.2/30 kB | 2.8/590 kBProgress (3): 13/24 kB | 5.0/30 kB | 2.8/590 kBProgress (3): 13/24 kB | 7.7/30 kB | 2.8/590 kBProgress (3): 13/24 kB | 10/30 kB | 2.8/590 kB Progress (3): 13/24 kB | 13/30 kB | 2.8/590 kBProgress (4): 13/24 kB | 13/30 kB | 2.8/590 kB | 2.2/48 kBProgress (4): 13/24 kB | 13/30 kB | 5.5/590 kB | 2.2/48 kBProgress (4): 13/24 kB | 13/30 kB | 5.5/590 kB | 5.0/48 kBProgress (4): 13/24 kB | 13/30 kB | 8.3/590 kB | 5.0/48 kBProgress (4): 13/24 kB | 13/30 kB | 8.3/590 kB | 7.7/48 kBProgress (4): 13/24 kB | 13/30 kB | 8.3/590 kB | 10/48 kB Progress (4): 13/24 kB | 13/30 kB | 8.3/590 kB | 13/48 kBProgress (4): 13/24 kB | 13/30 kB | 11/590 kB | 13/48 kB Progress (4): 16/24 kB | 13/30 kB | 11/590 kB | 13/48 kBProgress (4): 19/24 kB | 13/30 kB | 11/590 kB | 13/48 kBProgress (4): 21/24 kB | 13/30 kB | 11/590 kB | 13/48 kBProgress (4): 24 kB | 13/30 kB | 11/590 kB | 13/48 kB   Progress (4): 24 kB | 16/30 kB | 11/590 kB | 13/48 kBProgress (4): 24 kB | 16/30 kB | 11/590 kB | 16/48 kBProgress (4): 24 kB | 16/30 kB | 14/590 kB | 16/48 kBProgress (4): 24 kB | 19/30 kB | 14/590 kB | 16/48 kBProgress (4): 24 kB | 19/30 kB | 14/590 kB | 19/48 kBProgress (4): 24 kB | 19/30 kB | 16/590 kB | 19/48 kBProgress (4): 24 kB | 21/30 kB | 16/590 kB | 19/48 kBProgress (4): 24 kB | 21/30 kB | 16/590 kB | 21/48 kBProgress (4): 24 kB | 21/30 kB | 19/590 kB | 21/48 kBProgress (4): 24 kB | 21/30 kB | 19/590 kB | 24/48 kBProgress (4): 24 kB | 24/30 kB | 19/590 kB | 24/48 kBProgress (4): 24 kB | 24/30 kB | 22/590 kB | 24/48 kBProgress (4): 24 kB | 24/30 kB | 22/590 kB | 27/48 kBProgress (4): 24 kB | 27/30 kB | 22/590 kB | 27/48 kBProgress (4): 24 kB | 27/30 kB | 25/590 kB | 27/48 kBProgress (4): 24 kB | 30/30 kB | 25/590 kB | 27/48 kBProgress (4): 24 kB | 30/30 kB | 25/590 kB | 30/48 kBProgress (4): 24 kB | 30 kB | 25/590 kB | 30/48 kB   Progress (4): 24 kB | 30 kB | 27/590 kB | 30/48 kBProgress (4): 24 kB | 30 kB | 27/590 kB | 32/48 kBProgress (4): 24 kB | 30 kB | 30/590 kB | 32/48 kBProgress (4): 24 kB | 30 kB | 33/590 kB | 32/48 kBProgress (4): 24 kB | 30 kB | 33/590 kB | 36/48 kBProgress (4): 24 kB | 30 kB | 33/590 kB | 40/48 kBProgress (4): 24 kB | 30 kB | 33/590 kB | 45/48 kBProgress (4): 24 kB | 30 kB | 33/590 kB | 48 kB   Progress (4): 24 kB | 30 kB | 37/590 kB | 48 kBProgress (4): 24 kB | 30 kB | 41/590 kB | 48 kBProgress (4): 24 kB | 30 kB | 45/590 kB | 48 kBProgress (4): 24 kB | 30 kB | 49/590 kB | 48 kBProgress (4): 24 kB | 30 kB | 53/590 kB | 48 kBProgress (4): 24 kB | 30 kB | 57/590 kB | 48 kBProgress (4): 24 kB | 30 kB | 61/590 kB | 48 kBProgress (4): 24 kB | 30 kB | 66/590 kB | 48 kBProgress (4): 24 kB | 30 kB | 70/590 kB | 48 kBProgress (4): 24 kB | 30 kB | 74/590 kB | 48 kBProgress (4): 24 kB | 30 kB | 78/590 kB | 48 kBProgress (4): 24 kB | 30 kB | 82/590 kB | 48 kB                                               Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-api/3.5.1/maven-plugin-tools-api-3.5.1.jar (24 kB at 153 kB/s)
+Progress (3): 30 kB | 86/590 kB | 48 kBProgress (3): 30 kB | 90/590 kB | 48 kBProgress (3): 30 kB | 94/590 kB | 48 kBProgress (3): 30 kB | 98/590 kB | 48 kBProgress (3): 30 kB | 102/590 kB | 48 kBProgress (3): 30 kB | 106/590 kB | 48 kBProgress (3): 30 kB | 111/590 kB | 48 kBProgress (3): 30 kB | 115/590 kB | 48 kBProgress (3): 30 kB | 119/590 kB | 48 kBProgress (3): 30 kB | 123/590 kB | 48 kBProgress (3): 30 kB | 127/590 kB | 48 kBProgress (3): 30 kB | 131/590 kB | 48 kBProgress (3): 30 kB | 135/590 kB | 48 kBProgress (3): 30 kB | 139/590 kB | 48 kBProgress (3): 30 kB | 143/590 kB | 48 kBProgress (3): 30 kB | 147/590 kB | 48 kB                                        Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-tools-generators/3.5.1/maven-plugin-tools-generators-3.5.1.jar (48 kB at 256 kB/s)
+Progress (2): 30 kB | 152/590 kBProgress (2): 30 kB | 156/590 kBProgress (2): 30 kB | 160/590 kBProgress (2): 30 kB | 164/590 kBProgress (2): 30 kB | 168/590 kBProgress (2): 30 kB | 172/590 kBProgress (2): 30 kB | 176/590 kBProgress (2): 30 kB | 180/590 kBProgress (2): 30 kB | 184/590 kBProgress (2): 30 kB | 188/590 kBProgress (2): 30 kB | 193/590 kBProgress (2): 30 kB | 197/590 kBProgress (2): 30 kB | 201/590 kBProgress (2): 30 kB | 205/590 kBProgress (2): 30 kB | 209/590 kBProgress (2): 30 kB | 213/590 kBProgress (2): 30 kB | 217/590 kBProgress (2): 30 kB | 221/590 kBProgress (2): 30 kB | 225/590 kBProgress (2): 30 kB | 229/590 kBProgress (2): 30 kB | 233/590 kBProgress (2): 30 kB | 238/590 kBProgress (2): 30 kB | 242/590 kBProgress (2): 30 kB | 246/590 kBProgress (2): 30 kB | 250/590 kBProgress (2): 30 kB | 254/590 kBProgress (2): 30 kB | 258/590 kBProgress (2): 30 kB | 262/590 kBProgress (2): 30 kB | 266/590 kBProgress (2): 30 kB | 270/590 kBProgress (2): 30 kB | 274/590 kBProgress (2): 30 kB | 279/590 kBProgress (2): 30 kB | 283/590 kBProgress (2): 30 kB | 287/590 kBProgress (2): 30 kB | 291/590 kBProgress (2): 30 kB | 295/590 kBProgress (2): 30 kB | 299/590 kBProgress (2): 30 kB | 303/590 kBProgress (2): 30 kB | 307/590 kBProgress (2): 30 kB | 311/590 kBProgress (2): 30 kB | 315/590 kBProgress (2): 30 kB | 319/590 kBProgress (2): 30 kB | 324/590 kBProgress (2): 30 kB | 328/590 kBProgress (2): 30 kB | 332/590 kBProgress (2): 30 kB | 336/590 kBProgress (2): 30 kB | 340/590 kBProgress (2): 30 kB | 344/590 kBProgress (2): 30 kB | 347/590 kBProgress (2): 30 kB | 351/590 kBProgress (2): 30 kB | 355/590 kBProgress (2): 30 kB | 359/590 kBProgress (2): 30 kB | 363/590 kBProgress (2): 30 kB | 368/590 kBProgress (2): 30 kB | 372/590 kBProgress (2): 30 kB | 376/590 kBProgress (2): 30 kB | 380/590 kBProgress (2): 30 kB | 384/590 kBProgress (2): 30 kB | 388/590 kBProgress (2): 30 kB | 392/590 kBProgress (2): 30 kB | 396/590 kBProgress (2): 30 kB | 400/590 kBProgress (2): 30 kB | 404/590 kBProgress (2): 30 kB | 408/590 kBProgress (2): 30 kB | 413/590 kBProgress (2): 30 kB | 417/590 kBProgress (2): 30 kB | 421/590 kBProgress (2): 30 kB | 425/590 kBProgress (2): 30 kB | 429/590 kBProgress (2): 30 kB | 433/590 kBProgress (2): 30 kB | 437/590 kBProgress (2): 30 kB | 441/590 kBProgress (2): 30 kB | 445/590 kBProgress (2): 30 kB | 449/590 kBProgress (2): 30 kB | 454/590 kBProgress (2): 30 kB | 458/590 kB                                Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/reporting/maven-reporting-exec/1.4/maven-reporting-exec-1.4.jar (30 kB at 96 kB/s)
+Progress (1): 462/590 kBProgress (1): 466/590 kBProgress (1): 470/590 kBProgress (1): 474/590 kBProgress (1): 478/590 kBProgress (1): 482/590 kBProgress (1): 486/590 kBProgress (1): 490/590 kBProgress (1): 494/590 kBProgress (1): 499/590 kBProgress (1): 503/590 kBProgress (1): 507/590 kBProgress (1): 511/590 kBProgress (1): 515/590 kBProgress (1): 519/590 kBProgress (1): 523/590 kBProgress (1): 527/590 kBProgress (1): 531/590 kBProgress (1): 535/590 kBProgress (1): 540/590 kBProgress (1): 544/590 kBProgress (1): 548/590 kBProgress (1): 552/590 kBProgress (1): 556/590 kBProgress (1): 560/590 kBProgress (1): 564/590 kBProgress (1): 568/590 kBProgress (1): 572/590 kBProgress (1): 576/590 kBProgress (1): 580/590 kBProgress (1): 585/590 kBProgress (1): 589/590 kBProgress (1): 590 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/com/thoughtworks/xstream/xstream/1.4.10/xstream-1.4.10.jar (590 kB at 1.4 MB/s)
+[INFO] 
+Effective POMs, after inheritance, interpolation, and profiles are applied:
+
+<?xml version="1.0" encoding="Cp1252"?>
+<!-- ====================================================================== -->
+<!--                                                                        -->
+<!-- Generated by Maven Help Plugin on 2018-09-03T10:45:02-07:00            -->
+<!-- See: http://maven.apache.org/plugins/maven-help-plugin/                -->
+<!--                                                                        -->
+<!-- ====================================================================== -->
+<!-- ====================================================================== -->
+<!--                                                                        -->
+<!-- Effective POM for project                                              -->
+<!-- 'org.glowroot:glowroot-agent-grails-plugin:jar:0.10.13-SNAPSHOT'       -->
+<!--                                                                        -->
+<!-- ====================================================================== -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.glowroot</groupId>
+    <artifactId>glowroot-parent</artifactId>
+    <version>0.10.13-SNAPSHOT</version>
+    <relativePath>../../..</relativePath>
+  </parent>
+  <groupId>org.glowroot</groupId>
+  <artifactId>glowroot-agent-grails-plugin</artifactId>
+  <version>0.10.13-SNAPSHOT</version>
+  <name>Glowroot Agent Grails Plugin</name>
+  <description>Glowroot Agent Grails Plugin</description>
+  <url>https://github.com/glowroot/glowroot/agent/plugins/glowroot-agent-grails-plugin</url>
+  <inceptionYear>2011</inceptionYear>
+  <organization>
+    <name>Glowroot contributors</name>
+    <url>https://github.com/glowroot</url>
+  </organization>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Trask Stalnaker</name>
+      <email>trask.stalnaker@gmail.com</email>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:https://github.com/glowroot/glowroot.git/agent/plugins/glowroot-agent-grails-plugin</connection>
+    <developerConnection>scm:git:git@github.com:glowroot/glowroot.git/agent/plugins/glowroot-agent-grails-plugin</developerConnection>
+    <url>https://github.com/glowroot/glowroot/agent/plugins/glowroot-agent-grails-plugin</url>
+  </scm>
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+  <properties>
+    <glowroot.build.commit>[none]</glowroot.build.commit>
+    <grails.version>3.3.8</grails.version>
+    <grpc.version>1.14.0</grpc.version>
+    <immutables.version>2.6.3</immutables.version>
+    <jackson.version>2.6.7</jackson.version>
+    <jmh.version>1.21</jmh.version>
+    <logback.version>1.2.3</logback.version>
+    <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss Z</maven.build.timestamp.format>
+    <netty.version>4.1.27.Final</netty.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <protobuf.version>3.5.1</protobuf.version>
+    <protoc.version>3.5.1</protoc.version>
+    <slf4j.version>1.7.25</slf4j.version>
+    <sonar.login>${env.SONAR_LOGIN}</sonar.login>
+  </properties>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.immutables</groupId>
+        <artifactId>value</artifactId>
+        <version>2.6.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.immutables</groupId>
+        <artifactId>builder</artifactId>
+        <version>2.6.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.immutables</groupId>
+        <artifactId>android-stub</artifactId>
+        <version>2.6.3</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.protobuf</groupId>
+        <artifactId>protobuf-java</artifactId>
+        <version>3.5.1</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.protobuf</groupId>
+        <artifactId>protobuf-java-util</artifactId>
+        <version>3.5.1</version>
+      </dependency>
+      <dependency>
+        <groupId>io.grpc</groupId>
+        <artifactId>grpc-core</artifactId>
+        <version>1.14.0</version>
+      </dependency>
+      <dependency>
+        <groupId>io.grpc</groupId>
+        <artifactId>grpc-stub</artifactId>
+        <version>1.14.0</version>
+      </dependency>
+      <dependency>
+        <groupId>io.grpc</groupId>
+        <artifactId>grpc-protobuf</artifactId>
+        <version>1.14.0</version>
+      </dependency>
+      <dependency>
+        <groupId>io.grpc</groupId>
+        <artifactId>grpc-netty</artifactId>
+        <version>1.14.0</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>2.8.5</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-buffer</artifactId>
+        <version>4.1.27.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-transport</artifactId>
+        <version>4.1.27.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-codec-http</artifactId>
+        <version>4.1.27.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-codec-http2</artifactId>
+        <version>4.1.27.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-handler</artifactId>
+        <version>4.1.27.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-handler-proxy</artifactId>
+        <version>4.1.27.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>com.jcraft</groupId>
+        <artifactId>jzlib</artifactId>
+        <version>1.1.3</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.code.findbugs</groupId>
+        <artifactId>jsr305</artifactId>
+        <version>3.0.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.7.25</version>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-core</artifactId>
+        <version>1.2.3</version>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>1.2.3</version>
+      </dependency>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.12</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>20.0</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>2.6.7</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>2.6.7</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-annotations</artifactId>
+        <version>2.6.7</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.datatype</groupId>
+        <artifactId>jackson-datatype-guava</artifactId>
+        <version>2.6.7</version>
+      </dependency>
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>1.7.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>2.21.0</version>
+      </dependency>
+      <dependency>
+        <groupId>com.ning</groupId>
+        <artifactId>async-http-client</artifactId>
+        <version>1.8.17</version>
+      </dependency>
+      <dependency>
+        <groupId>org.hsqldb</groupId>
+        <artifactId>hsqldb</artifactId>
+        <version>2.3.6</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openjdk.jmh</groupId>
+        <artifactId>jmh-core</artifactId>
+        <version>1.21</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openjdk.jmh</groupId>
+        <artifactId>jmh-generator-annprocess</artifactId>
+        <version>1.21</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat.embed</groupId>
+        <artifactId>tomcat-embed-core</artifactId>
+        <version>7.0.88</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat.embed</groupId>
+        <artifactId>tomcat-embed-jasper</artifactId>
+        <version>7.0.88</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat.embed</groupId>
+        <artifactId>tomcat-embed-logging-juli</artifactId>
+        <version>7.0.88</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat.embed</groupId>
+        <artifactId>tomcat-embed-websocket</artifactId>
+        <version>7.0.88</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>org.glowroot</groupId>
+      <artifactId>glowroot-agent-plugin-api</artifactId>
+      <version>0.10.13-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>1.7.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>20.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.ning</groupId>
+      <artifactId>async-http-client</artifactId>
+      <version>1.8.17</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-core</artifactId>
+      <version>7.0.88</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-jasper</artifactId>
+      <version>7.0.88</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-logging-juli</artifactId>
+      <version>7.0.88</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.0.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.grails</groupId>
+      <artifactId>grails-web-boot</artifactId>
+      <version>3.3.8</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.grails</groupId>
+      <artifactId>grails-dependencies</artifactId>
+      <version>3.3.8</version>
+      <type>pom</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.glowroot</groupId>
+      <artifactId>glowroot-agent-servlet-plugin</artifactId>
+      <version>0.10.13-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjweaver</artifactId>
+      <version>1.9.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>4.3.18.RELEASE</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>4.3.18.RELEASE</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-validator</groupId>
+      <artifactId>commons-validator</artifactId>
+      <version>1.6</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.glowroot</groupId>
+      <artifactId>glowroot-agent-it-harness-unshaded</artifactId>
+      <version>0.10.13-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <repositories>
+    <repository>
+      <id>grails</id>
+      <url>https://repo.grails.org/grails/core</url>
+    </repository>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>central</id>
+      <name>Central Repository</name>
+      <url>https://repo.maven.apache.org/maven2</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <releases>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>central</id>
+      <name>Central Repository</name>
+      <url>https://repo.maven.apache.org/maven2</url>
+    </pluginRepository>
+  </pluginRepositories>
+  <build>
+    <sourceDirectory>D:\git\glowroot\agent\plugins\grails-plugin\src\main\java</sourceDirectory>
+    <scriptSourceDirectory>D:\git\glowroot\agent\plugins\grails-plugin\src\main\scripts</scriptSourceDirectory>
+    <testSourceDirectory>D:\git\glowroot\agent\plugins\grails-plugin\src\test\java</testSourceDirectory>
+    <outputDirectory>D:\git\glowroot\agent\plugins\grails-plugin\target\classes</outputDirectory>
+    <testOutputDirectory>D:\git\glowroot\agent\plugins\grails-plugin\target\test-classes</testOutputDirectory>
+    <resources>
+      <resource>
+        <directory>D:\git\glowroot\agent\plugins\grails-plugin\src\main\resources</directory>
+      </resource>
+    </resources>
+    <testResources>
+      <testResource>
+        <directory>D:\git\glowroot\agent\plugins\grails-plugin\src\test\resources</directory>
+      </testResource>
+    </testResources>
+    <directory>D:\git\glowroot\agent\plugins\grails-plugin\target</directory>
+    <finalName>glowroot-agent-grails-plugin-0.10.13-SNAPSHOT</finalName>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <version>1.8</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.0</version>
+          <executions>
+            <execution>
+              <id>default-testCompile</id>
+              <configuration>
+                <source>1.7</source>
+                <target>1.7</target>
+                <useIncrementalCompilation>false</useIncrementalCompilation>
+              </configuration>
+            </execution>
+          </executions>
+          <configuration>
+            <source>1.6</source>
+            <target>1.6</target>
+            <useIncrementalCompilation>false</useIncrementalCompilation>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.1.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.3.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.8.2</version>
+          <configuration>
+            <deployAtEnd>true</deployAtEnd>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>3.0.0-M2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>2.22.0</version>
+          <configuration>
+            <systemPropertyVariables>
+              <glowroot.test.fileLoggingOnly>true</glowroot.test.fileLoggingOnly>
+            </systemPropertyVariables>
+            <trimStackTrace>false</trimStackTrace>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>2.5.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.1.0</version>
+          <configuration>
+            <archive>
+              <manifestEntries>
+                <Implementation-Title>Glowroot Agent Grails Plugin</Implementation-Title>
+                <Implementation-Version>0.10.13-SNAPSHOT</Implementation-Version>
+                <Build-Commit>[none]</Build-Commit>
+              </manifestEntries>
+              <addMavenDescriptor>false</addMavenDescriptor>
+            </archive>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>3.0.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-plugin-plugin</artifactId>
+          <version>3.5.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-remote-resources-plugin</artifactId>
+          <version>1.5</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>3.1.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.7.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>3.0.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.22.0</version>
+          <configuration>
+            <systemPropertyVariables>
+              <glowroot.test.fileLoggingOnly>true</glowroot.test.fileLoggingOnly>
+            </systemPropertyVariables>
+            <trimStackTrace>false</trimStackTrace>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>com.github.wvengen</groupId>
+          <artifactId>proguard-maven-plugin</artifactId>
+          <version>2.0.14</version>
+          <dependencies>
+            <dependency>
+              <groupId>net.sf.proguard</groupId>
+              <artifactId>proguard-base</artifactId>
+              <version>6.0.3</version>
+            </dependency>
+          </dependencies>
+          <configuration>
+            <libs>
+              <lib>C:\dev\java\jdk1.8.0_131\jre/lib/rt.jar</lib>
+            </libs>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.sonarsource.scanner.maven</groupId>
+          <artifactId>sonar-maven-plugin</artifactId>
+          <version>3.4.1.1168</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>3.0.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>0.8.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <versionRange>[1.0.0,)</versionRange>
+                    <goals>
+                      <goal>enforce</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore />
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-remote-resources-plugin</artifactId>
+                    <versionRange>[1.0.0,)</versionRange>
+                    <goals>
+                      <goal>process</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore />
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <versionRange>[1.0.0,)</versionRange>
+                    <goals>
+                      <goal>run</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore />
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <versionRange>[1.0.0,)</versionRange>
+                    <goals>
+                      <goal>copy</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore />
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>net.alchim31.maven</groupId>
+                    <artifactId>scala-maven-plugin</artifactId>
+                    <versionRange>[1.0.0,)</versionRange>
+                    <goals>
+                      <goal>testCompile</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore />
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.glowroot</groupId>
+                    <artifactId>glowroot-agent-dist-maven-plugin</artifactId>
+                    <versionRange>[0.9,)</versionRange>
+                    <goals>
+                      <goal>generate</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore />
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.0.0-M2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <version>[1.7,)</version>
+                </requireJavaVersion>
+                <requireMavenVersion>
+                  <version>[3.2.2,)</version>
+                </requireMavenVersion>
+                <requireUpperBoundDeps />
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.0.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>animal-sniffer-maven-plugin</artifactId>
+        <version>1.17</version>
+        <executions>
+          <execution>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <configuration>
+              <signature>
+                <groupId>org.codehaus.mojo.signature</groupId>
+                <artifactId>java16</artifactId>
+                <version>1.1</version>
+              </signature>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <signature>
+            <groupId>org.codehaus.mojo.signature</groupId>
+            <artifactId>java16</artifactId>
+            <version>1.1</version>
+          </signature>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.8</version>
+        <extensions>true</extensions>
+        <executions>
+          <execution>
+            <id>injected-nexus-deploy</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>deploy</goal>
+            </goals>
+            <configuration>
+              <serverId>ossrh</serverId>
+              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <serverId>ossrh</serverId>
+          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-remote-resources-plugin</artifactId>
+        <version>1.5</version>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>process</goal>
+            </goals>
+            <configuration>
+              <resourceBundles>
+                <resourceBundle>org.glowroot.build:glowroot-build-license-bundle:0.10.13-SNAPSHOT</resourceBundle>
+              </resourceBundles>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.glowroot.build</groupId>
+            <artifactId>glowroot-build-license-bundle</artifactId>
+            <version>0.10.13-SNAPSHOT</version>
+            <scope>compile</scope>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.22.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+            <configuration>
+              <systemPropertyVariables>
+                <glowroot.test.fileLoggingOnly>true</glowroot.test.fileLoggingOnly>
+              </systemPropertyVariables>
+              <trimStackTrace>false</trimStackTrace>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <systemPropertyVariables>
+            <glowroot.test.fileLoggingOnly>true</glowroot.test.fileLoggingOnly>
+          </systemPropertyVariables>
+          <trimStackTrace>false</trimStackTrace>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>default-clean</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>default-testResources</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>testResources</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>default-resources</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>resources</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>default-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <archive>
+                <manifestEntries>
+                  <Implementation-Title>Glowroot Agent Grails Plugin</Implementation-Title>
+                  <Implementation-Version>0.10.13-SNAPSHOT</Implementation-Version>
+                  <Build-Commit>[none]</Build-Commit>
+                </manifestEntries>
+                <addMavenDescriptor>false</addMavenDescriptor>
+              </archive>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Implementation-Title>Glowroot Agent Grails Plugin</Implementation-Title>
+              <Implementation-Version>0.10.13-SNAPSHOT</Implementation-Version>
+              <Build-Commit>[none]</Build-Commit>
+            </manifestEntries>
+            <addMavenDescriptor>false</addMavenDescriptor>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.0</version>
+        <executions>
+          <execution>
+            <id>default-compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <source>1.6</source>
+              <target>1.6</target>
+              <useIncrementalCompilation>false</useIncrementalCompilation>
+            </configuration>
+          </execution>
+          <execution>
+            <id>default-testCompile</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+            <configuration>
+              <source>1.7</source>
+              <target>1.7</target>
+              <useIncrementalCompilation>false</useIncrementalCompilation>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+          <useIncrementalCompilation>false</useIncrementalCompilation>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.22.0</version>
+        <executions>
+          <execution>
+            <id>default-test</id>
+            <phase>test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <systemPropertyVariables>
+                <glowroot.test.fileLoggingOnly>true</glowroot.test.fileLoggingOnly>
+              </systemPropertyVariables>
+              <trimStackTrace>false</trimStackTrace>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <systemPropertyVariables>
+            <glowroot.test.fileLoggingOnly>true</glowroot.test.fileLoggingOnly>
+          </systemPropertyVariables>
+          <trimStackTrace>false</trimStackTrace>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-install-plugin</artifactId>
+        <version>2.5.2</version>
+        <executions>
+          <execution>
+            <id>default-install</id>
+            <phase>install</phase>
+            <goals>
+              <goal>install</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>2.8.2</version>
+        <configuration>
+          <deployAtEnd>true</deployAtEnd>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.7.1</version>
+        <executions>
+          <execution>
+            <id>default-site</id>
+            <phase>site</phase>
+            <goals>
+              <goal>site</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>D:\git\glowroot\agent\plugins\grails-plugin\target\site</outputDirectory>
+              <reportPlugins>
+                <reportPlugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-project-info-reports-plugin</artifactId>
+                </reportPlugin>
+              </reportPlugins>
+            </configuration>
+          </execution>
+          <execution>
+            <id>default-deploy</id>
+            <phase>site-deploy</phase>
+            <goals>
+              <goal>deploy</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>D:\git\glowroot\agent\plugins\grails-plugin\target\site</outputDirectory>
+              <reportPlugins>
+                <reportPlugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-project-info-reports-plugin</artifactId>
+                </reportPlugin>
+              </reportPlugins>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <outputDirectory>D:\git\glowroot\agent\plugins\grails-plugin\target\site</outputDirectory>
+          <reportPlugins>
+            <reportPlugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-project-info-reports-plugin</artifactId>
+            </reportPlugin>
+          </reportPlugins>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <reporting>
+    <outputDirectory>D:\git\glowroot\agent\plugins\grails-plugin\target\site</outputDirectory>
+  </reporting>
+  <profiles>
+    <profile>
+      <id>auto-activated-test-unshaded</id>
+      <activation>
+        <property>
+          <name>!glowroot.test.shaded</name>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.glowroot</groupId>
+          <artifactId>glowroot-agent-it-harness-unshaded</artifactId>
+          <version>0.10.13-SNAPSHOT</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>auto-activated-test-shaded</id>
+      <activation>
+        <property>
+          <name>glowroot.test.shaded</name>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.glowroot</groupId>
+          <artifactId>glowroot-agent-it-harness</artifactId>
+          <version>0.10.13-SNAPSHOT</version>
+          <scope>test</scope>
+          <exclusions>
+            <exclusion>
+              <artifactId>glowroot-agent-it-harness-unshaded</artifactId>
+              <groupId>org.glowroot</groupId>
+            </exclusion>
+            <exclusion>
+              <artifactId>glowroot-agent-core</artifactId>
+              <groupId>org.glowroot</groupId>
+            </exclusion>
+          </exclusions>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>java7</id>
+      <activation>
+        <jdk>1.7</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <configuration>
+              <argLine>-XX:MaxPermSize=128m</argLine>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
+
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 5.701 s
+[INFO] Finished at: 2018-09-03T10:45:03-07:00
+[INFO] Final Memory: 26M/380M
+[INFO] ------------------------------------------------------------------------

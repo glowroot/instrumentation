@@ -1,0 +1,76 @@
+import org.checkerframework.checker.nullness.qual.*;
+
+/* ========================================================================== */
+package com.google.common.base;
+
+public interface Function<F, T> {
+    T apply(F input);
+}
+
+public class Objects {
+    public static <T extends @Nullable Object> @NonNull T firstNonNull(T first, @NonNull T second);
+}
+
+public class Preconditions {
+    @EnsuresNonNull("#1")
+    public static <T extends @Nullable Object> T checkNotNull(@Nullable T reference);
+    @EnsuresNonNull("#1")
+    public static <T extends @Nullable Object> T checkNotNull(@Nullable T reference,
+            @Nullable Object errorMessage);
+    @EnsuresNonNull("#1")
+    public static <T extends @Nullable Object> T checkNotNull(@Nullable T reference,
+            @Nullable String errorMessageTemplate, @Nullable Object p1);
+    @EnsuresNonNull("#1")
+    public static <T extends @Nullable Object> T checkNotNull(@Nullable T reference,
+            @Nullable String errorMessageTemplate, @Nullable Object... errorMessageArgs);
+}
+
+public class Strings {
+    @EnsuresNonNullIf(expression = "#1", result = false)
+    public static boolean isNullOrEmpty(@Nullable String string);
+    public static String nullToEmpty(@Nullable String string);
+}
+
+/* ========================================================================== */
+package com.google.common.collect;
+
+public class Ordering<T extends @NonNull Object> {
+    public int compare(@NonNull T left, @NonNull T right);
+}
+
+public class Iterators {
+    public static <T extends @Nullable Object> UnmodifiableIterator<T> forArray(T... array);
+    public static <T extends @Nullable Object> Iterator<T> limit(Iterator<T> iterator,
+            int limitSize);
+}
+
+public class Lists {
+    public static <E extends @Nullable Object> ArrayList<E> newArrayList();
+    public static <E extends @Nullable Object> ArrayList<E> newArrayListWithCapacity(
+            int initialArraySize);
+    public static <E extends @Nullable Object> ArrayList<E> newArrayList(
+            Iterable<? extends E> elements);
+    public static <E extends @Nullable Object> ArrayList<E> newCopyOnWriteArrayList();
+}
+
+public class Maps {
+    public static <K extends @Nullable Object, V extends @Nullable Object>
+            HashMap<K, V> newHashMap();
+    public static <K extends @Nullable Object, V extends @Nullable Object>
+            LinkedHashMap<K, V> newLinkedHashMap();
+    // TreeMap with default comparator does not support null keys
+    public static <K, V extends @Nullable Object> TreeMap<K, V> newTreeMap();
+    public static <C extends @Nullable Object, K extends C, V extends @Nullable Object>
+            TreeMap<K, V> newTreeMap(@Nullable Comparator<C> comparator);
+}
+
+/* ========================================================================== */
+package com.google.common.util.concurrent;
+
+public interface AsyncFunction<I, O> {
+  ListenableFuture<O> apply(I input);
+}
+
+public interface FutureCallback<V> {
+  void onSuccess(V result);
+}

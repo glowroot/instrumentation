@@ -1,0 +1,9 @@
+{
+  "name": "AsyncHttpClient",
+  "id": "async-http-client",
+  "classes": [
+    "org.glowroot.instrumentation.asynchttpclient.AsyncHttpClient1xInstrumentation",
+    "org.glowroot.instrumentation.asynchttpclient.AsyncHttpClient2xInstrumentation"
+  ],
+  "collocate": true
+}

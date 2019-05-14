@@ -1,0 +1,49 @@
+{
+  "name": "Java HTTP Server",
+  "id": "java-http-server",
+  "properties": [
+    {
+      "name": "captureRequestHeaders",
+      "type": "list",
+      "label": "Capture request headers",
+      "description": "List of request headers to capture in the root trace entry. The wildcard '*' is supported anywhere in the header name."
+    },
+    {
+      "name": "maskRequestHeaders",
+      "type": "list",
+      "default": [
+        "Authorization"
+      ],
+      "label": "Mask request headers",
+      "description": "List of sensitive request headers to mask, e.g. credentials. The wildcard '*' is supported anywhere in the header name."
+    },
+    {
+      "name": "captureRequestRemoteAddr",
+      "type": "boolean",
+      "label": "Capture request remote address",
+      "checkboxLabel": "Capture request remote address using HttpExchange.getRemoteAddress().getAddress().getHostAddress()"
+    },
+    {
+      "name": "captureRequestRemoteHost",
+      "type": "boolean",
+      "label": "Capture request remote host",
+      "checkboxLabel": "Capture request remote host using HttpExchange.getRemoteAddress().getHostName()"
+    },
+    {
+      "name": "captureResponseHeaders",
+      "type": "list",
+      "label": "Capture response headers",
+      "description": "List of response headers to capture in the root trace entry. The wildcard '*' is supported anywhere in the header name."
+    },
+    {
+      "name": "traceErrorOn4xxResponseCode",
+      "type": "boolean",
+      "label": "Error on 4xx",
+      "checkboxLabel": "Mark trace as error on 4xx response code",
+      "description": "Mark the trace as an error when a 4xx response code is returned."
+    }
+  ],
+  "classes": [
+    "org.glowroot.instrumentation.javahttpserver.JavaHttpServerInstrumentation"
+  ]
+}

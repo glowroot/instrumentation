@@ -1,0 +1,64 @@
+import org.checkerframework.checker.nullness.qual.*;
+
+/* ========================================================================== */
+package org.objectweb.asm;
+
+public class ClassVisitor {
+    @Nullable protected ClassVisitor cv;
+    public void visit(int version, int access, String name, @Nullable String signature,
+            @Nullable String superName, String @Nullable [] interfaces);
+    public @Nullable MethodVisitor visitMethod(int access, String name, String descriptor,
+            @Nullable String signature, String @Nullable [] exceptions);
+    public @Nullable FieldVisitor visitField(int access, String name, @Nullable String descriptor,
+            @Nullable String signature, @Nullable Object value);
+    public @Nullable AnnotationVisitor visitAnnotation(String descriptor, boolean visible);
+}
+
+public class MethodVisitor {
+    public @Nullable AnnotationVisitor visitAnnotation(String descriptor, boolean visible);
+    public @Nullable AnnotationVisitor visitParameterAnnotation(int parameter, String descriptor,
+            boolean visible);
+    public void visitFrame(int type, int nLocal, Object @Nullable [] local, int nStack,
+            Object @Nullable [] stack);
+}
+
+public class ClassWriter {
+    public void visit(int version, int access, String name, @Nullable String signature,
+            @Nullable String superName, String @Nullable [] interfaces);
+    public MethodVisitor visitMethod(int access, String name, String descriptor,
+            @Nullable String signature, String @Nullable [] exceptions);
+    public FieldVisitor visitField(int access, String name, @Nullable String descriptor,
+            @Nullable String signature, @Nullable Object value);
+}
+
+public class AnnotationVisitor {
+    public void visit(@Nullable String name, Object value);
+    public @Nullable AnnotationVisitor visitArray(String name);
+}
+
+/* ========================================================================== */
+package org.objectweb.asm.commons;
+
+public class GeneratorAdapter {
+    public GeneratorAdapter(int access, Method method, @Nullable String signature,
+            @Nullable Type[] exceptions, ClassVisitor cv);
+}
+
+public class LocalVariablesSorter {
+    public void visitLocalVariable(String name, String descriptor, @Nullable String signature,
+            Label start, Label end, int index);
+    public void visitFrame(int type, int nLocal, Object @Nullable [] local, int nStack,
+            Object @Nullable [] stack);
+}
+
+public class JSRInlinerAdapter {
+    public JSRInlinerAdapter(@Nullable MethodVisitor mv, int access, String name, String descriptor,
+            @Nullable String signature, String @Nullable [] exceptions);
+}
+
+/* ========================================================================== */
+package org.objectweb.asm.util;
+
+public class TraceClassVisitor {
+    public TraceClassVisitor(@Nullable ClassVisitor cv, Printer p, PrintWriter pw);
+}

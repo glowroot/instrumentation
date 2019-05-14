@@ -1,0 +1,14 @@
+import org.checkerframework.checker.nullness.qual.*;
+
+/* ========================================================================== */
+package com.google.gson;
+
+public interface TypeAdapterFactory {
+
+    <T> @Nullable TypeAdapter<T> create(Gson gson, TypeToken<T> type);
+}
+
+public abstract class TypeAdapter<T> {
+
+    public @Nullable T read(JsonReader in);
+}

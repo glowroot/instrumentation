@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.glowroot.instrumentation</groupId>
+    <artifactId>instrumentation-parent</artifactId>
+    <version>0.14.0-SNAPSHOT</version>
+    <relativePath>../..</relativePath>
+  </parent>
+
+  <artifactId>instrumentation-servlet</artifactId>
+
+  <name>Instrumentation for the Servlet API</name>
+  <description>Instrumentation for the Servlet API</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.glowroot.instrumentation</groupId>
+      <artifactId>instrumentation-api</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <!-- need 3.0 for testing since Tomcat 7 (below) uses Servlet API 3.0,
+        but need to be careful not to use method not present in 2.x -->
+      <version>3.0.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-core</artifactId>
+      <!-- tomcat 8.0.0+ requires Java 7+ -->
+      <version>7.0.91</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.glowroot.instrumentation</groupId>
+      <artifactId>instrumentation-test-harness</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.ning</groupId>
+      <artifactId>async-http-client</artifactId>
+      <!-- async-http-client 1.9.0+ requires Java 7+ -->
+      <version>1.8.17</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-jasper</artifactId>
+      <!-- tomcat 8.0.0+ requires Java 7+ -->
+      <version>7.0.91</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-logging-juli</artifactId>
+      <!-- tomcat 8.0.0+ requires Java 7+ -->
+      <version>7.0.91</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <!-- Spring 5+ requires Java 8+ -->
+      <version>4.3.22.RELEASE</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- optional dependency of spring-test that is required by
+        org.springframework.mock.web.MockHttpServletRequest -->
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <!-- Spring 5+ requires Java 8+ -->
+      <version>4.3.22.RELEASE</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-server</artifactId>
+      <!-- jetty 9 uses Servlet API 3.1.0 which conflicts with Tomcat 7 (which uses 3.0) -->
+      <!-- jetty 8.2 requires Java 7+ which causes "force-java6" profile below to fail -->
+      <version>8.1.22.v20160922</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- executor plugin is included to test async servlets -->
+      <groupId>org.glowroot.instrumentation</groupId>
+      <artifactId>instrumentation-executor</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

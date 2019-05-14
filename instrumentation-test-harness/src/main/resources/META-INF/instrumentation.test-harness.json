@@ -1,0 +1,27 @@
+{
+  "name": "Test Harness",
+  "id": "instrumentation-test-harness",
+  "advice": [
+    {
+      "className": "org.glowroot.instrumentation.test.harness.TransactionMarker",
+      "methodName": "transactionMarker",
+      "methodParameterTypes": [ ],
+      "captureKind": "transaction",
+      "transactionType": "Test harness",
+      "transactionNameTemplate": "trace marker / {{this.class.simpleName}}",
+      "alreadyInTransactionBehavior": "capture-local-span",
+      "timerName": "mock trace marker"
+    },
+    {
+      "className": "org.glowroot.instrumentation.test.harness.TestSpans",
+      "methodName": "createLocalSpan",
+      "methodParameterTypes": [
+        ".."
+      ],
+      "methodModifiers": "static",
+      "captureKind": "local-span",
+      "timerName": "test local span",
+      "spanMessageTemplate": "test local span"
+    }
+  ]
+}

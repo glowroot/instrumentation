@@ -1,0 +1,44 @@
+{
+  "name": "JMS",
+  "id": "jms",
+  "advice": [
+    {
+      "className": "javax.jms.MessageListener",
+      "methodName": "onMessage",
+      "methodParameterTypes": [
+        "javax.jms.Message"
+      ],
+      "nestingGroup": "jms",
+      "captureKind": "transaction",
+      "transactionType": "Background",
+      "transactionNameTemplate": "JMS Message: {{this.class.simpleName}}",
+      "alreadyInTransactionBehavior": "capture-local-span",
+      "timerName": "jms message"
+    },
+    {
+      "className": "javax.jms.MessageProducer",
+      "methodName": "send",
+      "methodParameterTypes": [
+        "javax.jms.Message",
+        ".."
+      ],
+      "nestingGroup": "jms",
+      "captureKind": "local-span",
+      "spanMessageTemplate": "jms send message: {{this.destination}}",
+      "timerName": "jms send message"
+    },
+    {
+      "className": "javax.jms.MessageProducer",
+      "methodName": "send",
+      "methodParameterTypes": [
+        "javax.jms.Destination",
+        "javax.jms.Message",
+        ".."
+      ],
+      "nestingGroup": "jms",
+      "captureKind": "local-span",
+      "spanMessageTemplate": "jms send message: {{1.destination}}",
+      "timerName": "jms send message"
+    }
+  ]
+}

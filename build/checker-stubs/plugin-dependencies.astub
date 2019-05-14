@@ -1,0 +1,16 @@
+import org.checkerframework.checker.nullness.qual.*;
+
+/* ========================================================================== */
+package javax.servlet.http;
+
+public interface HttpServletRequest {
+    Enumeration<@Nullable String> getHeaderNames();
+    Enumeration<@Nullable String> getHeaders(String name);
+}
+
+/* ========================================================================== */
+package org.apache.kafka.clients.producer;
+
+public class Callback {
+    public void onCompletion(@Nullable RecordMetadata metadata, @Nullable Exception exception);
+}

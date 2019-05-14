@@ -1,0 +1,83 @@
+/*
+ * Copyright 2011-2019 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.glowroot.instrumentation.jdbc.boot;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.glowroot.instrumentation.api.QuerySpan;
+import org.glowroot.instrumentation.api.checker.Nullable;
+
+// used to capture and mirror the state of statements since the underlying {@link Statement} values
+// cannot be inspected after they have been set
+//
+// this class must be public since it is referenced from bytecode inside other packages via @Mixin
+public class StatementMirror {
+
+    private final String dest;
+
+    // this field is not used by PreparedStatementMirror subclass
+    //
+    // ok for this field to be non-volatile since it is only temporary storage for a single thread
+    // while that thread is adding batches into the statement and executing it
+    private @Nullable List<String> batchedSql;
+
+    // ok for this field to be non-volatile since it is only temporary storage for a single thread
+    // while that thread is adding batches into the statement and executing it
+    private @Nullable QuerySpan lastQuerySpan;
+
+    public StatementMirror(String dest) {
+        this.dest = dest;
+    }
+
+    public void addBatch(String sql) {
+        // synchronization isn't an issue here as this method is called only by
+        // the monitored thread
+        if (batchedSql == null) {
+            batchedSql = new ArrayList<String>();
+        }
+        batchedSql.add(sql);
+    }
+
+    public List<String> getBatchedSql() {
+        if (batchedSql == null) {
+            return Collections.emptyList();
+        } else {
+            return batchedSql;
+        }
+    }
+
+    public void clearBatch() {
+        batchedSql = null;
+    }
+
+    public String getDest() {
+        return dest;
+    }
+
+    public void setLastQuerySpan(QuerySpan lastQuerySpan) {
+        this.lastQuerySpan = lastQuerySpan;
+    }
+
+    public @Nullable QuerySpan getLastQuerySpan() {
+        return lastQuerySpan;
+    }
+
+    public void clearLastQuerySpan() {
+        lastQuerySpan = null;
+    }
+}

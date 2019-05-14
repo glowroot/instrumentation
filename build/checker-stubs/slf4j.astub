@@ -1,0 +1,50 @@
+import org.checkerframework.checker.nullness.qual.*;
+
+/* ========================================================================== */
+package org.slf4j;
+
+public interface Logger {
+    public String getName();
+    public void trace(@Nullable String msg);
+    public void trace(@Nullable String format, @Nullable Object arg);
+    public void trace(@Nullable String format, @Nullable Object arg1, @Nullable Object arg2);
+    public void trace(@Nullable String format, @Nullable Object... arguments);
+    public void trace(@Nullable String msg, @Nullable Throwable t);
+    public void debug(@Nullable String msg);
+    public void debug(@Nullable String format, @Nullable Object arg);
+    public void debug(@Nullable String format, @Nullable Object arg1, @Nullable Object arg2);
+    public void debug(@Nullable String format, @Nullable Object... arguments);
+    public void debug(@Nullable String msg, @Nullable Throwable t);
+    public void info(@Nullable String msg);
+    public void info(@Nullable String format, @Nullable Object arg);
+    public void info(@Nullable String format, @Nullable Object arg1, @Nullable Object arg2);
+    public void info(@Nullable String format, @Nullable Object... arguments);
+    public void info(@Nullable String msg, @Nullable Throwable t);
+    public void warn(@Nullable String msg);
+    public void warn(@Nullable String format, @Nullable Object arg);
+    public void warn(@Nullable String format, @Nullable Object arg1, @Nullable Object arg2);
+    public void warn(@Nullable String format, @Nullable Object... arguments);
+    public void warn(@Nullable String msg, @Nullable Throwable t);
+    public void error(@Nullable String msg);
+    public void error(@Nullable String format, @Nullable Object arg);
+    public void error(@Nullable String format, @Nullable Object arg1, @Nullable Object arg2);
+    public void error(@Nullable String format, @Nullable Object... arguments);
+    public void error(@Nullable String msg, @Nullable Throwable t);
+}
+
+/* ========================================================================== */
+package org.slf4j.helpers;
+
+public class FormattingTuple {
+    public @Nullable String getMessage();
+    public @Nullable Object @Nullable [] getArgArray();
+    public @Nullable Throwable getThrowable();
+}
+
+public class MessageFormatter {
+    public static FormattingTuple format(@Nullable String messagePattern, @Nullable Object arg);
+    public static FormattingTuple format(@Nullable String messagePattern, @Nullable Object arg1,
+            @Nullable Object arg2);
+    public static FormattingTuple arrayFormat(@Nullable String messagePattern,
+            @Nullable Object @Nullable[] argArray);
+}

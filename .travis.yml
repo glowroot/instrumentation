@@ -1,0 +1,33 @@
+# standard environment (sudo: required) is required for docker
+sudo: required
+language: java
+services:
+  - docker
+before_install:
+    # NewRatio is to leave as much memory as possible to old gen
+  - echo "MAVEN_OPTS=\"-Xmx768m -XX:NewRatio=20\"" > ~/.mavenrc
+install: true
+script:
+    # travis ci provides a default settings xml that has lots of unnecessary repositories which slows build down
+  - rm ~/.m2/settings.xml
+  - build/build.sh $TARGET
+cache:
+  directories:
+  - $HOME/.m2
+matrix:
+  include:
+    - jdk: openjdk11
+      env: TARGET=test
+    - jdk: openjdk8
+      env: TARGET=test
+    - jdk: openjdk8
+      env: TARGET=deploy
+    - jdk: openjdk8
+      env: TARGET=checker
+    - jdk: openjdk8
+      env: TARGET=sonar
+      # these builds are to make sure tests also work in IDE (where they are easy to run/debug)
+    - jdk: openjdk11
+      env: TARGET=test USE_LOCAL_TEST_HARNESS=true
+    - jdk: openjdk8
+      env: TARGET=test USE_LOCAL_TEST_HARNESS=true

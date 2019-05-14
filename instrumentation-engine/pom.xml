@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.glowroot.instrumentation</groupId>
+    <artifactId>instrumentation-parent</artifactId>
+    <version>0.14.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>instrumentation-engine</artifactId>
+
+  <name>Instrumentation Engine</name>
+  <description>Instrumentation Engine</description>
+
+  <properties>
+    <asm.version>7.0</asm.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.glowroot.instrumentation</groupId>
+      <artifactId>instrumentation-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.immutables</groupId>
+      <artifactId>value</artifactId>
+      <!-- immutables is only needed at compile time -->
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.immutables</groupId>
+      <artifactId>gson</artifactId>
+      <!-- immutables is only needed at compile time -->
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <!-- this dependency is needed for generating Java 6 compatible classes -->
+      <groupId>org.immutables</groupId>
+      <artifactId>android-stub</artifactId>
+      <!-- immutables is only needed at compile time -->
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <!-- this dependency is needed for generating Java 6 compatible classes -->
+      <groupId>com.github.trask</groupId>
+      <artifactId>immutables-jdk6-shim</artifactId>
+      <!-- immutables is only needed at compile time -->
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.ow2.asm</groupId>
+      <artifactId>asm</artifactId>
+      <version>${asm.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.ow2.asm</groupId>
+      <artifactId>asm-commons</artifactId>
+      <version>${asm.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.ow2.asm</groupId>
+      <artifactId>asm-tree</artifactId>
+      <version>${asm.version}</version>
+    </dependency>
+    <dependency>
+      <!-- this is an optional dependency of asm-util -->
+      <groupId>org.ow2.asm</groupId>
+      <artifactId>asm-analysis</artifactId>
+      <version>${asm.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
+    <dependency>
+      <!-- using gson instead of jackson to keep the jar size down (180kb compared to 1380kb) -->
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- this is included to test weaving against jdk 1.3 bytecode -->
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <!-- this is the latest version compiled to jdk 1.3 bytecode -->
+      <version>2.6</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- this is included to test weaving against JSR bytecode that ends up being inlined via
+        JSRInlinerAdapter -->
+      <groupId>org.apache.jackrabbit</groupId>
+      <artifactId>jackrabbit-core</artifactId>
+      <!-- this is the latest version compiled to jdk 5 and therefore the latest version to include
+        JSR bytecode since JSR bytecode was deprecated in jdk 6 -->
+      <version>2.5.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- dependency of jackrabbit-core that is marked "provided" so not transitively inherited -->
+      <groupId>javax.jcr</groupId>
+      <artifactId>jcr</artifactId>
+      <version>2.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- this is included to test weaving against jdk 1.7 bytecode -->
+      <groupId>io.undertow</groupId>
+      <artifactId>undertow-core</artifactId>
+      <version>1.4.26.Final</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- this is included to test reflection against classes with missing optional
+        dependencies -->
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <!-- Spring 5+ requires Java 8+ -->
+      <version>4.3.22.RELEASE</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <profiles>
+    <profile>
+      <!-- use custom-built jdk6 compatible checker framework annotations by default except when
+        actually running checker framework code quality tests, in which case the real checker
+        framework annotations are provided -->
+      <id>not-the-checker-build</id>
+      <activation>
+        <property>
+          <name>!build.checker</name>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>com.github.trask</groupId>
+          <artifactId>checker-framework-annotations-for-jdk6</artifactId>
+          <version>1.0.0</version>
+          <!-- cannot set to optional, all annotation classes must be available on IBM Java 1.6 SR8
+            and earlier due to http://www-01.ibm.com/support/docview.wss?uid=swg1IZ76354 -->
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>test-java-8-and-later</id>
+      <activation>
+        <property>
+          <name>!test.noDefaultProfiles</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>test-java-8-and-later</id>
+                <goals>
+                  <goal>add-test-source</goal>
+                </goals>
+                <configuration>
+                  <sources>
+                    <source>src/test/java-8-and-later</source>
+                  </sources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

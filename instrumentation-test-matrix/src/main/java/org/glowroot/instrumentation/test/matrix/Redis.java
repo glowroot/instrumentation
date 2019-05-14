@@ -1,0 +1,80 @@
+/**
+ * Copyright 2016-2019 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.glowroot.instrumentation.test.matrix;
+
+import static org.glowroot.instrumentation.test.matrix.JavaVersion.JAVA6;
+import static org.glowroot.instrumentation.test.matrix.JavaVersion.JAVA7;
+import static org.glowroot.instrumentation.test.matrix.JavaVersion.JAVA8;
+
+public class Redis {
+
+    private static final String MODULE_PATH = "instrumentation/redis";
+
+    public static void main(String[] args) throws Exception {
+        if (args.length == 1 && args[0].contentEquals("short")) {
+            runShort();
+        } else {
+            runAll();
+        }
+    }
+
+    static void runShort() throws Exception {
+        run("2.0.0");
+        runJava7("2.9.1");
+    }
+
+    static void runAll() throws Exception {
+        run("2.0.0");
+        run("2.1.0");
+        run("2.2.0");
+        run("2.2.1");
+        run("2.3.0");
+        run("2.3.1");
+        run("2.4.0");
+        run("2.4.1");
+        run("2.4.2");
+        run("2.5.0");
+        run("2.5.1");
+        run("2.5.2");
+        run("2.6.0");
+        run("2.6.1");
+        run("2.6.2");
+        run("2.6.3");
+        run("2.7.0");
+        run("2.7.1");
+        run("2.7.2");
+        run("2.7.3");
+        run("2.8.0");
+        run("2.8.1");
+        run("2.8.2");
+        run("2.9.0");
+        runJava7("2.9.1");
+        runJava7("2.10.0");
+        runJava7("2.10.1");
+        runJava7("3.0.0");
+        runJava7("3.0.1");
+    }
+
+    private static void run(String version) throws Exception {
+        Util.updateLibVersion(MODULE_PATH, "jedis.version", version);
+        Util.runTests(MODULE_PATH, JAVA8, JAVA7, JAVA6);
+    }
+
+    private static void runJava7(String version) throws Exception {
+        Util.updateLibVersion(MODULE_PATH, "jedis.version", version);
+        Util.runTests(MODULE_PATH, JAVA8, JAVA7);
+    }
+}

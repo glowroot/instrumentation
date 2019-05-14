@@ -1,0 +1,203 @@
+{
+  "name": "Hibernate",
+  "id": "hibernate",
+  "advice": [
+    {
+      "className": "org.hibernate.Criteria",
+      "methodName": "list",
+      "methodParameterTypes": [
+      ],
+      "nestingGroup": "hibernate",
+      "captureKind": "timer",
+      "timerName": "hibernate query"
+    },
+    {
+      "className": "javax.persistence.TypedQuery",
+      "subTypeRestriction": "org.hibernate.*",
+      "methodName": "getResultList",
+      "methodParameterTypes": [
+      ],
+      "nestingGroup": "hibernate",
+      "captureKind": "timer",
+      "timerName": "hibernate query"
+    },
+    {
+      "className": "org.hibernate.Transaction",
+      "methodName": "commit",
+      "methodParameterTypes": [
+      ],
+      "nestingGroup": "hibernate",
+      "captureKind": "local-span",
+      "spanMessageTemplate": "hibernate commit",
+      "timerName": "hibernate commit"
+    },
+    {
+      "className": "org.hibernate.Transaction",
+      "methodName": "rollback",
+      "methodParameterTypes": [
+      ],
+      "nestingGroup": "hibernate",
+      "captureKind": "local-span",
+      "spanMessageTemplate": "hibernate rollback",
+      "timerName": "hibernate rollback"
+    },
+    {
+      "className": "javax.persistence.EntityTransaction",
+      "subTypeRestriction": "org.hibernate.Transaction",
+      "methodName": "commit",
+      "methodParameterTypes": [
+      ],
+      "nestingGroup": "hibernate",
+      "captureKind": "local-span",
+      "spanMessageTemplate": "hibernate commit",
+      "timerName": "hibernate commit"
+    },
+    {
+      "className": "javax.persistence.EntityTransaction",
+      "subTypeRestriction": "org.hibernate.Transaction",
+      "methodName": "rollback",
+      "methodParameterTypes": [
+      ],
+      "nestingGroup": "hibernate",
+      "captureKind": "local-span",
+      "spanMessageTemplate": "hibernate rollback",
+      "timerName": "hibernate rollback"
+    },
+    {
+      "className": "org.hibernate.Session",
+      "methodName": "flush",
+      "methodParameterTypes": [
+      ],
+      "nestingGroup": "hibernate",
+      "captureKind": "local-span",
+      "spanMessageTemplate": "hibernate flush",
+      "timerName": "hibernate flush"
+    },
+    {
+      "className": "org.hibernate.Session",
+      "methodName": "saveOrUpdate",
+      "methodParameterTypes": [
+        "java.lang.Object"
+      ],
+      "nestingGroup": "hibernate",
+      "captureKind": "timer",
+      "timerName": "hibernate saveOrUpdate"
+    },
+    {
+      "className": "org.hibernate.Session",
+      "methodName": "saveOrUpdate",
+      "methodParameterTypes": [
+        "java.lang.String",
+        "java.lang.Object"
+      ],
+      "nestingGroup": "hibernate",
+      "captureKind": "timer",
+      "timerName": "hibernate saveOrUpdate"
+    },
+    {
+      "className": "org.hibernate.Session",
+      "methodName": "save",
+      "methodParameterTypes": [
+        "java.lang.Object"
+      ],
+      "nestingGroup": "hibernate",
+      "captureKind": "timer",
+      "timerName": "hibernate save"
+    },
+    {
+      "className": "org.hibernate.Session",
+      "methodName": "save",
+      "methodParameterTypes": [
+        "java.lang.String",
+        "java.lang.Object"
+      ],
+      "nestingGroup": "hibernate",
+      "captureKind": "timer",
+      "timerName": "hibernate save"
+    },
+    {
+      "className": "org.hibernate.Session",
+      "methodName": "merge",
+      "methodParameterTypes": [
+        "java.lang.Object"
+      ],
+      "nestingGroup": "hibernate",
+      "captureKind": "timer",
+      "timerName": "hibernate merge"
+    },
+    {
+      "className": "org.hibernate.Session",
+      "methodName": "merge",
+      "methodParameterTypes": [
+        "java.lang.String",
+        "java.lang.Object"
+      ],
+      "nestingGroup": "hibernate",
+      "captureKind": "timer",
+      "timerName": "hibernate merge"
+    },
+    {
+      "className": "org.hibernate.Session",
+      "methodName": "update",
+      "methodParameterTypes": [
+        "java.lang.Object"
+      ],
+      "nestingGroup": "hibernate",
+      "captureKind": "timer",
+      "timerName": "hibernate update"
+    },
+    {
+      "className": "org.hibernate.Session",
+      "methodName": "update",
+      "methodParameterTypes": [
+        "java.lang.String",
+        "java.lang.Object"
+      ],
+      "nestingGroup": "hibernate",
+      "captureKind": "timer",
+      "timerName": "hibernate update"
+    },
+    {
+      "className": "org.hibernate.Session",
+      "methodName": "persist",
+      "methodParameterTypes": [
+        "java.lang.Object"
+      ],
+      "nestingGroup": "hibernate",
+      "captureKind": "timer",
+      "timerName": "hibernate persist"
+    },
+    {
+      "className": "org.hibernate.Session",
+      "methodName": "persist",
+      "methodParameterTypes": [
+        "java.lang.String",
+        "java.lang.Object"
+      ],
+      "nestingGroup": "hibernate",
+      "captureKind": "timer",
+      "timerName": "hibernate persist"
+    },
+    {
+      "className": "org.hibernate.Session",
+      "methodName": "delete",
+      "methodParameterTypes": [
+        "java.lang.Object"
+      ],
+      "nestingGroup": "hibernate",
+      "captureKind": "timer",
+      "timerName": "hibernate delete"
+    },
+    {
+      "className": "org.hibernate.Session",
+      "methodName": "delete",
+      "methodParameterTypes": [
+        "java.lang.String",
+        "java.lang.Object"
+      ],
+      "nestingGroup": "hibernate",
+      "captureKind": "timer",
+      "timerName": "hibernate delete"
+    }
+  ]
+}

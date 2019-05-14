@@ -1,0 +1,18 @@
+{
+  "name": "Cassandra",
+  "id": "cassandra",
+  "properties": [
+    {
+      "name": "stackTraceThresholdMillis",
+      "type": "double",
+      "default": 1000.0,
+      "label": "Stack trace threshold (millis)",
+      "description": "Any query that exceeds this threshold will have a stack trace captured and attached to it. An empty value will not collect any stack traces, a zero value will collect a stack trace for every query."
+    }
+  ],
+  "classes": [
+    "org.glowroot.instrumentation.cassandra.SessionInstrumentation",
+    "org.glowroot.instrumentation.cassandra.ResultSetInstrumentation",
+    "org.glowroot.instrumentation.cassandra.ResultSetFutureInstrumentation"
+  ]
+}

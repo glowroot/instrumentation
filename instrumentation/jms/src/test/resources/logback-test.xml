@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<configuration>
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+  <root level="warn">
+    <appender-ref ref="CONSOLE" />
+  </root>
+  <!-- these are needed to deal with a couple of sporadic error messages -->
+  <logger name="org.apache.activemq.broker.BrokerService" level="off"></logger>
+  <logger name="org.apache.activemq.broker.jmx.ManagementContext" level="off"></logger>
+</configuration>
