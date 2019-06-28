@@ -16,6 +16,14 @@
   <name>Instrumentation for Netty</name>
   <description>Instrumentation for Netty</description>
 
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
   <properties>
     <netty4x.version>4.1.35.Final</netty4x.version>
     <netty3x.version>3.10.6.Final</netty3x.version>

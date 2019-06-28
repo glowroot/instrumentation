@@ -16,6 +16,14 @@
   <name>Instrumentation for Apache Http Async Client</name>
   <description>Instrumentation for Apache Http Async Client</description>
 
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
   <properties>
     <apachehttpasyncclient.version>4.1.3</apachehttpasyncclient.version>
   </properties>

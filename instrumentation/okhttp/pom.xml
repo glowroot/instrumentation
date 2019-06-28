@@ -16,6 +16,14 @@
   <name>Instrumentation for OkHttp</name>
   <description>Instrumentation for OkHttp</description>
 
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
   <properties>
     <okhttp3x.version>3.12.1</okhttp3x.version>
     <okhttp2x.version>2.7.5</okhttp2x.version>

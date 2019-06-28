@@ -16,6 +16,14 @@
   <name>Instrumentation for Elasticsearch</name>
   <description>Instrumentation for Elasticsearch</description>
 
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
   <properties>
     <elasticsearch.version>6.5.4</elasticsearch.version>
     <log4j.version>2.11.1</log4j.version>

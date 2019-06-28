@@ -16,6 +16,14 @@
   <name>Instrumentation for Grails</name>
   <description>Instrumentation for Grails</description>
 
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
   <properties>
     <grails.version>3.3.9</grails.version>
   </properties>

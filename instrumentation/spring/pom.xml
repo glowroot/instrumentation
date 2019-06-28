@@ -16,6 +16,14 @@
   <name>Instrumentation for Spring Framework</name>
   <description>Instrumentation for Spring Framework</description>
 
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
   <properties>
     <spring.version>5.1.4.RELEASE</spring.version>
   </properties>

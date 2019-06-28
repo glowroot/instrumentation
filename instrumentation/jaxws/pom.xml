@@ -16,6 +16,14 @@
   <name>Instrumentation for JAX-WS</name>
   <description>Instrumentation for JAX-WS</description>
 
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
   <properties>
     <!-- cxf 3.2.0+ requires Java 8+, which would prevent any jaxws plugin tests from being able to
       run when building with Java 7 -->

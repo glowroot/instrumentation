@@ -16,6 +16,14 @@
   <name>Instrumentation for Struts</name>
   <description>Instrumentation for Struts</description>
 
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
   <properties>
     <struts2x.version>2.5.18</struts2x.version>
     <struts1x.version>1.3.10</struts1x.version>

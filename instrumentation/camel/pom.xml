@@ -16,6 +16,14 @@
   <name>Instrumentation for Apache Camel</name>
   <description>Instrumentation for Apache Camel</description>
 
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
   <properties>
     <!-- Camel 2.14+ requires Java 7+ -->
     <camel.version>2.13.4</camel.version>

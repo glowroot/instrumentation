@@ -16,6 +16,14 @@
   <name>Instrumentation for JDBC</name>
   <description>Instrumentation for JDBC</description>
 
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
   <properties>
     <h2.version>1.4.197</h2.version>
     <hsqldb.version>2.4.1</hsqldb.version>
