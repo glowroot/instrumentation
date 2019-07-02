@@ -61,7 +61,7 @@ public class Struts2xIT {
         IncomingSpan incomingSpan = container.executeForType(ExecuteActionInTomcat.class, "Web");
 
         // then
-        assertThat(incomingSpan.transactionName()).isEqualTo("HelloAction#helloAction");
+        assertThat(incomingSpan.transactionName()).isEqualTo("GET HelloAction#helloAction");
 
         assertSingleLocalSpanMessage(incomingSpan).isEqualTo("struts action: org.glowroot"
                 + ".instrumentation.struts.Struts2xIT$HelloAction.helloAction()");

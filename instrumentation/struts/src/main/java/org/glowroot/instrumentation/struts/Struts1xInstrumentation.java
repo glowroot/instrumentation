@@ -20,7 +20,9 @@ import org.glowroot.instrumentation.api.MessageSupplier;
 import org.glowroot.instrumentation.api.Span;
 import org.glowroot.instrumentation.api.ThreadContext;
 import org.glowroot.instrumentation.api.ThreadContext.Priority;
+import org.glowroot.instrumentation.api.ThreadContext.ServletRequestInfo;
 import org.glowroot.instrumentation.api.TimerName;
+import org.glowroot.instrumentation.api.checker.Nullable;
 import org.glowroot.instrumentation.api.weaving.Advice;
 import org.glowroot.instrumentation.api.weaving.Bind;
 
@@ -39,7 +41,12 @@ public class Struts1xInstrumentation {
         public static Span onBefore(@Bind.This Object action, ThreadContext context) {
 
             Class<?> actionClass = action.getClass();
-            context.setTransactionName(actionClass.getSimpleName() + "#execute",
+            String httpMethod = null;
+            ServletRequestInfo servletRequestInfo = context.getServletRequestInfo();
+            if (servletRequestInfo != null) {
+                httpMethod = servletRequestInfo.getMethod();
+            }
+            context.setTransactionName(getTransactionName(httpMethod, actionClass),
                     Priority.CORE_INSTRUMENTATION);
             return context.startLocalSpan(
                     MessageSupplier.create("struts action: {}.execute()", actionClass.getName()),
@@ -59,5 +66,16 @@ public class Struts1xInstrumentation {
 
             span.endWithError(t);
         }
+    }
+
+    private static String getTransactionName(@Nullable String httpMethod, Class<?> actionClass) {
+        StringBuilder sb = new StringBuilder();
+        if (httpMethod != null && !httpMethod.isEmpty()) {
+            sb.append(httpMethod);
+            sb.append(' ');
+        }
+        sb.append(actionClass.getSimpleName());
+        sb.append("#execute");
+        return sb.toString();
     }
 }

@@ -59,7 +59,7 @@ public class RestControllerIT {
                 "Web", "webapp1", "", "/rest");
 
         // then
-        assertThat(incomingSpan.transactionName()).isEqualTo("" + "/rest");
+        assertThat(incomingSpan.transactionName()).isEqualTo("GET /rest");
 
         validateSpans(incomingSpan.childSpans(), TestRestController.class, "rest");
     }
@@ -71,7 +71,7 @@ public class RestControllerIT {
                 "Web", "webapp1", "", "/abc");
 
         // then
-        assertThat(incomingSpan.transactionName()).isEqualTo("" + "/abc");
+        assertThat(incomingSpan.transactionName()).isEqualTo("GET /abc");
 
         validateSpans(incomingSpan.childSpans(), TestRestWithPropertyController.class, "abc");
     }
@@ -84,7 +84,7 @@ public class RestControllerIT {
                 "Web", "webapp1", "/zzz", "/rest");
 
         // then
-        assertThat(incomingSpan.transactionName()).isEqualTo("/zzz" + "/rest");
+        assertThat(incomingSpan.transactionName()).isEqualTo("GET /zzz/rest");
 
         validateSpans(incomingSpan.childSpans(), TestRestController.class, "rest");
     }
@@ -97,7 +97,7 @@ public class RestControllerIT {
                 "Web", "webapp1", "/zzz", "/abc");
 
         // then
-        assertThat(incomingSpan.transactionName()).isEqualTo("/zzz" + "/abc");
+        assertThat(incomingSpan.transactionName()).isEqualTo("GET /zzz/abc");
 
         validateSpans(incomingSpan.childSpans(), TestRestWithPropertyController.class, "abc");
     }

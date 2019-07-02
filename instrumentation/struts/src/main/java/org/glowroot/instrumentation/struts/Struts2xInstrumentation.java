@@ -20,7 +20,9 @@ import org.glowroot.instrumentation.api.MessageSupplier;
 import org.glowroot.instrumentation.api.Span;
 import org.glowroot.instrumentation.api.ThreadContext;
 import org.glowroot.instrumentation.api.ThreadContext.Priority;
+import org.glowroot.instrumentation.api.ThreadContext.ServletRequestInfo;
 import org.glowroot.instrumentation.api.TimerName;
+import org.glowroot.instrumentation.api.checker.Nullable;
 import org.glowroot.instrumentation.api.weaving.Advice;
 import org.glowroot.instrumentation.api.weaving.Bind;
 import org.glowroot.instrumentation.api.weaving.Shim;
@@ -51,7 +53,12 @@ public class Struts2xInstrumentation {
             Class<?> actionClass = actionProxy.getAction().getClass();
             String actionMethod = actionProxy.getMethod();
             String methodName = actionMethod != null ? actionMethod : "execute";
-            context.setTransactionName(actionClass.getSimpleName() + "#" + methodName,
+            String httpMethod = null;
+            ServletRequestInfo servletRequestInfo = context.getServletRequestInfo();
+            if (servletRequestInfo != null) {
+                httpMethod = servletRequestInfo.getMethod();
+            }
+            context.setTransactionName(getTransactionName(httpMethod, actionClass, methodName),
                     Priority.CORE_INSTRUMENTATION);
             return context.startLocalSpan(MessageSupplier.create("struts action: {}.{}()",
                     actionClass.getName(), methodName), TIMER_NAME);
@@ -70,5 +77,18 @@ public class Struts2xInstrumentation {
 
             span.endWithError(t);
         }
+    }
+
+    private static String getTransactionName(@Nullable String httpMethod, Class<?> actionClass,
+            String methodName) {
+        StringBuilder sb = new StringBuilder();
+        if (httpMethod != null && !httpMethod.isEmpty()) {
+            sb.append(httpMethod);
+            sb.append(' ');
+        }
+        sb.append(actionClass.getSimpleName());
+        sb.append('#');
+        sb.append(methodName);
+        return sb.toString();
     }
 }

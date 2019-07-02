@@ -62,7 +62,7 @@ public class WebFluxRestControllerIT {
                 "Web", "webapp1", "", "/webflux");
 
         // then
-        assertThat(incomingSpan.transactionName()).isEqualTo("/webflux");
+        assertThat(incomingSpan.transactionName()).isEqualTo("GET /webflux");
 
         Iterator<Span> i = incomingSpan.childSpans().iterator();
 

@@ -173,12 +173,7 @@ public class WebInstrumentation {
                 normalizedPattern = pattern.replaceAll("\\{[^}]*\\}", "*");
                 normalizedPatterns.put(pattern, normalizedPattern);
             }
-            if (prefix == null || prefix.isEmpty()) {
-                context.setTransactionName(normalizedPattern, Priority.CORE_INSTRUMENTATION);
-            } else {
-                context.setTransactionName(prefix + normalizedPattern,
-                        Priority.CORE_INSTRUMENTATION);
-            }
+            context.setTransactionName(prefix + normalizedPattern, Priority.CORE_INSTRUMENTATION);
         }
     }
 
@@ -206,20 +201,15 @@ public class WebInstrumentation {
                 normalizedPattern = bestMatchingPattern.replaceAll("\\{[^}]*\\}", "*");
                 normalizedPatterns.put(bestMatchingPattern, normalizedPattern);
             }
-            if (prefix == null || prefix.isEmpty()) {
-                context.setTransactionName(normalizedPattern, Priority.CORE_INSTRUMENTATION);
-            } else {
-                context.setTransactionName(prefix + normalizedPattern,
-                        Priority.CORE_INSTRUMENTATION);
-            }
+            context.setTransactionName(prefix + normalizedPattern, Priority.CORE_INSTRUMENTATION);
         }
     }
 
     @Advice.Pointcut(
                      classAnnotation = "org.springframework.stereotype.Controller"
                              + "|org.springframework.web.bind.annotation.RestController",
-                     methodAnnotation = "/org.springframework.web.bind.annotation.(Request|Delete|Get"
-                             + "|Patch|Post|Put)Mapping/",
+                     methodAnnotation = "/org.springframework.web.bind.annotation"
+                             + ".(Request|Delete|Get|Patch|Post|Put)Mapping/",
                      methodParameterTypes = {".."})
     public static class ControllerAdvice {
 
@@ -229,8 +219,21 @@ public class WebInstrumentation {
                 ThreadContext context) {
 
             if (useAltTransactionNaming.value()) {
-                context.setTransactionName(controllerMethodMeta.getAltTransactionName(),
-                        Priority.CORE_INSTRUMENTATION);
+                ServletRequestInfo servletRequestInfo = context.getServletRequestInfo();
+                if (servletRequestInfo == null) {
+                    context.setTransactionName(controllerMethodMeta.getAltTransactionName(),
+                            Priority.CORE_INSTRUMENTATION);
+                } else {
+                    String httpMethod = servletRequestInfo.getMethod();
+                    if (httpMethod == null || httpMethod.isEmpty()) {
+                        context.setTransactionName(controllerMethodMeta.getAltTransactionName(),
+                                Priority.CORE_INSTRUMENTATION);
+                    } else {
+                        context.setTransactionName(
+                                httpMethod + " " + controllerMethodMeta.getAltTransactionName(),
+                                Priority.CORE_INSTRUMENTATION);
+                    }
+                }
             }
             return context.startLocalSpan(MessageSupplier.create("spring controller: {}.{}()",
                     controllerMethodMeta.getControllerClassName(),
@@ -423,13 +426,19 @@ public class WebInstrumentation {
         if (servletRequestInfo == null) {
             return "";
         }
-        if (servletRequestInfo.getPathInfo() == null) {
+        String httpMethod = servletRequestInfo.getMethod();
+        StringBuilder sb = new StringBuilder();
+        if (httpMethod != null && !httpMethod.isEmpty()) {
+            sb.append(httpMethod);
+            sb.append(' ');
+        }
+        sb.append(servletRequestInfo.getContextPath());
+        if (servletRequestInfo.getPathInfo() != null) {
             // pathInfo is null when the servlet is mapped to "/" (not "/*") and therefore it is
             // replacing the default servlet and getServletPath() returns the full path
-            return servletRequestInfo.getContextPath();
-        } else {
-            return servletRequestInfo.getContextPath() + servletRequestInfo.getServletPath();
+            sb.append(servletRequestInfo.getServletPath());
         }
+        return sb.toString();
     }
 
     private static class NopGetter implements Getter<Object> {

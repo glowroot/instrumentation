@@ -60,7 +60,7 @@ public class ControllerIT {
                 "Web", "webapp1", "", "/hello/echo/5");
 
         // then
-        assertThat(incomingSpan.transactionName()).isEqualTo("" + "/hello/echo/*");
+        assertThat(incomingSpan.transactionName()).isEqualTo("GET /hello/echo/*");
 
         validateSpans(incomingSpan.childSpans(), TestController.class, "echo");
     }
@@ -73,7 +73,7 @@ public class ControllerIT {
                 "Web", "webapp1", "/zzz", "/hello/echo/5");
 
         // then
-        assertThat(incomingSpan.transactionName()).isEqualTo("/zzz" + "/hello/echo/*");
+        assertThat(incomingSpan.transactionName()).isEqualTo("GET /zzz/hello/echo/*");
 
         validateSpans(incomingSpan.childSpans(), TestController.class, "echo");
     }
@@ -85,7 +85,7 @@ public class ControllerIT {
                 "Web", "webapp1", "", "/");
 
         // then
-        assertThat(incomingSpan.transactionName()).isEqualTo("" + "/");
+        assertThat(incomingSpan.transactionName()).isEqualTo("GET /");
 
         validateSpans(incomingSpan.childSpans(), RootController.class, "echo");
     }
@@ -98,7 +98,7 @@ public class ControllerIT {
                 "Web", "webapp1", "/zzz", "/");
 
         // then
-        assertThat(incomingSpan.transactionName()).isEqualTo("/zzz" + "/");
+        assertThat(incomingSpan.transactionName()).isEqualTo("GET /zzz/");
 
         validateSpans(incomingSpan.childSpans(), RootController.class, "echo");
     }
@@ -110,7 +110,7 @@ public class ControllerIT {
                 "Web", "webapp2", "", "/spring/hello/echo/5");
 
         // then
-        assertThat(incomingSpan.transactionName()).isEqualTo("" + "/spring/hello/echo/*");
+        assertThat(incomingSpan.transactionName()).isEqualTo("GET /spring/hello/echo/*");
 
         validateSpans(incomingSpan.childSpans(), TestController.class, "echo");
     }
@@ -123,7 +123,7 @@ public class ControllerIT {
                 "Web", "webapp2", "/zzz", "/spring/hello/echo/5");
 
         // then
-        assertThat(incomingSpan.transactionName()).isEqualTo("/zzz" + "/spring/hello/echo/*");
+        assertThat(incomingSpan.transactionName()).isEqualTo("GET /zzz/spring/hello/echo/*");
 
         validateSpans(incomingSpan.childSpans(), TestController.class, "echo");
     }
@@ -135,7 +135,7 @@ public class ControllerIT {
                 "Web", "webapp2", "", "/spring/");
 
         // then
-        assertThat(incomingSpan.transactionName()).isEqualTo("" + "/spring/");
+        assertThat(incomingSpan.transactionName()).isEqualTo("GET /spring/");
 
         validateSpans(incomingSpan.childSpans(), RootController.class, "echo");
     }
@@ -148,7 +148,7 @@ public class ControllerIT {
                 "Web", "webapp2", "/zzz", "/spring/");
 
         // then
-        assertThat(incomingSpan.transactionName()).isEqualTo("/zzz" + "/spring/");
+        assertThat(incomingSpan.transactionName()).isEqualTo("GET /zzz/spring/");
 
         validateSpans(incomingSpan.childSpans(), RootController.class, "echo");
     }
@@ -160,7 +160,7 @@ public class ControllerIT {
                 "Web", "webapp3", "", "/hello/echo/5");
 
         // then
-        assertThat(incomingSpan.transactionName()).isEqualTo("" + "/hello/echo/*");
+        assertThat(incomingSpan.transactionName()).isEqualTo("GET /hello/echo/*");
 
         validateSpans(incomingSpan.childSpans(), TestController.class, "echo");
     }
@@ -173,7 +173,7 @@ public class ControllerIT {
                 "Web", "webapp3", "/zzz", "/hello/echo/5");
 
         // then
-        assertThat(incomingSpan.transactionName()).isEqualTo("/zzz" + "/hello/echo/*");
+        assertThat(incomingSpan.transactionName()).isEqualTo("GET /zzz/hello/echo/*");
 
         validateSpans(incomingSpan.childSpans(), TestController.class, "echo");
     }
@@ -186,7 +186,7 @@ public class ControllerIT {
                 "Web", "webapp3", "", "/");
 
         // then
-        assertThat(incomingSpan.transactionName()).isEqualTo("" + "/");
+        assertThat(incomingSpan.transactionName()).isEqualTo("GET /");
 
         validateSpans(incomingSpan.childSpans(), RootController.class, "echo");
     }
@@ -199,7 +199,7 @@ public class ControllerIT {
                 "Web", "webapp3", "/zzz", "/");
 
         // then
-        assertThat(incomingSpan.transactionName()).isEqualTo("/zzz" + "/");
+        assertThat(incomingSpan.transactionName()).isEqualTo("GET /zzz/");
 
         validateSpans(incomingSpan.childSpans(), RootController.class, "echo");
     }
@@ -214,7 +214,7 @@ public class ControllerIT {
                 "Web", "webapp1", "", "/hello/echo/5");
 
         // then
-        assertThat(incomingSpan.transactionName()).isEqualTo("TestController#echo");
+        assertThat(incomingSpan.transactionName()).isEqualTo("GET TestController#echo");
 
         validateSpans(incomingSpan.childSpans(), TestController.class, "echo");
     }

@@ -84,7 +84,7 @@ public class AsyncControllerIT {
                 "Web", "webapp1", contextPath, "/async");
 
         // then
-        assertThat(incomingSpan.transactionName()).isEqualTo(contextPath + "/async");
+        assertThat(incomingSpan.transactionName()).isEqualTo("GET " + contextPath + "/async");
 
         Iterator<Span> i = incomingSpan.childSpans().iterator();
 
@@ -113,7 +113,7 @@ public class AsyncControllerIT {
                 "Web", "webapp1", contextPath, "/async2");
 
         // then
-        assertThat(incomingSpan.transactionName()).isEqualTo(contextPath + "/async2");
+        assertThat(incomingSpan.transactionName()).isEqualTo("GET " + contextPath + "/async2");
 
         Iterator<Span> i = incomingSpan.childSpans().iterator();
 
