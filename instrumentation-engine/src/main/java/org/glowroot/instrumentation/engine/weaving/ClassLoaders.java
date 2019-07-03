@@ -48,6 +48,7 @@ class ClassLoaders {
     static void defineClassesInBootstrapClassLoader(Collection<LazyDefinedClass> lazyDefinedClasses,
             Instrumentation instrumentation, File tmpDir, String fileNamePrefix)
             throws IOException {
+
         if (lazyDefinedClasses.isEmpty()) {
             return;
         }
@@ -59,15 +60,26 @@ class ClassLoaders {
         String uniqueHash = getUniqueHash(flattenedAndOrderedList);
         File generatedJarFile = new File(tmpDir, fileNamePrefix + uniqueHash + ".jar");
         if (!generatedJarFile.exists()) {
+            File tmpFile = File.createTempFile(fileNamePrefix, ".tmp.jar", tmpDir);
             Closer closer = Closer.create();
             try {
-                FileOutputStream out = closer.register(new FileOutputStream(generatedJarFile));
+                FileOutputStream out = closer.register(new FileOutputStream(tmpFile));
                 JarOutputStream jarOut = closer.register(new JarOutputStream(out));
                 generate(flattenedAndOrderedList, jarOut);
             } catch (Throwable t) {
                 throw closer.rethrow(t);
             } finally {
                 closer.close();
+            }
+            if (!tmpFile.renameTo(generatedJarFile)) {
+                if (!generatedJarFile.exists()) {
+                    logger.warn("could not rename file {} to {}", tmpFile.getAbsolutePath(),
+                            generatedJarFile.getAbsolutePath());
+                    // use tmpFile instead
+                    generatedJarFile = tmpFile;
+                } else if (!tmpFile.delete()) {
+                    logger.warn("could not delete file {}", tmpFile.getAbsolutePath());
+                }
             }
         }
         instrumentation.appendToBootstrapClassLoaderSearch(new JarFile(generatedJarFile));
