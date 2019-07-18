@@ -61,7 +61,7 @@ class ClassLoaders {
         String uniqueHash = getUniqueHash(flattenedAndOrderedList);
         File generatedJarFile = new File(tmpDir, fileNamePrefix + uniqueHash + ".jar");
         if (!generatedJarFile.exists()) {
-            File tmpFile = File.createTempFile(fileNamePrefix, ".tmp.jar", tmpDir);
+            File tmpFile = createTempFile(fileNamePrefix + uniqueHash, ".jar", tmpDir);
             Closer closer = Closer.create();
             try {
                 FileOutputStream out = closer.register(new FileOutputStream(tmpFile));
@@ -231,6 +231,21 @@ class ClassLoaders {
             flattenedMap.put(lazyDefinedClass.getType().getInternalName(), lazyDefinedClass);
             put(flattenedMap, lazyDefinedClass.getDependencies());
         }
+    }
+
+    // not using File.createTempFile() because that calls SecureRandom under the hood which can be
+    // really slow the first time it's used (and so can have a big impact on startup time)
+    private static File createTempFile(String prefix, String suffix, File tmpDir)
+            throws IOException {
+        String baseName = prefix + "-" + System.currentTimeMillis() + "-";
+        for (int i = 0; i < 10000; i++) {
+            File tempFile = new File(tmpDir, baseName + i + suffix);
+            if (tempFile.createNewFile()) {
+                return tempFile;
+            }
+        }
+        throw new IOException("Could not create temp file, tried " + baseName + "0" + suffix
+                + " through " + baseName + "999" + suffix);
     }
 
     private static String getUniqueHash(Collection<LazyDefinedClass> flattened) {
