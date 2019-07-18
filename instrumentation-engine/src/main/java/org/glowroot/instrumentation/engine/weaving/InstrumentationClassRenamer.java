@@ -16,6 +16,7 @@
 package org.glowroot.instrumentation.engine.weaving;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
@@ -23,7 +24,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.ClassRemapper;
 import org.objectweb.asm.commons.Remapper;
 import org.slf4j.Logger;
@@ -43,9 +43,10 @@ class InstrumentationClassRenamer {
     private final String rootPackageName;
     private final String bootstrapClassLoaderPackageName;
 
-    private final Set<String> processed = Sets.newHashSet();
+    private final Map<String, LazyDefinedClass> collocatedClassCache;
 
-    InstrumentationClassRenamer(PointcutClass adviceClass) {
+    InstrumentationClassRenamer(PointcutClass adviceClass,
+            Map<String, LazyDefinedClass> collocatedClassCache) {
         this.adviceClass = adviceClass;
         String internalName = adviceClass.type().getInternalName();
         int index = internalName.lastIndexOf('/');
@@ -55,6 +56,7 @@ class InstrumentationClassRenamer {
             rootPackageName = internalName.substring(0, index);
         }
         bootstrapClassLoaderPackageName = rootPackageName + "/boot/";
+        this.collocatedClassCache = collocatedClassCache;
     }
 
     @Nullable
@@ -95,32 +97,42 @@ class InstrumentationClassRenamer {
         }
     }
 
-    private LazyDefinedClass build(String internalName, byte[] origBytes) throws IOException {
-        processed.add(internalName);
+    private LazyDefinedClass build(String internalName, byte /*@Nullable*/ [] bytes)
+            throws IOException {
+
+        LazyDefinedClass lazyDefinedClass = collocatedClassCache.get(internalName);
+        if (lazyDefinedClass != null) {
+            return lazyDefinedClass;
+        }
+
         InstrumentationClassRemapper remapper = new InstrumentationClassRemapper();
-        ImmutableLazyDefinedClass.Builder builder = ImmutableLazyDefinedClass.builder()
-                .type(Type.getObjectType(remapper.mapType(internalName)));
+        if (bytes == null) {
+            bytes = InstrumentationDetailBuilder.getBytes(internalName, adviceClass.jarFile());
+        }
+        lazyDefinedClass = new LazyDefinedClass(remapper.mapType(internalName), bytes);
+        collocatedClassCache.put(internalName, lazyDefinedClass);
+
         // TODO don't need a real ClassWriter here, just something that forces visiting everything
         ClassWriter cw = new ClassWriter(0);
         ClassVisitor cv = new ClassRemapper(cw, remapper);
-        ClassReader cr = new ClassReader(origBytes);
+        ClassReader cr = new ClassReader(bytes);
         cr.accept(cv, 0);
-        builder.bytes(origBytes);
-        for (String unprocessed : remapper.unprocessed) {
-            builder.addDependencies(build(unprocessed,
-                    InstrumentationDetailBuilder.getBytes(unprocessed, adviceClass.jarFile())));
+        for (String dependencyName : remapper.dependencyNames) {
+            if (!dependencyName.equals(internalName)) {
+                lazyDefinedClass.getDependencies().add(build(dependencyName, null));
+            }
         }
-        return builder.build();
+        return lazyDefinedClass;
     }
 
     private class InstrumentationClassRemapper extends Remapper {
 
-        private final Set<String> unprocessed = Sets.newHashSet();
+        private final Set<String> dependencyNames = Sets.newHashSet();
 
         @Override
         public String map(String internalName) {
-            if (collocate(internalName) && !processed.contains(internalName)) {
-                unprocessed.add(internalName);
+            if (collocate(internalName)) {
+                dependencyNames.add(internalName);
             }
             return internalName;
         }

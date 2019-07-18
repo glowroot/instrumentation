@@ -15,6 +15,7 @@
  */
 package org.glowroot.instrumentation.engine.weaving;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -127,11 +128,15 @@ class AdviceBuilder {
     }
 
     Advice build() throws Exception {
+        return build(new HashMap<String, LazyDefinedClass>());
+    }
+
+    Advice build(Map<String, LazyDefinedClass> collocatedClassCache) throws Exception {
         PointcutClass adviceClass = this.adviceClass;
         if (adviceClass == null) {
             // safe check, if adviceClass is null then lazyAdviceClass is non-null
             checkNotNull(lazyAdviceClass);
-            adviceClass = InstrumentationDetailBuilder.buildAdviceClass(lazyAdviceClass.bytes());
+            adviceClass = InstrumentationDetailBuilder.buildAdviceClass(lazyAdviceClass.getBytes());
         }
         Pointcut pointcut = adviceClass.pointcut();
         checkNotNull(pointcut, "Class has no @Advice.Pointcut annotation");
@@ -167,7 +172,8 @@ class AdviceBuilder {
             }
         }
         if (adviceClass.collocateInClassLoader()) {
-            InstrumentationClassRenamer classRenamer = new InstrumentationClassRenamer(adviceClass);
+            InstrumentationClassRenamer classRenamer =
+                    new InstrumentationClassRenamer(adviceClass, collocatedClassCache);
             builder.nonBootstrapLoaderAdviceClass(
                     classRenamer.buildNonBootstrapLoaderAdviceClass());
             builder.nonBootstrapLoaderAdvice(

@@ -27,7 +27,6 @@ import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -158,13 +157,12 @@ class AdviceGenerator {
             addOnBeforeMethodOther(cw);
         }
         cw.visitEnd();
-        ImmutableLazyDefinedClass.Builder builder = ImmutableLazyDefinedClass.builder()
-                .type(Type.getObjectType(adviceInternalName))
-                .bytes(cw.toByteArray());
+        LazyDefinedClass lazyDefinedClass =
+                new LazyDefinedClass(adviceInternalName, cw.toByteArray());
         if (methodMetaClass != null) {
-            builder.addDependencies(methodMetaClass);
+            lazyDefinedClass.getDependencies().add(methodMetaClass);
         }
-        return builder.build();
+        return lazyDefinedClass;
     }
 
     private void addClassAnnotation(ClassWriter cw) {
@@ -697,10 +695,8 @@ class AdviceGenerator {
                     "getTransactionAttributeTemplate" + i);
         }
         cw.visitEnd();
-        return ImmutableLazyDefinedClass.builder()
-                .type(Type.getObjectType(methodMetaInternalName))
-                .bytes(cw.toByteArray())
-                .build();
+
+        return new LazyDefinedClass(methodMetaInternalName, cw.toByteArray());
     }
 
     private void addCodeForSetTransactionX(MethodVisitor mv, String templateGetterName,

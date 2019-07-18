@@ -165,9 +165,10 @@ public class AdviceCache {
 
     private static List<Advice> getAdvisors(List<PointcutClass> adviceClasses) {
         List<Advice> advisors = Lists.newArrayList();
+        Map<String, LazyDefinedClass> collocatedClassCache = Maps.newHashMap();
         for (PointcutClass adviceClass : adviceClasses) {
             try {
-                advisors.add(new AdviceBuilder(adviceClass).build());
+                advisors.add(new AdviceBuilder(adviceClass).build(collocatedClassCache));
             } catch (Throwable t) {
                 logger.error("error creating advice: {}", adviceClass.type().getClassName(), t);
             }

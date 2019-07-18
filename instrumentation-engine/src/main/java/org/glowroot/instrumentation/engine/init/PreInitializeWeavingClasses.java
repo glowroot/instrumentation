@@ -369,8 +369,6 @@ class PreInitializeWeavingClasses {
         types.add("org.glowroot.instrumentation.engine.weaving.ImmutableBindAnnotation$Builder");
         types.add("org.glowroot.instrumentation.engine.weaving.ImmutableCatchHandler");
         types.add("org.glowroot.instrumentation.engine.weaving.ImmutableCatchHandler$Builder");
-        types.add("org.glowroot.instrumentation.engine.weaving.ImmutableLazyDefinedClass");
-        types.add("org.glowroot.instrumentation.engine.weaving.ImmutableLazyDefinedClass$Builder");
         types.add("org.glowroot.instrumentation.engine.weaving.ImmutableMatchedMixinTypes");
         types.add("org.glowroot.instrumentation.engine.weaving.ImmutableMatchedMixinTypes$Builder");
         types.add("org.glowroot.instrumentation.engine.weaving.ImmutableMethodMetaGroup");

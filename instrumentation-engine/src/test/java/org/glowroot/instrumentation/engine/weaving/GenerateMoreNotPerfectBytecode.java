@@ -17,7 +17,6 @@ package org.glowroot.instrumentation.engine.weaving;
 
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Type;
 
 import org.glowroot.instrumentation.engine.weaving.ClassLoaders.LazyDefinedClass;
 
@@ -63,10 +62,7 @@ public class GenerateMoreNotPerfectBytecode {
         }
         cw.visitEnd();
 
-        return ImmutableLazyDefinedClass.builder()
-                .type(Type.getObjectType("MoreNotPerfectBytecode"))
-                .bytes(cw.toByteArray())
-                .build();
+        return new LazyDefinedClass("MoreNotPerfectBytecode", cw.toByteArray());
     }
 
     public interface Test {

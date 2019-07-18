@@ -1887,8 +1887,8 @@ public class WeaverTest {
                 Ticker.systemTicker());
         isolatedWeavingClassLoader.setWeaver(weaver);
 
-        String className = toBeDefinedImplClass.type().getClassName();
-        isolatedWeavingClassLoader.addManualClass(className, toBeDefinedImplClass.bytes());
+        String className = toBeDefinedImplClass.getType().getClassName();
+        isolatedWeavingClassLoader.addManualClass(className, toBeDefinedImplClass.getBytes());
         @SuppressWarnings("unchecked")
         Class<T> implClass = (Class<T>) Class.forName(className, false, isolatedWeavingClassLoader);
         return isolatedWeavingClassLoader.newInstance(implClass, bridgeClass);

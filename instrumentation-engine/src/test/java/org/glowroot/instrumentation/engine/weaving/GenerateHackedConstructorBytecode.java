@@ -17,7 +17,6 @@ package org.glowroot.instrumentation.engine.weaving;
 
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Type;
 
 import org.glowroot.instrumentation.engine.weaving.ClassLoaders.LazyDefinedClass;
 
@@ -69,10 +68,7 @@ public class GenerateHackedConstructorBytecode {
         }
         cw.visitEnd();
 
-        return ImmutableLazyDefinedClass.builder()
-                .type(Type.getObjectType("HackedConstructorBytecode"))
-                .bytes(cw.toByteArray())
-                .build();
+        return new LazyDefinedClass("HackedConstructorBytecode", cw.toByteArray());
     }
 
     public static class Test {}

@@ -22,17 +22,18 @@ import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Closer;
-import org.immutables.value.Value;
 import org.objectweb.asm.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,13 +102,13 @@ class ClassLoaders {
     static void defineClasses(Collection<LazyDefinedClass> lazyDefinedClasses, ClassLoader loader)
             throws Exception {
         for (LazyDefinedClass lazyDefinedClass : lazyDefinedClasses) {
-            defineClass(lazyDefinedClass, loader, false);
+            defineClass(lazyDefinedClass, loader);
         }
     }
 
     static void defineClassIfNotExists(LazyDefinedClass lazyDefinedClass, ClassLoader loader)
             throws Exception {
-        defineClass(lazyDefinedClass, loader, true);
+        defineClassIfNotExists(lazyDefinedClass, loader, new HashSet<Type>());
     }
 
     static void defineClass(String name, byte[] bytes, ClassLoader loader) throws Exception {
@@ -127,28 +128,36 @@ class ClassLoaders {
         }
     }
 
-    private static void defineClass(LazyDefinedClass lazyDefinedClass, ClassLoader loader,
-            boolean ifNotExists) throws Exception {
-        for (LazyDefinedClass dependency : lazyDefinedClass.dependencies()) {
-            defineClass(dependency, loader, ifNotExists);
+    private static void defineClass(LazyDefinedClass lazyDefinedClass, ClassLoader loader)
+            throws Exception {
+        for (LazyDefinedClass dependency : lazyDefinedClass.getDependencies()) {
+            defineClass(dependency, loader);
         }
-        String className = lazyDefinedClass.type().getClassName();
-        if (ifNotExists) {
-            // synchronized block is needed to guard against race condition (for class loaders that
-            // support concurrent class loading), otherwise can have two threads evaluate
-            // !classExists, and both try to defineClass, leading to one of them getting
-            // java.lang.LinkageError: "attempted duplicate class definition for name"
-            //
-            // deadlock should not be possible here since ifNotExists is only called from Weaver,
-            // and ClassFileTransformers are not re-entrant, so defineClass() should be self
-            // contained
-            synchronized (lock) {
-                if (!classExists(className, loader)) {
-                    defineClass(className, lazyDefinedClass.bytes(), loader);
-                }
+        defineClass(lazyDefinedClass.getType().getClassName(), lazyDefinedClass.getBytes(), loader);
+    }
+
+    private static void defineClassIfNotExists(LazyDefinedClass lazyDefinedClass,
+            ClassLoader loader, Set<Type> alreadyDefinedOrToBeDefined) throws Exception {
+        if (!alreadyDefinedOrToBeDefined.add(lazyDefinedClass.getType())) {
+            // this is to deal with circular references between lazy defined classes since they are
+            // now cached/shared across advice
+            return;
+        }
+        for (LazyDefinedClass dependency : lazyDefinedClass.getDependencies()) {
+            defineClassIfNotExists(dependency, loader, alreadyDefinedOrToBeDefined);
+        }
+        String className = lazyDefinedClass.getType().getClassName();
+        // synchronized block is needed to guard against race condition (for class loaders that
+        // support concurrent class loading), otherwise can have two threads evaluate !classExists,
+        // and both try to defineClass, leading to one of them getting java.lang.LinkageError:
+        // "attempted duplicate class definition for name"
+        //
+        // deadlock should not be possible here since ifNotExists is only called from Weaver, and
+        // ClassFileTransformers are not re-entrant, so defineClass() should be self contained
+        synchronized (lock) {
+            if (!classExists(className, loader)) {
+                defineClass(className, lazyDefinedClass.getBytes(), loader);
             }
-        } else {
-            defineClass(className, lazyDefinedClass.bytes(), loader);
         }
     }
 
@@ -162,9 +171,10 @@ class ClassLoaders {
     private static void generate(Collection<LazyDefinedClass> flattenedAndOrderedList,
             JarOutputStream jarOut) throws IOException {
         for (LazyDefinedClass lazyDefinedClass : flattenedAndOrderedList) {
-            JarEntry jarEntry = new JarEntry(lazyDefinedClass.type().getInternalName() + ".class");
+            JarEntry jarEntry =
+                    new JarEntry(lazyDefinedClass.getType().getInternalName() + ".class");
             jarOut.putNextEntry(jarEntry);
-            jarOut.write(lazyDefinedClass.bytes());
+            jarOut.write(lazyDefinedClass.getBytes());
             jarOut.closeEntry();
         }
     }
@@ -218,26 +228,40 @@ class ClassLoaders {
     private static void put(Map<String, LazyDefinedClass> flattenedMap,
             Collection<LazyDefinedClass> lazyDefinedClasses) {
         for (LazyDefinedClass lazyDefinedClass : lazyDefinedClasses) {
-            flattenedMap.put(lazyDefinedClass.type().getInternalName(), lazyDefinedClass);
-            put(flattenedMap, lazyDefinedClass.dependencies());
+            flattenedMap.put(lazyDefinedClass.getType().getInternalName(), lazyDefinedClass);
+            put(flattenedMap, lazyDefinedClass.getDependencies());
         }
     }
 
     private static String getUniqueHash(Collection<LazyDefinedClass> flattened) {
         Hasher hasher = Hashing.sha1().newHasher();
         for (LazyDefinedClass lazyDefinedClass : flattened) {
-            hasher.putBytes(lazyDefinedClass.bytes());
+            hasher.putBytes(lazyDefinedClass.getBytes());
         }
         return hasher.hash().toString();
     }
 
-    @Value.Immutable
-    public interface LazyDefinedClass {
+    static class LazyDefinedClass {
 
-        Type type();
+        private final Type type;
+        private final byte[] bytes;
+        private final Set<LazyDefinedClass> dependencies = Sets.newConcurrentHashSet();
 
-        byte[] bytes();
+        LazyDefinedClass(String internalName, byte[] bytes) {
+            this.type = Type.getObjectType(internalName);
+            this.bytes = bytes;
+        }
 
-        ImmutableList<LazyDefinedClass> dependencies();
+        public Type getType() {
+            return type;
+        }
+
+        public byte[] getBytes() {
+            return bytes;
+        }
+
+        public Set<LazyDefinedClass> getDependencies() {
+            return dependencies;
+        }
     }
 }
