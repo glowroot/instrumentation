@@ -54,6 +54,7 @@ public class AdviceCache {
     private final ImmutableList<ShimType> shimTypes;
     private final ImmutableList<MixinType> mixinTypes;
     private final @Nullable Instrumentation instrumentation;
+    private final List<String> doNotWeavePrefixes;
     private final File tmpDir;
 
     private volatile ImmutableSet<AdviceConfig> reweavableAdviceConfigs;
@@ -62,8 +63,8 @@ public class AdviceCache {
     private volatile ImmutableList<Advice> allAdvisors;
 
     public AdviceCache(List<InstrumentationDescriptor> instrumentationDescriptors,
-            List<AdviceConfig> reweavableAdviceConfigs,
-            @Nullable Instrumentation instrumentation, File tmpDir) throws Exception {
+            List<AdviceConfig> reweavableAdviceConfigs, @Nullable Instrumentation instrumentation,
+            List<String> doNotWeavePrefixes, File tmpDir) throws Exception {
 
         List<Advice> nonReweavableAdvisors = Lists.newArrayList();
         List<ShimType> shimTypes = Lists.newArrayList();
@@ -102,6 +103,7 @@ public class AdviceCache {
         this.shimTypes = ImmutableList.copyOf(shimTypes);
         this.mixinTypes = ImmutableList.copyOf(mixinTypes);
         this.instrumentation = instrumentation;
+        this.doNotWeavePrefixes = doNotWeavePrefixes;
         this.tmpDir = tmpDir;
         this.reweavableAdviceConfigs = ImmutableSet.copyOf(reweavableAdviceConfigs);
         reweavableAdvisors =
@@ -146,7 +148,7 @@ public class AdviceCache {
             }
         }
         Reweaving.initialReweave(pointcutClassNames, initialLoadedClasses,
-                checkNotNull(instrumentation));
+                checkNotNull(instrumentation), doNotWeavePrefixes);
     }
 
     public void updateAdvisors(List<AdviceConfig> reweavableConfigs)

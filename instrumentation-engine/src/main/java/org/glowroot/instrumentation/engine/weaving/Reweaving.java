@@ -39,12 +39,13 @@ public class Reweaving {
     private Reweaving() {}
 
     public static void initialReweave(Set<PointcutClassName> pointcutClassNames,
-            Class<?>[] initialLoadedClasses, Instrumentation instrumentation) {
+            Class<?>[] initialLoadedClasses, Instrumentation instrumentation,
+            List<String> doNotWeavePrefixes) {
         if (!instrumentation.isRetransformClassesSupported()) {
             return;
         }
         Set<Class<?>> classes = getExistingModifiableSubClasses(pointcutClassNames,
-                initialLoadedClasses, instrumentation);
+                initialLoadedClasses, instrumentation, doNotWeavePrefixes);
         for (Class<?> clazz : classes) {
             if (clazz.isInterface()) {
                 continue;
@@ -61,10 +62,14 @@ public class Reweaving {
 
     public static Set<Class<?>> getExistingModifiableSubClasses(
             Set<PointcutClassName> pointcutClassNames, Class<?>[] classes,
-            Instrumentation instrumentation) {
+            Instrumentation instrumentation, List<String> doNotWeavePrefixes) {
         List<Class<?>> matchingClasses = Lists.newArrayList();
         Multimap<Class<?>, Class<?>> subClasses = ArrayListMultimap.create();
         for (Class<?> clazz : classes) {
+            String className = clazz.getName();
+            if (ignoreClass(className, doNotWeavePrefixes)) {
+                continue;
+            }
             if (!instrumentation.isModifiableClass(clazz)) {
                 continue;
             }
@@ -95,6 +100,23 @@ public class Reweaving {
         for (Class<?> subClass : subClasses.get(clazz)) {
             addToMatchingSubClasses(subClass, matchingSubClasses, subClasses);
         }
+    }
+
+    private static boolean ignoreClass(String className, List<String> doNotWeavePrefixes) {
+        if (isEngineClass(className)) {
+            return true;
+        }
+        for (String doNotWeavePrefix : doNotWeavePrefixes) {
+            if (className.startsWith(doNotWeavePrefix)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isEngineClass(String className) {
+        return className.startsWith("org.glowroot.instrumentation.engine.")
+                || className.startsWith("org.glowroot.instrumentation.api.");
     }
 
     @Value.Immutable

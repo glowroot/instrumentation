@@ -40,7 +40,7 @@ public class PreInitializeWeavingClassesTest {
                 ReferencedMethod.create(
                         "org/glowroot/instrumentation/engine/weaving/WeavingClassFileTransformer",
                         "<init>", "(Lorg/glowroot/instrumentation/engine/weaving/Weaver;"
-                                + "Ljava/lang/instrument/Instrumentation;)V"));
+                                + "Ljava/lang/instrument/Instrumentation;Ljava/util/List;)V"));
         // "call" WeavingClassFileTransformer.transform()
         globalCollector.processMethodFailIfNotFound(
                 ReferencedMethod.create(

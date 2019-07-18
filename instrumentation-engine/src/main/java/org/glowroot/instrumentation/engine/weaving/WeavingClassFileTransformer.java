@@ -20,6 +20,7 @@ import java.lang.instrument.Instrumentation;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.WeakHashMap;
 
@@ -33,6 +34,7 @@ public class WeavingClassFileTransformer implements ClassFileTransformer {
 
     private final Weaver weaver;
     private final Instrumentation instrumentation;
+    private final List<String> doNotWeavePrefixes;
 
     private final boolean weaveBootstrapClassLoader;
 
@@ -50,9 +52,11 @@ public class WeavingClassFileTransformer implements ClassFileTransformer {
     // org.glowroot.instrumentation.engine.init.PreInitializeWeavingClassesTest)
     // note: an exception is made for WeavingTimerService, see PreInitializeWeavingClassesTest for
     // explanation
-    public WeavingClassFileTransformer(Weaver weaver, Instrumentation instrumentation) {
+    public WeavingClassFileTransformer(Weaver weaver, Instrumentation instrumentation,
+            List<String> doNotWeavePrefixes) {
         this.weaver = weaver;
         this.instrumentation = instrumentation;
+        this.doNotWeavePrefixes = doNotWeavePrefixes;
         // can only weave classes in bootstrap class loader if the engine is in bootstrap class
         // loader, otherwise woven bootstrap classes will generate NoClassDefFoundError since the
         // woven code will not be able to see engine classes (e.g. woven code will not be able to
@@ -115,10 +119,15 @@ public class WeavingClassFileTransformer implements ClassFileTransformer {
         return weaver.weave(bytes, className, classBeingRedefined, codeSource, loader);
     }
 
-    private static boolean ignoreClass(String className, @Nullable ClassLoader loader) {
+    private boolean ignoreClass(String className, @Nullable ClassLoader loader) {
         if (isEngineClass(className)) {
             // don't weave engine classes, including shaded classes
             return true;
+        }
+        for (String doNotWeavePrefix : doNotWeavePrefixes) {
+            if (className.startsWith(doNotWeavePrefix)) {
+                return true;
+            }
         }
         if (className.startsWith("sun/reflect/Generated")) {
             // optimization, no need to try to weave the many classes generated for reflection:
