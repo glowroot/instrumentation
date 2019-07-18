@@ -151,7 +151,6 @@ public class DetailCapture {
             if (!Patterns.matchesOneOf(name, capturePatterns)) {
                 continue;
             }
-            System.out.println(name);
             requestCookies.put(name, cookie.getValue());
         }
         return ImmutableMap.copyOf(requestCookies);
