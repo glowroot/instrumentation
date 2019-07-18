@@ -22,7 +22,7 @@ public class Elasticsearch {
     private static final String MODULE_PATH = "instrumentation/elasticsearch";
 
     public static void main(String[] args) throws Exception {
-        if (args.length == 1 && args[0].contentEquals("short")) {
+        if (args.length == 1 && args[0].equals("short")) {
             runShort();
         } else {
             runAll();

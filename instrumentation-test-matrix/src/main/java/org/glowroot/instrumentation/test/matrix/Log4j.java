@@ -26,7 +26,7 @@ public class Log4j {
     private static final String MODULE_PATH = "instrumentation/log4j";
 
     public static void main(String[] args) throws Exception {
-        if (args.length == 1 && args[0].contentEquals("short")) {
+        if (args.length == 1 && args[0].equals("short")) {
             runShort();
         } else {
             runAll();

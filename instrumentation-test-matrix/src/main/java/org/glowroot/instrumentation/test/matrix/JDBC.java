@@ -28,7 +28,7 @@ public class JDBC {
     private static final String hsqldbJava8Version = "2.4.1";
 
     public static void main(String[] args) throws Exception {
-        if (args.length == 1 && args[0].contentEquals("short")) {
+        if (args.length == 1 && args[0].equals("short")) {
             runShort();
         } else {
             runAll();
