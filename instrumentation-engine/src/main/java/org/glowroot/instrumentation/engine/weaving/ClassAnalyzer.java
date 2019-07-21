@@ -49,6 +49,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.glowroot.instrumentation.engine.config.AdviceConfig;
+import org.glowroot.instrumentation.engine.config.AdviceConfig.AlreadyInTransactionBehavior;
 import org.glowroot.instrumentation.engine.config.AdviceConfig.CaptureKind;
 import org.glowroot.instrumentation.engine.config.ImmutableAdviceConfig;
 import org.glowroot.instrumentation.engine.weaving.AnalyzedWorld.ParseContext;
@@ -666,6 +667,7 @@ class ClassAnalyzer {
                     .transactionNameTemplate("EJB remote: " + shortClassName + "#{{methodName}}")
                     .spanMessageTemplate("EJB remote: " + entry.getValue() + ".{{methodName}}()")
                     .timerName("ejb remote")
+                    .alreadyInTransactionBehavior(AlreadyInTransactionBehavior.CAPTURE_LOCAL_SPAN)
                     .build());
         }
         ImmutableMap<Advice, LazyDefinedClass> newAdvisors =
