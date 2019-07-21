@@ -27,6 +27,9 @@ public class ObjectPoolInstrumentation {
 
     private static final ConfigService configService = Agent.getConfigService("jdbc");
 
+    private static final BooleanProperty captureConnectionPoolLeaks =
+            configService.getBooleanProperty("captureConnectionPoolLeaks");
+
     private static final BooleanProperty captureConnectionPoolLeakDetails =
             configService.getBooleanProperty("captureConnectionPoolLeakDetails");
 
@@ -36,6 +39,11 @@ public class ObjectPoolInstrumentation {
                      methodName = "borrowObject",
                      methodParameterTypes = {".."})
     public static class DbcpBorrowAdvice {
+
+        @Advice.IsEnabled
+        public static boolean isEnabled() {
+            return captureConnectionPoolLeaks.value();
+        }
 
         @Advice.OnMethodReturn
         public static void onReturn(
@@ -55,6 +63,11 @@ public class ObjectPoolInstrumentation {
                      methodParameterTypes = {"java.lang.Object"})
     public static class DbcpReturnAdvice {
 
+        @Advice.IsEnabled
+        public static boolean isEnabled() {
+            return captureConnectionPoolLeaks.value();
+        }
+
         @Advice.OnMethodReturn
         public static void onReturn(
                 @Bind.Argument(0) @Nullable Object resource,
@@ -71,6 +84,11 @@ public class ObjectPoolInstrumentation {
                      methodParameterTypes = {".."})
     public static class TomcatBorrowAdvice {
 
+        @Advice.IsEnabled
+        public static boolean isEnabled() {
+            return captureConnectionPoolLeaks.value();
+        }
+
         @Advice.OnMethodReturn
         public static void onReturn(
                 @Bind.Return @Nullable Object resource,
@@ -86,6 +104,11 @@ public class ObjectPoolInstrumentation {
                      methodName = "returnConnection",
                      methodParameterTypes = {"org.apache.tomcat.jdbc.pool.PooledConnection"})
     public static class TomcatReturnAdvice {
+
+        @Advice.IsEnabled
+        public static boolean isEnabled() {
+            return captureConnectionPoolLeaks.value();
+        }
 
         @Advice.OnMethodReturn
         public static void onReturn(
@@ -104,6 +127,11 @@ public class ObjectPoolInstrumentation {
                              "javax.resource.spi.ConnectionRequestInfo"})
     public static class GlassfishBorrowAdvice {
 
+        @Advice.IsEnabled
+        public static boolean isEnabled() {
+            return captureConnectionPoolLeaks.value();
+        }
+
         @Advice.OnMethodReturn
         public static void onReturn(
                 @Bind.Return @Nullable Object resource,
@@ -120,6 +148,11 @@ public class ObjectPoolInstrumentation {
                      methodParameterTypes = {"java.lang.Exception",
                              "com.sun.gjc.spi.base.ConnectionHolder"})
     public static class GlassfishReturnAdvice {
+
+        @Advice.IsEnabled
+        public static boolean isEnabled() {
+            return captureConnectionPoolLeaks.value();
+        }
 
         @Advice.OnMethodReturn
         public static void onReturn(
@@ -138,6 +171,11 @@ public class ObjectPoolInstrumentation {
                      nestingGroup = "jdbc-hikari-leak-detection")
     public static class HikariBorrowAdvice {
 
+        @Advice.IsEnabled
+        public static boolean isEnabled() {
+            return captureConnectionPoolLeaks.value();
+        }
+
         @Advice.OnMethodReturn
         public static void onReturn(
                 @Bind.Return @Nullable Object resource,
@@ -153,6 +191,11 @@ public class ObjectPoolInstrumentation {
                      methodName = "getConnection",
                      methodParameterTypes = {})
     public static class OldHikariBorrowAdvice {
+
+        @Advice.IsEnabled
+        public static boolean isEnabled() {
+            return captureConnectionPoolLeaks.value();
+        }
 
         @Advice.OnMethodReturn
         public static void onReturn(
@@ -172,6 +215,11 @@ public class ObjectPoolInstrumentation {
                      methodParameterTypes = {})
     public static class HikariReturnAdvice {
 
+        @Advice.IsEnabled
+        public static boolean isEnabled() {
+            return captureConnectionPoolLeaks.value();
+        }
+
         @Advice.OnMethodReturn
         public static void onReturn(
                 @Bind.This Object connectionProxy,
@@ -185,6 +233,11 @@ public class ObjectPoolInstrumentation {
                      methodName = "getConnection",
                      methodParameterTypes = {})
     public static class BitronixBorrowAdvice {
+
+        @Advice.IsEnabled
+        public static boolean isEnabled() {
+            return captureConnectionPoolLeaks.value();
+        }
 
         @Advice.OnMethodReturn
         public static void onReturn(
@@ -201,6 +254,11 @@ public class ObjectPoolInstrumentation {
                      methodName = "close",
                      methodParameterTypes = {})
     public static class BitronixReturnAdvice {
+
+        @Advice.IsEnabled
+        public static boolean isEnabled() {
+            return captureConnectionPoolLeaks.value();
+        }
 
         @Advice.OnMethodReturn
         public static void onReturn(

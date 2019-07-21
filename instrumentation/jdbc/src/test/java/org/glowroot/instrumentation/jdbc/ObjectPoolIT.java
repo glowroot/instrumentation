@@ -61,6 +61,10 @@ public class ObjectPoolIT {
 
         assumeTrue(Connections.shouldRun(ConnectionType.COMMONS_DBCP_WRAPPED));
 
+        // given
+        container.setInstrumentationProperty(INSTRUMENTATION_ID, "captureConnectionPoolLeaks",
+                true);
+
         // when
         IncomingSpan incomingSpan = container.execute(ReturnCommonsDbcpConnection.class);
 
@@ -74,6 +78,10 @@ public class ObjectPoolIT {
     public void testLeakingCommonsDbcpConnection() throws Exception {
 
         assumeTrue(Connections.shouldRun(ConnectionType.COMMONS_DBCP_WRAPPED));
+
+        // given
+        container.setInstrumentationProperty(INSTRUMENTATION_ID, "captureConnectionPoolLeaks",
+                true);
 
         // when
         IncomingSpan incomingSpan = container.execute(LeakCommonsDbcpConnection.class);
@@ -90,6 +98,10 @@ public class ObjectPoolIT {
 
         assumeTrue(Connections.shouldRun(ConnectionType.COMMONS_DBCP2_WRAPPED));
 
+        // given
+        container.setInstrumentationProperty(INSTRUMENTATION_ID, "captureConnectionPoolLeaks",
+                true);
+
         // when
         IncomingSpan incomingSpan = container.execute(ReturnCommonsDbcp2Connection.class);
 
@@ -103,6 +115,10 @@ public class ObjectPoolIT {
     public void testLeakingCommonsDbcp2Connection() throws Exception {
 
         assumeTrue(Connections.shouldRun(ConnectionType.COMMONS_DBCP2_WRAPPED));
+
+        // given
+        container.setInstrumentationProperty(INSTRUMENTATION_ID, "captureConnectionPoolLeaks",
+                true);
 
         // when
         IncomingSpan incomingSpan = container.execute(LeakCommonsDbcp2Connection.class);
@@ -119,6 +135,10 @@ public class ObjectPoolIT {
 
         assumeTrue(Connections.shouldRun(ConnectionType.TOMCAT_JDBC_POOL_WRAPPED));
 
+        // given
+        container.setInstrumentationProperty(INSTRUMENTATION_ID, "captureConnectionPoolLeaks",
+                true);
+
         // when
         IncomingSpan incomingSpan = container.execute(ReturnTomcatConnection.class);
 
@@ -132,6 +152,10 @@ public class ObjectPoolIT {
     public void testLeakingTomcatConnection() throws Exception {
 
         assumeTrue(Connections.shouldRun(ConnectionType.TOMCAT_JDBC_POOL_WRAPPED));
+
+        // given
+        container.setInstrumentationProperty(INSTRUMENTATION_ID, "captureConnectionPoolLeaks",
+                true);
 
         // when
         IncomingSpan incomingSpan = container.execute(LeakTomcatConnection.class);
@@ -148,6 +172,10 @@ public class ObjectPoolIT {
 
         assumeTrue(Connections.shouldRun(ConnectionType.TOMCAT_JDBC_POOL_WRAPPED));
 
+        // given
+        container.setInstrumentationProperty(INSTRUMENTATION_ID, "captureConnectionPoolLeaks",
+                true);
+
         // when
         IncomingSpan incomingSpan = container.execute(ReturnTomcatAsyncConnection.class);
 
@@ -161,6 +189,10 @@ public class ObjectPoolIT {
     public void testLeakingTomcatAsyncConnection() throws Exception {
 
         assumeTrue(Connections.shouldRun(ConnectionType.TOMCAT_JDBC_POOL_WRAPPED));
+
+        // given
+        container.setInstrumentationProperty(INSTRUMENTATION_ID, "captureConnectionPoolLeaks",
+                true);
 
         // when
         IncomingSpan incomingSpan = container.execute(LeakTomcatAsyncConnection.class);
@@ -177,6 +209,10 @@ public class ObjectPoolIT {
 
         assumeTrue(Connections.shouldRun(ConnectionType.GLASSFISH_JDBC_POOL_WRAPPED));
 
+        // given
+        container.setInstrumentationProperty(INSTRUMENTATION_ID, "captureConnectionPoolLeaks",
+                true);
+
         // when
         IncomingSpan incomingSpan = container.execute(ReturnGlassfishConnection.class);
 
@@ -190,6 +226,10 @@ public class ObjectPoolIT {
     public void testLeakingGlassfishConnection() throws Exception {
 
         assumeTrue(Connections.shouldRun(ConnectionType.GLASSFISH_JDBC_POOL_WRAPPED));
+
+        // given
+        container.setInstrumentationProperty(INSTRUMENTATION_ID, "captureConnectionPoolLeaks",
+                true);
 
         // when
         IncomingSpan incomingSpan = container.execute(LeakGlassfishConnection.class);
@@ -206,6 +246,10 @@ public class ObjectPoolIT {
 
         assumeTrue(Connections.shouldRun(ConnectionType.HIKARI_CP_WRAPPED));
 
+        // given
+        container.setInstrumentationProperty(INSTRUMENTATION_ID, "captureConnectionPoolLeaks",
+                true);
+
         // when
         IncomingSpan incomingSpan = container.execute(ReturnHikariConnection.class);
 
@@ -219,6 +263,10 @@ public class ObjectPoolIT {
     public void testLeakingHikariConnection() throws Exception {
 
         assumeTrue(Connections.shouldRun(ConnectionType.HIKARI_CP_WRAPPED));
+
+        // given
+        container.setInstrumentationProperty(INSTRUMENTATION_ID, "captureConnectionPoolLeaks",
+                true);
 
         // when
         IncomingSpan incomingSpan = container.execute(LeakHikariConnection.class);
@@ -235,6 +283,10 @@ public class ObjectPoolIT {
 
         assumeTrue(Connections.shouldRun(ConnectionType.BITRONIX_WRAPPED));
 
+        // given
+        container.setInstrumentationProperty(INSTRUMENTATION_ID, "captureConnectionPoolLeaks",
+                true);
+
         // when
         IncomingSpan incomingSpan = container.execute(ReturnBitronixConnection.class);
 
@@ -248,6 +300,10 @@ public class ObjectPoolIT {
     public void testLeakingBitronixConnection() throws Exception {
 
         assumeTrue(Connections.shouldRun(ConnectionType.BITRONIX_WRAPPED));
+
+        // given
+        container.setInstrumentationProperty(INSTRUMENTATION_ID, "captureConnectionPoolLeaks",
+                true);
 
         // when
         IncomingSpan incomingSpan = container.execute(LeakBitronixConnection.class);
@@ -264,6 +320,10 @@ public class ObjectPoolIT {
 
         assumeTrue(Connections.shouldRun(ConnectionType.COMMONS_DBCP_WRAPPED));
 
+        // given
+        container.setInstrumentationProperty(INSTRUMENTATION_ID, "captureConnectionPoolLeaks",
+                true);
+
         // when
         IncomingSpan incomingSpan = container.execute(LeakMultipleDbcpConnections.class);
 
@@ -278,6 +338,10 @@ public class ObjectPoolIT {
     public void testLeakingConnectionWithLocationStackTrace() throws Exception {
 
         assumeTrue(Connections.shouldRun(ConnectionType.COMMONS_DBCP_WRAPPED));
+
+        // given
+        container.setInstrumentationProperty(INSTRUMENTATION_ID, "captureConnectionPoolLeaks",
+                true);
 
         // given
         container.setInstrumentationProperty(INSTRUMENTATION_ID, "captureConnectionPoolLeakDetails",

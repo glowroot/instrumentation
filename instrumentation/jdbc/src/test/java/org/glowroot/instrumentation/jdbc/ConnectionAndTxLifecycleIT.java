@@ -203,9 +203,6 @@ public class ConnectionAndTxLifecycleIT {
                 container.execute(ExecuteCloseConnectionOnThrowingDataSource.class);
 
         // then
-        assertThat(incomingSpan.resourceLeakDetected()).isTrue();
-        assertThat(incomingSpan.resourceLeakDetectedWithLocation()).isFalse();
-
         Iterator<Span> i = incomingSpan.childSpans().iterator();
 
         LocalSpan localSpan = (LocalSpan) i.next();
@@ -236,9 +233,6 @@ public class ConnectionAndTxLifecycleIT {
                 container.execute(ExecuteCloseConnectionOnThrowingDataSource.class);
 
         // then
-        assertThat(incomingSpan.resourceLeakDetected()).isTrue();
-        assertThat(incomingSpan.resourceLeakDetectedWithLocation()).isFalse();
-
         IncomingSpan.Timer mainThreadTimer = incomingSpan.mainThreadTimer();
         assertThat(mainThreadTimer.childTimers()).isEmpty();
     }
@@ -256,9 +250,6 @@ public class ConnectionAndTxLifecycleIT {
                 container.execute(ExecuteCloseConnectionOnThrowingDataSource.class);
 
         // then
-        assertThat(incomingSpan.resourceLeakDetected()).isTrue();
-        assertThat(incomingSpan.resourceLeakDetectedWithLocation()).isFalse();
-
         IncomingSpan.Timer mainThreadTimer = incomingSpan.mainThreadTimer();
         assertThat(mainThreadTimer.childTimers()).hasSize(2);
         // ordering is by total desc, so order is not fixed
