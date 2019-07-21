@@ -16,10 +16,40 @@
 package org.glowroot.instrumentation.engine.bytecode.api;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Type;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class Util {
 
     private Util() {}
+
+    public static Set<Type> stripMixinInterfaces(Set<Type> decoratedTypes) {
+        boolean found = false;
+        for (Type decoratedType : decoratedTypes) {
+            if (isMixinInterface(decoratedType)) {
+                found = true;
+            }
+        }
+        if (!found) {
+            // optimization of common case
+            return decoratedTypes;
+        }
+        // linked hash set to preserve ordering
+        Set<Type> stripped = new LinkedHashSet<Type>();
+        for (Type decoratedType : decoratedTypes) {
+            if (!isMixinInterface(decoratedType)) {
+                stripped.add(decoratedType);
+            }
+        }
+        return stripped;
+    }
+
+    private static boolean isMixinInterface(Type decoratedType) {
+        // this check is good enough
+        return decoratedType instanceof Class
+                && ((Class<?>) decoratedType).getName().startsWith("org.glowroot.instrumentation.");
+    }
 
     public static Class<?> getArrayClass(Class<?> type, int nDimensions) {
         if (nDimensions == 0) {
