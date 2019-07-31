@@ -1025,7 +1025,7 @@ public class WeaverTest {
         Supplier<List<Advice>> advisorsSupplier =
                 Suppliers.<List<Advice>>ofInstance(ImmutableList.copyOf(advisors));
         AnalyzedWorld analyzedWorld = new AnalyzedWorld(advisorsSupplier,
-                ImmutableList.<ShimType>of(), ImmutableList.<MixinType>of(), null);
+                ImmutableList.<ShimType>of(), ImmutableList.<MixinType>of(), false, null);
         Weaver weaver = new Weaver(advisorsSupplier, ImmutableList.<ShimType>of(),
                 ImmutableList.<MixinType>of(), analyzedWorld, Ticker.systemTicker());
         isolatedWeavingClassLoader.setWeaver(weaver);
@@ -1846,7 +1846,7 @@ public class WeaverTest {
         Supplier<List<Advice>> advisorsSupplier =
                 Suppliers.<List<Advice>>ofInstance(ImmutableList.copyOf(advisors));
         AnalyzedWorld analyzedWorld =
-                new AnalyzedWorld(advisorsSupplier, shimTypes, mixinTypes, null);
+                new AnalyzedWorld(advisorsSupplier, shimTypes, mixinTypes, false, null);
         Weaver weaver = new Weaver(advisorsSupplier, shimTypes, mixinTypes, analyzedWorld,
                 Ticker.systemTicker());
         isolatedWeavingClassLoader.setWeaver(weaver);
@@ -1882,7 +1882,7 @@ public class WeaverTest {
         Supplier<List<Advice>> advisorsSupplier =
                 Suppliers.<List<Advice>>ofInstance(ImmutableList.copyOf(advisors));
         AnalyzedWorld analyzedWorld =
-                new AnalyzedWorld(advisorsSupplier, shimTypes, mixinTypes, null);
+                new AnalyzedWorld(advisorsSupplier, shimTypes, mixinTypes, false, null);
         Weaver weaver = new Weaver(advisorsSupplier, shimTypes, mixinTypes, analyzedWorld,
                 Ticker.systemTicker());
         isolatedWeavingClassLoader.setWeaver(weaver);

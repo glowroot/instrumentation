@@ -64,7 +64,7 @@ public class MainEntryPoint {
         EngineModule engineModule = new EngineModule(instrumentation, tmpDir, Ticker.systemTicker(),
                 instrumentationDescriptors, Collections.<AdviceConfig>emptyList(),
                 Global.getThreadContextThreadLocal(), new TimerNameCache(), configServiceFactory,
-                agent, ImmutableList.<String>of(), ImmutableList.<String>of(),
+                agent, true, ImmutableList.<String>of(), ImmutableList.<String>of(),
                 new PreCheckClassFileTransformer(), new Class<?>[0], null);
 
         if (instrumentation == null) {

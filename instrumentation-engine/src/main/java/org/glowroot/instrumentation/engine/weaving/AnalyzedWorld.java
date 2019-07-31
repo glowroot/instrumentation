@@ -91,13 +91,16 @@ public class AnalyzedWorld {
     // only null for tests
     private final @Nullable PreloadSomeSuperTypesCache preloadSomeSuperTypesCache;
 
+    private final boolean useInstrumentationAnnotations;
+
     public AnalyzedWorld(Supplier<List<Advice>> advisors, List<ShimType> shimTypes,
-            List<MixinType> mixinTypes,
+            List<MixinType> mixinTypes, boolean useInstrumentationAnnotations,
             @Nullable PreloadSomeSuperTypesCache preloadSomeSuperTypesCache) {
         this.advisors = advisors;
         this.shimTypes = ImmutableList.copyOf(shimTypes);
         this.mixinTypes = ImmutableList.copyOf(mixinTypes);
         this.preloadSomeSuperTypesCache = preloadSomeSuperTypesCache;
+        this.useInstrumentationAnnotations = useInstrumentationAnnotations;
     }
 
     public List<Class<?>> getClassesWithReweavableAdvice(boolean remove) {
@@ -142,8 +145,11 @@ public class AnalyzedWorld {
         return getSuperClasses(className, loader, subClassName, parseContext);
     }
 
-    static List<Advice> mergeInstrumentationAnnotations(List<Advice> advisors, byte[] classBytes,
+    List<Advice> mergeInstrumentationAnnotations(List<Advice> advisors, byte[] classBytes,
             @Nullable ClassLoader loader, String className) {
+        if (!useInstrumentationAnnotations) {
+            return advisors;
+        }
         byte[] marker =
                 "Lorg/glowroot/instrumentation/annotation/api/Instrumentation$".getBytes(UTF_8);
         if (Bytes.indexOf(classBytes, marker) == -1) {

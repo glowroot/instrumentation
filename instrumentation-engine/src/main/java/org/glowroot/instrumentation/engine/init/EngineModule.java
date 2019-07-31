@@ -83,7 +83,7 @@ public class EngineModule {
                 InstrumentationDescriptors.read();
         return createWithSomeDefaults(instrumentation, tmpDir, threadContextThreadLocal,
                 instrumentationDescriptors,
-                new SimpleConfigServiceFactory(instrumentationDescriptors), agentSPI,
+                new SimpleConfigServiceFactory(instrumentationDescriptors), agentSPI, true,
                 ImmutableList.<String>of(), ImmutableList.<String>of(), agentJarFile);
     }
 
@@ -91,14 +91,14 @@ public class EngineModule {
             File tmpDir, ThreadContextThreadLocal threadContextThreadLocal,
             List<InstrumentationDescriptor> instrumentationDescriptors,
             ConfigServiceFactory configServiceFactory, AgentSPI agentSPI,
-            List<String> doNotWeavePrefixes, List<String> tryToLoadInBootstrapClassLoader,
-            @Nullable File agentJarFile)
+            boolean useInstrumentationAnnotations, List<String> doNotWeavePrefixes,
+            List<String> tryToLoadInBootstrapClassLoader, @Nullable File agentJarFile)
             throws Exception {
         return new EngineModule(instrumentation, tmpDir, Ticker.systemTicker(),
                 instrumentationDescriptors, Collections.<AdviceConfig>emptyList(),
                 threadContextThreadLocal, new TimerNameCache(), configServiceFactory, agentSPI,
-                doNotWeavePrefixes, tryToLoadInBootstrapClassLoader, null, new Class<?>[0],
-                agentJarFile);
+                useInstrumentationAnnotations, doNotWeavePrefixes, tryToLoadInBootstrapClassLoader,
+                null, new Class<?>[0], agentJarFile);
     }
 
     public EngineModule(@Nullable Instrumentation instrumentation, File tmpDir, Ticker ticker,
@@ -106,7 +106,8 @@ public class EngineModule {
             List<AdviceConfig> reweavableAdviceConfigs,
             ThreadContextThreadLocal threadContextThreadLocal, TimerNameCache timerNameCache,
             ConfigServiceFactory configServiceFactory, AgentSPI agentSPI,
-            List<String> doNotWeavePrefixes, List<String> tryToLoadInBootstrapClassLoader,
+            boolean useInstrumentationAnnotations, List<String> doNotWeavePrefixes,
+            List<String> tryToLoadInBootstrapClassLoader,
             @Nullable PreCheckClassFileTransformer preCheckClassFileTransformer,
             Class<?>[] allPreCheckLoadedClasses, @Nullable File agentJarFile) throws Exception {
 
@@ -154,9 +155,9 @@ public class EngineModule {
             }
             preloadSomeSuperTypesCache = new PreloadSomeSuperTypesCache(
                     new File(tmpDir, "preload-some-super-types-cache"), 50000);
-            analyzedWorld =
-                    new AnalyzedWorld(adviceCache.getAdvisorsSupplier(), adviceCache.getShimTypes(),
-                            adviceCache.getMixinTypes(), preloadSomeSuperTypesCache);
+            analyzedWorld = new AnalyzedWorld(adviceCache.getAdvisorsSupplier(),
+                    adviceCache.getShimTypes(), adviceCache.getMixinTypes(),
+                    useInstrumentationAnnotations, preloadSomeSuperTypesCache);
 
             weaver = new Weaver(adviceCache.getAdvisorsSupplier(), adviceCache.getShimTypes(),
                     adviceCache.getMixinTypes(), analyzedWorld, ticker);
