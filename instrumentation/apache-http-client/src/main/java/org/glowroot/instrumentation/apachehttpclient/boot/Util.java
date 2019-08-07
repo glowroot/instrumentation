@@ -33,6 +33,9 @@ public class Util {
         if (httpMethod != null) {
             maxLength += httpMethod.length();
         }
+        if (host != null) {
+            maxLength += host.length() + 1;
+        }
         if (uri != null) {
             maxLength += uri.length() + 1;
         }
