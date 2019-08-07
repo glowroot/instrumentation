@@ -15,6 +15,7 @@
  */
 package org.glowroot.instrumentation.httpurlconnection;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -23,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.glowroot.instrumentation.api.Agent;
 import org.glowroot.instrumentation.api.Logger;
-import org.glowroot.instrumentation.api.MessageSupplier;
 import org.glowroot.instrumentation.api.Setter;
 import org.glowroot.instrumentation.api.Span;
 import org.glowroot.instrumentation.api.ThreadContext;
@@ -33,6 +33,7 @@ import org.glowroot.instrumentation.api.checker.Nullable;
 import org.glowroot.instrumentation.api.weaving.Advice;
 import org.glowroot.instrumentation.api.weaving.Bind;
 import org.glowroot.instrumentation.api.weaving.Mixin;
+import org.glowroot.instrumentation.httpurlconnection.boot.HttpRequestMessageSupplier;
 
 public class HttpURLConnectionInstrumentation {
 
@@ -176,6 +177,8 @@ public class HttpURLConnectionInstrumentation {
                             returnValue.getClass().getName());
                 }
             }
+
+            onReturnCaptureResponseCode(httpURLConnection);
             onReturnCommon(spanOrTimer);
         }
 
@@ -246,8 +249,11 @@ public class HttpURLConnectionInstrumentation {
         }
 
         @Advice.OnMethodReturn
-        public static void onReturn(@Bind.Enter @Nullable SpanOrTimer spanOrTimer) {
+        public static void onReturn(
+                @Bind.This HttpURLConnection httpURLConnection,
+                @Bind.Enter @Nullable SpanOrTimer spanOrTimer) {
 
+            onReturnCaptureResponseCode(httpURLConnection);
             onReturnCommon(spanOrTimer);
         }
 
@@ -276,8 +282,11 @@ public class HttpURLConnectionInstrumentation {
         }
 
         @Advice.OnMethodReturn
-        public static void onReturn(@Bind.Enter @Nullable SpanOrTimer spanOrTimer) {
+        public static void onReturn(
+                @Bind.This HttpURLConnection httpURLConnection,
+                @Bind.Enter @Nullable SpanOrTimer spanOrTimer) {
 
+            onReturnCaptureResponseCode(httpURLConnection);
             onReturnCommon(spanOrTimer);
         }
 
@@ -365,9 +374,7 @@ public class HttpURLConnectionInstrumentation {
         } else if (overrideGetWithPost && method.equals("GET")) {
             // this is to match behavior in
             // sun.net.www.protocol.http.HttpURLConnection.getOutputStream0()
-            method = "POST ";
-        } else {
-            method += " ";
+            method = "POST";
         }
         URL urlObj = httpURLConnection.getURL();
         String url;
@@ -376,9 +383,7 @@ public class HttpURLConnectionInstrumentation {
         } else {
             url = urlObj.toString();
         }
-        span = context.startOutgoingSpan("HTTP", method + stripQueryString(url), SETTER,
-                httpURLConnection,
-                MessageSupplier.create("http client request: {}{}", method, url), TIMER_NAME);
+        span = startOutgoingSpan(context, method, url, SETTER, httpURLConnection, TIMER_NAME);
         ((HasSpanMixin) httpURLConnection).glowroot$setSpan(span);
         return new SpanOrTimer(span);
     }
@@ -389,10 +394,56 @@ public class HttpURLConnectionInstrumentation {
         }
     }
 
+    private static void onReturnCaptureResponseCode(HttpURLConnection httpURLConnection) {
+        Span span = ((HasSpanMixin) httpURLConnection).glowroot$getSpan();
+        if (span == null) {
+            return;
+        }
+        HttpRequestMessageSupplier messageSupplier =
+                (HttpRequestMessageSupplier) span.getMessageSupplier();
+        if (messageSupplier == null) {
+            return;
+        }
+        try {
+            messageSupplier.setStatusCode(httpURLConnection.getResponseCode());
+        } catch (IOException e) {
+            logger.debug(e.getMessage(), e);
+        }
+    }
+
     private static void onThrowCommon(@Nullable SpanOrTimer spanOrTimer, Throwable t) {
         if (spanOrTimer != null) {
             spanOrTimer.onThrow(t);
         }
+    }
+
+    public static <C> Span startOutgoingSpan(ThreadContext context, @Nullable String httpMethod,
+            @Nullable String uri, Setter<C> setter, C carrier,
+            TimerName timerName) {
+
+        int maxLength = 0;
+        if (httpMethod != null) {
+            maxLength += httpMethod.length();
+        }
+        if (uri != null) {
+            maxLength += uri.length() + 1;
+        }
+
+        StringBuilder sb = new StringBuilder(maxLength);
+        if (httpMethod != null) {
+            sb.append(httpMethod);
+        }
+        if (uri != null) {
+            if (sb.length() != 0) {
+                sb.append(' ');
+            }
+            sb.append(stripQueryString(uri));
+        }
+
+        HttpRequestMessageSupplier messageSupplier =
+                new HttpRequestMessageSupplier(httpMethod, uri);
+        return context.startOutgoingSpan("HTTP", sb.toString(), setter, carrier, messageSupplier,
+                timerName);
     }
 
     private static String stripQueryString(String uri) {

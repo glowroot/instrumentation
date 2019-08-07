@@ -18,6 +18,8 @@ package org.glowroot.instrumentation.httpurlconnection;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.Map;
 
 import com.google.common.io.ByteStreams;
 import org.junit.After;
@@ -27,9 +29,11 @@ import org.junit.Test;
 
 import org.glowroot.instrumentation.test.harness.Container;
 import org.glowroot.instrumentation.test.harness.IncomingSpan;
+import org.glowroot.instrumentation.test.harness.OutgoingSpan;
+import org.glowroot.instrumentation.test.harness.Span;
 import org.glowroot.instrumentation.test.harness.impl.JavaagentContainer;
 
-import static org.glowroot.instrumentation.test.harness.util.HarnessAssertions.assertSingleOutgoingSpanMessage;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class HttpURLConnectionIT {
 
@@ -57,8 +61,18 @@ public class HttpURLConnectionIT {
         IncomingSpan incomingSpan = container.execute(ExecuteHttpGet.class, false);
 
         // then
-        assertSingleOutgoingSpanMessage(incomingSpan)
+        Iterator<Span> i = incomingSpan.childSpans().iterator();
+
+        OutgoingSpan outgoingSpan = (OutgoingSpan) i.next();
+        assertThat(outgoingSpan.message())
                 .matches("http client request: GET http://localhost:[0-9]+/hello1/");
+        Map<String, Object> detail = outgoingSpan.detail();
+        assertThat(detail).hasSize(3);
+        assertThat(detail).containsEntry("Method", "GET");
+        assertThat((String) detail.get("URI")).matches("http://localhost:[0-9]+/hello1/");
+        assertThat(detail).containsEntry("Result", 200);
+
+        assertThat(i.hasNext()).isFalse();
     }
 
     @Test
@@ -67,8 +81,18 @@ public class HttpURLConnectionIT {
         IncomingSpan incomingSpan = container.execute(ExecuteHttpGetWithQueryString.class, false);
 
         // then
-        assertSingleOutgoingSpanMessage(incomingSpan).matches(
-                "http client request: GET http://localhost:[0-9]+/hello1\\?abc=xyz");
+        Iterator<Span> i = incomingSpan.childSpans().iterator();
+
+        OutgoingSpan outgoingSpan = (OutgoingSpan) i.next();
+        assertThat(outgoingSpan.message())
+                .matches("http client request: GET http://localhost:[0-9]+/hello1\\?abc=xyz");
+        Map<String, Object> detail = outgoingSpan.detail();
+        assertThat(detail).hasSize(3);
+        assertThat(detail).containsEntry("Method", "GET");
+        assertThat((String) detail.get("URI")).matches("http://localhost:[0-9]+/hello1\\?abc=xyz");
+        assertThat(detail).containsEntry("Result", 200);
+
+        assertThat(i.hasNext()).isFalse();
     }
 
     @Test
@@ -77,8 +101,18 @@ public class HttpURLConnectionIT {
         IncomingSpan incomingSpan = container.execute(ExecuteHttpPost.class, false);
 
         // then
-        assertSingleOutgoingSpanMessage(incomingSpan)
+        Iterator<Span> i = incomingSpan.childSpans().iterator();
+
+        OutgoingSpan outgoingSpan = (OutgoingSpan) i.next();
+        assertThat(outgoingSpan.message())
                 .matches("http client request: POST http://localhost:[0-9]+/hello1/");
+        Map<String, Object> detail = outgoingSpan.detail();
+        assertThat(detail).hasSize(3);
+        assertThat(detail).containsEntry("Method", "POST");
+        assertThat((String) detail.get("URI")).matches("http://localhost:[0-9]+/hello1/");
+        assertThat(detail).containsEntry("Result", 200);
+
+        assertThat(i.hasNext()).isFalse();
     }
 
     @Test
@@ -87,8 +121,18 @@ public class HttpURLConnectionIT {
         IncomingSpan incomingSpan = container.execute(ExecuteHttpGet.class, true);
 
         // then
-        assertSingleOutgoingSpanMessage(incomingSpan)
+        Iterator<Span> i = incomingSpan.childSpans().iterator();
+
+        OutgoingSpan outgoingSpan = (OutgoingSpan) i.next();
+        assertThat(outgoingSpan.message())
                 .matches("http client request: GET https://localhost:[0-9]+/hello1/");
+        Map<String, Object> detail = outgoingSpan.detail();
+        assertThat(detail).hasSize(3);
+        assertThat(detail).containsEntry("Method", "GET");
+        assertThat((String) detail.get("URI")).matches("https://localhost:[0-9]+/hello1/");
+        assertThat(detail).containsEntry("Result", 200);
+
+        assertThat(i.hasNext()).isFalse();
     }
 
     @Test
@@ -97,8 +141,18 @@ public class HttpURLConnectionIT {
         IncomingSpan incomingSpan = container.execute(ExecuteHttpGetWithQueryString.class, true);
 
         // then
-        assertSingleOutgoingSpanMessage(incomingSpan).matches(
-                "http client request: GET https://localhost:[0-9]+/hello1\\?abc=xyz");
+        Iterator<Span> i = incomingSpan.childSpans().iterator();
+
+        OutgoingSpan outgoingSpan = (OutgoingSpan) i.next();
+        assertThat(outgoingSpan.message())
+                .matches("http client request: GET https://localhost:[0-9]+/hello1\\?abc=xyz");
+        Map<String, Object> detail = outgoingSpan.detail();
+        assertThat(detail).hasSize(3);
+        assertThat(detail).containsEntry("Method", "GET");
+        assertThat((String) detail.get("URI")).matches("https://localhost:[0-9]+/hello1\\?abc=xyz");
+        assertThat(detail).containsEntry("Result", 200);
+
+        assertThat(i.hasNext()).isFalse();
     }
 
     @Test
@@ -107,8 +161,18 @@ public class HttpURLConnectionIT {
         IncomingSpan incomingSpan = container.execute(ExecuteHttpPost.class, true);
 
         // then
-        assertSingleOutgoingSpanMessage(incomingSpan)
+        Iterator<Span> i = incomingSpan.childSpans().iterator();
+
+        OutgoingSpan outgoingSpan = (OutgoingSpan) i.next();
+        assertThat(outgoingSpan.message())
                 .matches("http client request: POST https://localhost:[0-9]+/hello1/");
+        Map<String, Object> detail = outgoingSpan.detail();
+        assertThat(detail).hasSize(3);
+        assertThat(detail).containsEntry("Method", "POST");
+        assertThat((String) detail.get("URI")).matches("https://localhost:[0-9]+/hello1/");
+        assertThat(detail).containsEntry("Result", 200);
+
+        assertThat(i.hasNext()).isFalse();
     }
 
     public static class ExecuteHttpGet extends ExecuteHttpBase {
