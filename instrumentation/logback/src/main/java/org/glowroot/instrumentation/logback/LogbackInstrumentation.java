@@ -28,6 +28,7 @@ import org.glowroot.instrumentation.api.checker.Nullable;
 import org.glowroot.instrumentation.api.weaving.Advice;
 import org.glowroot.instrumentation.api.weaving.Bind;
 import org.glowroot.instrumentation.logback.boot.LogMessageSupplier;
+import org.glowroot.instrumentation.logback.boot.LogbackLevel;
 import org.glowroot.instrumentation.logback.boot.LoggerInstrumentationProperties;
 import org.glowroot.instrumentation.logback.boot.LoggingEventInvoker;
 
@@ -35,24 +36,26 @@ public class LogbackInstrumentation {
 
     private static final TimerName TIMER_NAME = Agent.getTimerName("logging");
 
-    // constants from ch.qos.logback.classic.Level
-    private static final int ERROR_INT = 40000;
-    private static final int WARN_INT = 30000;
-
     @Advice.Pointcut(className = "ch.qos.logback.classic.Logger",
                      methodName = "callAppenders",
                      methodParameterTypes = {"ch.qos.logback.classic.spi.ILoggingEvent"},
                      nestingGroup = "logging")
     public static class CallAppendersAdvice {
 
+        @Advice.IsEnabled
+        public static boolean isEnabled(@Bind.Argument(0) @Nullable ILoggingEvent loggingEvent) {
+            if (loggingEvent == null) {
+                return false;
+            }
+            Level level = loggingEvent.getLevel();
+            return level != null && LoggerInstrumentationProperties.captureLevel(level.toInt());
+        }
+
         @Advice.OnMethodBefore
         public static @Nullable Timer onBefore(
-                @Bind.Argument(0) @Nullable ILoggingEvent loggingEvent,
+                @Bind.Argument(0) ILoggingEvent loggingEvent,
                 ThreadContext context) {
 
-            if (loggingEvent == null) {
-                return null;
-            }
             String formattedMessage = nullToEmpty(loggingEvent.getFormattedMessage());
             Level level = loggingEvent.getLevel();
             int lvl = level == null ? 0 : level.toInt();
@@ -63,8 +66,8 @@ public class LogbackInstrumentation {
                 // and it is only used for logging exceptions over the wire
                 t = ((ThrowableProxy) throwableProxy).getThrowable();
             }
-            if (LoggerInstrumentationProperties.markTraceAsError(lvl >= ERROR_INT, lvl >= WARN_INT,
-                    t != null)) {
+            if (LoggerInstrumentationProperties.markTraceAsError(lvl >= LogbackLevel.ERROR,
+                    lvl >= LogbackLevel.WARN, t != null)) {
                 context.setTransactionError(formattedMessage, t);
             }
             String levelStr = level == null ? null : level.toString();
@@ -89,22 +92,28 @@ public class LogbackInstrumentation {
                      nestingGroup = "logging")
     public static class CallAppenders0xAdvice {
 
+        @Advice.IsEnabled
+        public static boolean isEnabled(@Bind.Argument(0) @Nullable LoggingEvent loggingEvent) {
+            if (loggingEvent == null) {
+                return false;
+            }
+            Level level = loggingEvent.getLevel();
+            return level != null && LoggerInstrumentationProperties.captureLevel(level.toInt());
+        }
+
         @Advice.OnMethodBefore
         public static @Nullable Timer onBefore(
                 @Bind.This Object logger,
-                @Bind.Argument(0) @Nullable LoggingEvent loggingEvent,
+                @Bind.Argument(0) LoggingEvent loggingEvent,
                 @Bind.ClassMeta LoggingEventInvoker invoker,
                 ThreadContext context) {
 
-            if (loggingEvent == null) {
-                return null;
-            }
             String formattedMessage = invoker.getFormattedMessage(loggingEvent);
             Level level = loggingEvent.getLevel();
             int lvl = level == null ? 0 : level.toInt();
             Throwable t = invoker.getThrowable(loggingEvent);
-            if (LoggerInstrumentationProperties.markTraceAsError(lvl >= ERROR_INT, lvl >= WARN_INT,
-                    t != null)) {
+            if (LoggerInstrumentationProperties.markTraceAsError(lvl >= LogbackLevel.ERROR,
+                    lvl >= LogbackLevel.WARN, t != null)) {
                 context.setTransactionError(formattedMessage, t);
             }
             String levelStr = level == null ? null : level.toString();

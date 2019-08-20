@@ -44,18 +44,21 @@ public class JavaUtilLoggingInstrumentation {
                      nestingGroup = "logging")
     public static class LogAdvice {
 
+        @Advice.IsEnabled
+        public static boolean isEnabled(@Bind.Argument(0) @Nullable LogRecord record) {
+            return record != null
+                    && LoggerInstrumentationProperties.captureLevel(record.getLevel());
+        }
+
         // cannot use java.util.logging.Logger in the signature of this method because that triggers
         // java.util.logging.Logger to be loaded before weaving is put in place (from inside
         // org.glowroot.instrumentation.engine.weaving.AdviceBuilder)
         @Advice.OnMethodBefore
         public static @Nullable Timer onBefore(
-                @Bind.Argument(0) @Nullable LogRecord record,
+                @Bind.Argument(0) LogRecord record,
                 @Bind.This Object logger,
                 ThreadContext context) {
 
-            if (record == null) {
-                return null;
-            }
             Level level = record.getLevel();
             if (!((Logger) logger).isLoggable(level)) {
                 // Logger.log(LogRecord) was called directly
@@ -79,14 +82,17 @@ public class JavaUtilLoggingInstrumentation {
                      nestingGroup = "logging")
     public static class JBossLogAdvice {
 
+        @Advice.IsEnabled
+        public static boolean isEnabled(@Bind.Argument(0) @Nullable LogRecord record) {
+            return record != null
+                    && LoggerInstrumentationProperties.captureLevel(record.getLevel());
+        }
+
         @Advice.OnMethodBefore
         public static @Nullable Timer onBefore(
-                @Bind.Argument(0) @Nullable LogRecord record,
+                @Bind.Argument(0) LogRecord record,
                 ThreadContext context) {
 
-            if (record == null) {
-                return null;
-            }
             return onBeforeCommon(record, record.getLevel(), context);
         }
 

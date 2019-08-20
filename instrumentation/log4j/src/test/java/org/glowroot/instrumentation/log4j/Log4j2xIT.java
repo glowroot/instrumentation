@@ -88,6 +88,26 @@ public class Log4j2xIT {
     }
 
     @Test
+    public void testLogWithThreshold() throws Exception {
+        // given
+        container.setInstrumentationProperty(INSTRUMENTATION_ID, "threshold", "error");
+
+        // when
+        IncomingSpan incomingSpan = container.execute(ShouldLog.class);
+
+        // then
+        Iterator<Span> i = incomingSpan.childSpans().iterator();
+
+        LoggerSpan loggerSpan = (LoggerSpan) i.next();
+        assertThat(loggerSpan.message()).isEqualTo("efg");
+        assertThat(loggerSpan.detail()).hasSize(2);
+        assertThat(loggerSpan.detail()).containsEntry("Level", "ERROR");
+        assertThat(loggerSpan.detail()).containsEntry("Logger name", ShouldLog.logger.getName());
+
+        assertThat(i.hasNext()).isFalse();
+    }
+
+    @Test
     public void testLogWithThrowable() throws Exception {
         // given
         container.setInstrumentationProperty(INSTRUMENTATION_ID,

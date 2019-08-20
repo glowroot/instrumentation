@@ -15,13 +15,21 @@
  */
 package org.glowroot.instrumentation.logback.boot;
 
+import java.util.Locale;
+
 import org.glowroot.instrumentation.api.Agent;
+import org.glowroot.instrumentation.api.Logger;
 import org.glowroot.instrumentation.api.config.BooleanProperty;
+import org.glowroot.instrumentation.api.config.ConfigListener;
 import org.glowroot.instrumentation.api.config.ConfigService;
 
 public class LoggerInstrumentationProperties {
 
+    private static final Logger logger = Logger.getLogger(LoggerInstrumentationProperties.class);
+
     private static final ConfigService configService = Agent.getConfigService("logback");
+
+    private static int threshold;
 
     private static final BooleanProperty traceErrorOnWarningWithThrowable =
             configService.getBooleanProperty("traceErrorOnWarningWithThrowable");
@@ -32,7 +40,15 @@ public class LoggerInstrumentationProperties {
     private static final BooleanProperty traceErrorOnErrorWithoutThrowable =
             configService.getBooleanProperty("traceErrorOnErrorWithoutThrowable");
 
+    static {
+        configService.registerConfigListener(new ConfigListenerImpl());
+    }
+
     private LoggerInstrumentationProperties() {}
+
+    public static boolean captureLevel(int level) {
+        return level >= threshold;
+    }
 
     public static boolean markTraceAsError(boolean isErrorOrHigher, boolean isWarnOrHigher,
             boolean throwable) {
@@ -45,5 +61,30 @@ public class LoggerInstrumentationProperties {
                     : traceErrorOnWarningWithoutThrowable.value();
         }
         return false;
+    }
+
+    private static class ConfigListenerImpl implements ConfigListener {
+
+        @Override
+        public void onChange() {
+            String thresholdStr = configService.getStringProperty("threshold").value()
+                    .toLowerCase(Locale.ENGLISH);
+            if (thresholdStr.equals("")) {
+                threshold = Integer.MIN_VALUE;
+            } else if (thresholdStr.equals("error")) {
+                threshold = LogbackLevel.ERROR;
+            } else if (thresholdStr.equals("warn")) {
+                threshold = LogbackLevel.WARN;
+            } else if (thresholdStr.equals("info")) {
+                threshold = LogbackLevel.INFO;
+            } else if (thresholdStr.equals("debug")) {
+                threshold = LogbackLevel.DEBUG;
+            } else if (thresholdStr.equals("trace")) {
+                threshold = LogbackLevel.TRACE;
+            } else {
+                logger.warn("unexpected configuration for threshold: {}", threshold);
+                threshold = Integer.MIN_VALUE;
+            }
+        }
     }
 }

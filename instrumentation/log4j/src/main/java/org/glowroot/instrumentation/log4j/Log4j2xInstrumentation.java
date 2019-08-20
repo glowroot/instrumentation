@@ -26,16 +26,13 @@ import org.glowroot.instrumentation.api.TimerName;
 import org.glowroot.instrumentation.api.checker.Nullable;
 import org.glowroot.instrumentation.api.weaving.Advice;
 import org.glowroot.instrumentation.api.weaving.Bind;
+import org.glowroot.instrumentation.log4j.boot.Log4j2xLevel;
 import org.glowroot.instrumentation.log4j.boot.LogMessageSupplier;
 import org.glowroot.instrumentation.log4j.boot.LoggerInstrumentationProperties;
 
 public class Log4j2xInstrumentation {
 
     private static final TimerName TIMER_NAME = Agent.getTimerName("logging");
-
-    // constants from org.apache.logging.log4j.spi.StandardLevel
-    private static final int ERROR = 200;
-    private static final int WARN = 300;
 
     @Advice.Pointcut(className = "org.apache.logging.log4j.spi.ExtendedLogger",
                      methodName = "logMessage",
@@ -45,6 +42,12 @@ public class Log4j2xInstrumentation {
                              "java.lang.Throwable"},
                      nestingGroup = "logging")
     public static class CallAppendersAdvice {
+
+        @Advice.IsEnabled
+        public static boolean isEnabled(@Bind.Argument(1) @Nullable Level level) {
+            return level != null
+                    && LoggerInstrumentationProperties.captureLog4j2xLevel(level.intLevel());
+        }
 
         @Advice.OnMethodBefore
         public static Timer onBefore(
@@ -57,8 +60,8 @@ public class Log4j2xInstrumentation {
             String formattedMessage =
                     message == null ? "" : nullToEmpty(message.getFormattedMessage());
             int lvl = level == null ? 0 : level.intLevel();
-            if (LoggerInstrumentationProperties.markTraceAsError(lvl <= ERROR, lvl <= WARN,
-                    t != null)) {
+            if (LoggerInstrumentationProperties.markTraceAsError(lvl <= Log4j2xLevel.ERROR,
+                    lvl <= Log4j2xLevel.WARN, t != null)) {
                 context.setTransactionError(formattedMessage, t);
             }
             context.captureLoggerSpan(new LogMessageSupplier(formattedMessage,

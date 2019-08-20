@@ -3,6 +3,12 @@
   "id": "logback",
   "properties": [
     {
+      "name": "threshold",
+      "type": "string",
+      "label": "Threshold",
+      "description": "Threshold to apply to logging capture. Must be one of: trace, debug, info, warn, error."
+    },
+    {
       "name": "traceErrorOnErrorWithThrowable",
       "type": "boolean",
       "default": true,
