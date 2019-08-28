@@ -46,6 +46,8 @@ public class HttpURLConnectionInstrumentation {
     private static final AtomicBoolean inputStreamIssueLogged = new AtomicBoolean();
     private static final AtomicBoolean outputStreamIssueAlreadyLogged = new AtomicBoolean();
 
+    private static final AtomicBoolean addRequestPropertyIssueLogged = new AtomicBoolean();
+
     // the field and method names are verbose since they will be mixed in to existing classes
     @Mixin({"java.net.HttpURLConnection",
             "sun.net.www.protocol.http.HttpURLConnection$HttpInputStream",
@@ -268,7 +270,8 @@ public class HttpURLConnectionInstrumentation {
 
     @Advice.Pointcut(className = "java.net.URLConnection",
                      subTypeRestriction = "java.net.HttpURLConnection",
-                     methodName = "getHeaderField*",
+                     methodName = "getHeaderField*|getContent*|getDate|getExpiration"
+                             + "|getLastModified",
                      methodParameterTypes = {".."},
                      nestingGroup = "http-client")
     public static class GetHeaderFieldAdvice {
@@ -455,7 +458,14 @@ public class HttpURLConnectionInstrumentation {
 
         @Override
         public void put(HttpURLConnection carrier, String key, String value) {
-            carrier.addRequestProperty(key, value);
+            try {
+                carrier.addRequestProperty(key, value);
+            } catch (RuntimeException e) {
+                // just in case it throws IllegalStateException: Already connected
+                if (!addRequestPropertyIssueLogged.getAndSet(true)) {
+                    logger.error("could not add http request header '{}': {}", key, e.toString());
+                }
+            }
         }
     }
 }
