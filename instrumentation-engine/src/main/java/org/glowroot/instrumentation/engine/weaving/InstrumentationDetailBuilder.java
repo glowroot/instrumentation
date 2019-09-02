@@ -61,9 +61,9 @@ class InstrumentationDetailBuilder {
     InstrumentationDetail build() throws IOException {
         ImmutableInstrumentationDetail.Builder builder = ImmutableInstrumentationDetail.builder();
         for (String clazz : instrumentationDescriptor.classes()) {
-            byte[] bytes = getBytes(ClassNames.toInternalName(clazz),
-                    instrumentationDescriptor.jarFile());
-            InstrumentationClassVisitor cv = new InstrumentationClassVisitor();
+            String internalName = ClassNames.toInternalName(clazz);
+            byte[] bytes = getBytes(internalName, instrumentationDescriptor.jarFile());
+            InstrumentationClassVisitor cv = new InstrumentationClassVisitor(internalName);
             new ClassReader(bytes).accept(cv, ClassReader.SKIP_CODE);
             for (String innerClassName : cv.innerClassNames) {
                 bytes = getBytes(innerClassName, instrumentationDescriptor.jarFile());
@@ -121,9 +121,8 @@ class InstrumentationDetailBuilder {
 
     private static PointcutClass buildAdviceClassLookAtSuperClass(String internalName)
             throws IOException {
-        URL url =
-                checkNotNull(InstrumentationDetailBuilder.class
-                        .getResource("/" + internalName + ".class"));
+        URL url = checkNotNull(
+                InstrumentationDetailBuilder.class.getResource("/" + internalName + ".class"));
         byte[] bytes = Resources.asByteSource(url).read();
         MemberClassVisitor mcv = new MemberClassVisitor();
         new ClassReader(bytes).accept(mcv, ClassReader.SKIP_CODE);
@@ -140,15 +139,20 @@ class InstrumentationDetailBuilder {
 
     private static class InstrumentationClassVisitor extends ClassVisitor {
 
-        private List<String> innerClassNames = Lists.newArrayList();
+        private final String internalName;
+        private final List<String> innerClassNames = Lists.newArrayList();
 
-        private InstrumentationClassVisitor() {
+        private InstrumentationClassVisitor(String internalName) {
             super(ASM7);
+            this.internalName = internalName;
         }
 
         @Override
-        public void visitInnerClass(String name, String outerName, String innerName, int access) {
-            innerClassNames.add(name);
+        public void visitInnerClass(String name, @Nullable String outerName,
+                @Nullable String innerName, int access) {
+            if (internalName.equals(outerName)) {
+                innerClassNames.add(name);
+            }
         }
     }
 

@@ -12,6 +12,8 @@ public class ClassVisitor {
     public @Nullable FieldVisitor visitField(int access, String name, @Nullable String descriptor,
             @Nullable String signature, @Nullable Object value);
     public @Nullable AnnotationVisitor visitAnnotation(String descriptor, boolean visible);
+    public void visitInnerClass(String name, @Nullable String outerName, @Nullable String innerName,
+           int access);
 }
 
 public class MethodVisitor {
