@@ -157,7 +157,7 @@ public class EngineModule {
                     new File(tmpDir, "preload-some-super-types-cache"), 50000);
             analyzedWorld = new AnalyzedWorld(adviceCache.getAdvisorsSupplier(),
                     adviceCache.getShimTypes(), adviceCache.getMixinTypes(),
-                    useInstrumentationAnnotations, preloadSomeSuperTypesCache);
+                    useInstrumentationAnnotations, instrumentation, preloadSomeSuperTypesCache);
 
             weaver = new Weaver(adviceCache.getAdvisorsSupplier(), adviceCache.getShimTypes(),
                     adviceCache.getMixinTypes(), analyzedWorld, ticker);

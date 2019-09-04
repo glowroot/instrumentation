@@ -17,13 +17,17 @@ package org.glowroot.instrumentation.engine.weaving;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.security.CodeSource;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -88,19 +92,23 @@ public class AnalyzedWorld {
     private final ImmutableList<ShimType> shimTypes;
     private final ImmutableList<MixinType> mixinTypes;
 
+    private final boolean useInstrumentationAnnotations;
+
+    // only null for tests
+    private final @Nullable Instrumentation instrumentation;
     // only null for tests
     private final @Nullable PreloadSomeSuperTypesCache preloadSomeSuperTypesCache;
 
-    private final boolean useInstrumentationAnnotations;
-
     public AnalyzedWorld(Supplier<List<Advice>> advisors, List<ShimType> shimTypes,
             List<MixinType> mixinTypes, boolean useInstrumentationAnnotations,
+            @Nullable Instrumentation instrumentation,
             @Nullable PreloadSomeSuperTypesCache preloadSomeSuperTypesCache) {
         this.advisors = advisors;
         this.shimTypes = ImmutableList.copyOf(shimTypes);
         this.mixinTypes = ImmutableList.copyOf(mixinTypes);
-        this.preloadSomeSuperTypesCache = preloadSomeSuperTypesCache;
         this.useInstrumentationAnnotations = useInstrumentationAnnotations;
+        this.instrumentation = instrumentation;
+        this.preloadSomeSuperTypesCache = preloadSomeSuperTypesCache;
     }
 
     public List<Class<?>> getClassesWithReweavableAdvice(boolean remove) {
@@ -284,7 +292,7 @@ public class AnalyzedWorld {
             // null loader means the bootstrap class loader
             url = ClassLoader.getSystemResource(path);
         } else {
-            url = loader.getResource(path);
+            url = getResourceWithTraceLogging(loader, path);
             if (url != null) {
                 AnalyzedClass parentLoaderAnalyzedClass =
                         tryToReuseFromParentLoader(className, loader, path, url);
@@ -320,7 +328,7 @@ public class AnalyzedWorld {
             if (parentLoader == null) {
                 parentLoaderUrl = ClassLoader.getSystemResource(path);
             } else {
-                parentLoaderUrl = parentLoader.getResource(path);
+                parentLoaderUrl = getResourceWithTraceLogging(parentLoader, path);
             }
             // comparing results of URL.toExternalForm() since using URL.equals() directly
             // performs name resolution and is a blocking operation (from the javadoc)
@@ -338,6 +346,24 @@ public class AnalyzedWorld {
             loader = parentLoader;
         }
         return null;
+    }
+
+    private @Nullable URL getResourceWithTraceLogging(ClassLoader loader, String path) {
+        if (logger.isTraceEnabled() && instrumentation != null) {
+            Class<?>[] allLoadedClassesBefore = instrumentation.getAllLoadedClasses();
+            URL url = loader.getResource(path);
+            Class<?>[] allLoadedClassesAfter = instrumentation.getAllLoadedClasses();
+            Set<Class<?>> newClasses = new HashSet<Class<?>>();
+            newClasses.addAll(Arrays.asList(allLoadedClassesAfter));
+            newClasses.removeAll(Arrays.asList(allLoadedClassesBefore));
+            for (Class<?> newClass : newClasses) {
+                logger.trace("{}.getResource(\"{}\") triggered loading of {}",
+                        loader.getClass().getName(), path, newClass.getName());
+            }
+            return url;
+        } else {
+            return loader.getResource(path);
+        }
     }
 
     // plan B covers some class loaders like

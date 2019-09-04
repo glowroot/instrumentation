@@ -34,7 +34,9 @@ public class PreInitializeWeavingClassesTest {
                 ReferencedMethod.create("org/glowroot/instrumentation/engine/weaving/AnalyzedWorld",
                         "<init>",
                         "(Lcom/google/common/base/Supplier;Ljava/util/List;Ljava/util/List;Z"
-                                + "Lorg/glowroot/instrumentation/engine/weaving/PreloadSomeSuperTypesCache;)V"));
+                                + "Ljava/lang/instrument/Instrumentation"
+                                + ";Lorg/glowroot/instrumentation/engine/weaving"
+                                + "/PreloadSomeSuperTypesCache;)V"));
         // "call" WeavingClassFileTransformer constructor
         globalCollector.processMethodFailIfNotFound(
                 ReferencedMethod.create(
