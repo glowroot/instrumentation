@@ -367,7 +367,8 @@ public class HttpURLConnectionInstrumentation {
         if (!(httpURLConnection instanceof HasSpanMixin)) {
             return null;
         }
-        Span span = ((HasSpanMixin) httpURLConnection).glowroot$getSpan();
+        HasSpanMixin hasSpanMixin = (HasSpanMixin) httpURLConnection;
+        Span span = hasSpanMixin.glowroot$getSpan();
         if (span != null) {
             return new SpanOrTimer(span.extend());
         }
@@ -387,7 +388,7 @@ public class HttpURLConnectionInstrumentation {
             url = urlObj.toString();
         }
         span = startOutgoingSpan(context, method, url, SETTER, httpURLConnection, TIMER_NAME);
-        ((HasSpanMixin) httpURLConnection).glowroot$setSpan(span);
+        hasSpanMixin.glowroot$setSpan(span);
         return new SpanOrTimer(span);
     }
 
@@ -398,6 +399,9 @@ public class HttpURLConnectionInstrumentation {
     }
 
     private static void onReturnCaptureResponseCode(HttpURLConnection httpURLConnection) {
+        if (!(httpURLConnection instanceof HasSpanMixin)) {
+            return;
+        }
         Span span = ((HasSpanMixin) httpURLConnection).glowroot$getSpan();
         if (span == null) {
             return;
