@@ -227,6 +227,16 @@ public class EngineModule {
             } catch (ClassNotFoundException e) {
                 logger.debug(e.getMessage(), e);
             }
+            // need to instrument HttpURLConnection before it can be used inside of some class
+            // loader's getResource() method
+            // (e.g. org.springframework.boot.loader.LaunchedURLClassLoader), which can trigger
+            // loading the class inside of AnalyzedWorld, during class file transformation of
+            // another class, which will prevent it from being transformed itself
+            try {
+                Class.forName("java.net.HttpURLConnection");
+            } catch (ClassNotFoundException e) {
+                logger.warn(e.getMessage(), e);
+            }
         }
 
         initInstrumentation(instrumentationDescriptors);
