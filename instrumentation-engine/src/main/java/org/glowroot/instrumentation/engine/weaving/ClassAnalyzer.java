@@ -811,14 +811,6 @@ class ClassAnalyzer {
     }
 
     @Value.Immutable
-    interface MatchedShimTypes {
-
-        List<ShimType> reweavable();
-
-        List<ShimType> nonReweavable();
-    }
-
-    @Value.Immutable
     interface MatchedMixinTypes {
 
         List<MixinType> reweavable();
