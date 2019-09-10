@@ -15,6 +15,9 @@
  */
 package org.glowroot.instrumentation.netty;
 
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.concurrent.Future;
@@ -41,11 +44,12 @@ public class Netty4xInstrumentation {
     private static final Getter<HttpRequestShim> GETTER = new GetterImpl();
 
     // the field and method names are verbose since they will be mixed in to existing classes
-    @Mixin({"io.netty.channel.Channel"})
+    @Mixin("io.netty.channel.Channel")
     public abstract static class ChannelImpl implements ChannelMixin {
 
         private transient volatile @Nullable ThreadContext glowroot$threadContextToComplete;
         private transient volatile @Nullable AuxThreadContext glowroot$auxContext;
+        private transient boolean ssl;
 
         @Override
         public @Nullable ThreadContext glowroot$getThreadContextToComplete() {
@@ -67,6 +71,16 @@ public class Netty4xInstrumentation {
         public void glowroot$setAuxContext(@Nullable AuxThreadContext auxContext) {
             glowroot$auxContext = auxContext;
         }
+
+        @Override
+        public boolean glowroot$isSsl() {
+            return ssl;
+        }
+
+        @Override
+        public void glowroot$setSsl(boolean ssl) {
+            this.ssl = ssl;
+        }
     }
 
     // the method names are verbose since they will be mixed in to existing classes
@@ -81,6 +95,10 @@ public class Netty4xInstrumentation {
         AuxThreadContext glowroot$getAuxContext();
 
         void glowroot$setAuxContext(@Nullable AuxThreadContext auxThreadContext);
+
+        boolean glowroot$isSsl();
+
+        void glowroot$setSsl(boolean ssl);
     }
 
     // need shims for netty-http-codec classes, since the pointcuts below are applied to
@@ -123,6 +141,26 @@ public class Netty4xInstrumentation {
     @Shim("io.netty.handler.codec.http.LastHttpContent")
     public interface LastHttpContentShim {}
 
+    @Advice.Pointcut(className = "io.netty.handler.ssl.SslHandler",
+                     methodName = "read",
+                     methodParameterTypes = {"io.netty.channel.ChannelHandlerContext"})
+    public static class SslHandlerAdvice {
+
+        @Advice.OnMethodBefore
+        public static void onBefore(
+                @Bind.Argument(0) @Nullable ChannelHandlerContext channelHandlerContext) {
+
+            if (channelHandlerContext == null) {
+                return;
+            }
+            Channel channel = channelHandlerContext.channel();
+            if (channel == null) {
+                return;
+            }
+            ((ChannelMixin) channel).glowroot$setSsl(true);
+        }
+    }
+
     @Advice.Pointcut(className = "io.netty.channel.ChannelHandlerContext",
                      methodName = "fireChannelRead",
                      methodParameterTypes = {"java.lang.Object"},
@@ -149,9 +187,19 @@ public class Netty4xInstrumentation {
             }
             HttpRequestShim request = (HttpRequestShim) msg;
             HttpMethodShim method = request.glowroot$getMethod();
-            String methodName = method == null ? null : method.name();
-            Span span = Util.startAsyncTransaction(context, methodName, request.getUri(), GETTER,
-                    request, TIMER_NAME);
+            String requestMethod = method == null ? null : method.name();
+            HttpHeadersShim headers = request.glowroot$headers();
+            String host = headers == null ? null : headers.get("host");
+            if (host == null) {
+                SocketAddress socketAddress = channel.localAddress();
+                if (socketAddress instanceof InetSocketAddress) {
+                    InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
+                    host = inetSocketAddress.getHostName() + ":" + inetSocketAddress.getPort();
+                }
+            }
+            Span span = Util.startAsyncTransaction(context, requestMethod,
+                    channelMixin.glowroot$isSsl(), host, request.getUri(), GETTER, request,
+                    TIMER_NAME);
             channelMixin.glowroot$setThreadContextToComplete(context);
             // IMPORTANT the close future gets called if client disconnects, but does not get called
             // when transaction ends and Keep-Alive is used (so still need to capture write

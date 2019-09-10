@@ -16,7 +16,6 @@
 package org.glowroot.instrumentation.netty.boot;
 
 import org.glowroot.instrumentation.api.Getter;
-import org.glowroot.instrumentation.api.MessageSupplier;
 import org.glowroot.instrumentation.api.OptionalThreadContext;
 import org.glowroot.instrumentation.api.OptionalThreadContext.AlreadyInTransactionBehavior;
 import org.glowroot.instrumentation.api.Span;
@@ -28,17 +27,10 @@ public class Util {
     private Util() {}
 
     public static <C> Span startAsyncTransaction(OptionalThreadContext context,
-            @Nullable String methodName, @Nullable String uri, Getter<C> getter, C carrier,
-            TimerName timerName) {
-        String path = getPath(uri);
-        String message;
-        if (methodName == null) {
-            message = uri;
-        } else {
-            message = methodName + " " + uri;
-        }
-        Span span = context.startIncomingSpan("Web", path, getter, carrier,
-                MessageSupplier.create(message), timerName,
+            @Nullable String requestMethod, boolean ssl, @Nullable String host,
+            @Nullable String uri, Getter<C> getter, C carrier, TimerName timerName) {
+        Span span = context.startIncomingSpan("Web", getPath(uri), getter, carrier,
+                new NettyMessageSupplier(requestMethod, ssl, host, uri), timerName,
                 AlreadyInTransactionBehavior.CAPTURE_LOCAL_SPAN);
         context.setTransactionAsync();
         return span;

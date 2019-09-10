@@ -62,6 +62,11 @@ public class Netty3xIT {
         // then
         assertThat(incomingSpan.transactionName()).isEqualTo("/abc");
         assertThat(incomingSpan.message()).isEqualTo("GET /abc?xyz=123");
+        assertThat(incomingSpan.detail().get("Request http method")).isEqualTo("GET");
+        assertThat(incomingSpan.detail().get("Request scheme")).isEqualTo("http");
+        assertThat((String) incomingSpan.detail().get("Request server hostname"))
+                .matches("localhost:[0-9]+");
+        assertThat(incomingSpan.detail().get("Request uri")).isEqualTo("/abc?xyz=123");
         assertThat(incomingSpan.childSpans()).isEmpty();
     }
 
@@ -73,6 +78,11 @@ public class Netty3xIT {
         // then
         assertThat(incomingSpan.transactionName()).isEqualTo("/exception");
         assertThat(incomingSpan.message()).isEqualTo("GET /exception");
+        assertThat(incomingSpan.detail().get("Request http method")).isEqualTo("GET");
+        assertThat(incomingSpan.detail().get("Request scheme")).isEqualTo("http");
+        assertThat((String) incomingSpan.detail().get("Request server hostname"))
+                .matches("localhost:[0-9]+");
+        assertThat(incomingSpan.detail().get("Request uri")).isEqualTo("/exception");
         assertThat(incomingSpan.childSpans()).isEmpty();
     }
 

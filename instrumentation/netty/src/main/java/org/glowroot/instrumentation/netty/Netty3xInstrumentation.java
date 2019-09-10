@@ -15,6 +15,9 @@
  */
 package org.glowroot.instrumentation.netty;
 
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+
 import org.glowroot.instrumentation.api.Agent;
 import org.glowroot.instrumentation.api.AuxThreadContext;
 import org.glowroot.instrumentation.api.Getter;
@@ -37,10 +40,11 @@ public class Netty3xInstrumentation {
     private static final Getter<HttpRequestShim> CARRIER = new GetterImpl();
 
     // the field and method names are verbose since they will be mixed in to existing classes
-    @Mixin({"org.jboss.netty.channel.Channel"})
+    @Mixin("org.jboss.netty.channel.Channel")
     public abstract static class ChannelImpl implements ChannelMixin {
 
         private transient volatile boolean glowroot$completeAsyncTransaction;
+        private transient boolean ssl;
 
         @Override
         public boolean glowroot$getCompleteAsyncTransaction() {
@@ -51,6 +55,16 @@ public class Netty3xInstrumentation {
         public void glowroot$setCompleteAsyncTransaction(boolean completeAsyncTransaction) {
             glowroot$completeAsyncTransaction = completeAsyncTransaction;
         }
+
+        @Override
+        public boolean glowroot$isSsl() {
+            return ssl;
+        }
+
+        @Override
+        public void glowroot$setSsl(boolean ssl) {
+            this.ssl = ssl;
+        }
     }
 
     // the method names are verbose since they will be mixed in to existing classes
@@ -59,10 +73,14 @@ public class Netty3xInstrumentation {
         boolean glowroot$getCompleteAsyncTransaction();
 
         void glowroot$setCompleteAsyncTransaction(boolean completeAsyncTransaction);
+
+        boolean glowroot$isSsl();
+
+        void glowroot$setSsl(boolean ssl);
     }
 
     // the field and method names are verbose since they will be mixed in to existing classes
-    @Mixin({"org.jboss.netty.channel.ChannelFutureListener"})
+    @Mixin("org.jboss.netty.channel.ChannelFutureListener")
     public abstract static class ListenerImpl implements ListenerMixin {
 
         private transient volatile @Nullable AuxThreadContext glowroot$auxContext;
@@ -93,6 +111,13 @@ public class Netty3xInstrumentation {
         @Shim("org.jboss.netty.channel.Channel getChannel()")
         @Nullable
         ChannelMixin glowroot$getChannel();
+    }
+
+    @Shim("org.jboss.netty.channel.Channel")
+    public interface ChannelShim {
+
+        @Nullable
+        SocketAddress getLocalAddress();
     }
 
     @Shim("org.jboss.netty.handler.codec.http.HttpRequest")
@@ -143,6 +168,25 @@ public class Netty3xInstrumentation {
         boolean isLast();
     }
 
+    @Advice.Pointcut(className = "org.jboss.netty.handler.ssl.SslHandler",
+                     methodName = "channelConnected",
+                     methodParameterTypes = {"org.jboss.netty.channel.ChannelHandlerContext"})
+    public static class SslHandlerAdvice {
+
+        @Advice.OnMethodBefore
+        public static void onBefore(
+                @Bind.Argument(0) @Nullable ChannelHandlerContextShim channelHandlerContext) {
+            if (channelHandlerContext == null) {
+                return;
+            }
+            ChannelMixin channel = channelHandlerContext.glowroot$getChannel();
+            if (channel == null) {
+                return;
+            }
+            channel.glowroot$setSsl(true);
+        }
+    }
+
     @Advice.Pointcut(className = "org.jboss.netty.channel.ChannelHandlerContext",
                      methodName = "sendUpstream",
                      methodParameterTypes = {"org.jboss.netty.channel.ChannelEvent"},
@@ -178,10 +222,19 @@ public class Netty3xInstrumentation {
             // just checked valid cast above in isEnabled()
             HttpRequestShim request = (HttpRequestShim) msg;
             HttpMethodShim method = request.glowroot$getMethod();
-            String methodName = method == null ? null : method.getName();
+            String requestMethod = method == null ? null : method.getName();
+            HttpHeadersShim headers = request.glowroot$headers();
+            String host = headers == null ? null : headers.get("host");
+            if (host == null) {
+                SocketAddress socketAddress = ((ChannelShim) channel).getLocalAddress();
+                if (socketAddress instanceof InetSocketAddress) {
+                    InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
+                    host = inetSocketAddress.getHostName() + ":" + inetSocketAddress.getPort();
+                }
+            }
             channel.glowroot$setCompleteAsyncTransaction(true);
-            return Util.startAsyncTransaction(context, methodName, request.getUri(), CARRIER,
-                    request, TIMER_NAME);
+            return Util.startAsyncTransaction(context, requestMethod, channel.glowroot$isSsl(),
+                    host, request.getUri(), CARRIER, request, TIMER_NAME);
         }
 
         @Advice.OnMethodReturn
