@@ -15,6 +15,8 @@
  */
 package org.glowroot.instrumentation.apachehttpclient;
 
+import java.net.URI;
+
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
@@ -40,8 +42,6 @@ public class ApacheHttpClient4xInstrumentation {
 
     private static final TimerName TIMER_NAME = Agent.getTimerName("http client request");
 
-    private static final Setter<HttpUriRequest> URI_REQUEST_SETTER = new HttpUriRequestSetter();
-
     private static final Setter<HttpRequest> REQUEST_SETTER = new HttpRequestSetter();
 
     private static final Getter<HttpResponse> GETTER = new HttpResponseGetter();
@@ -49,6 +49,7 @@ public class ApacheHttpClient4xInstrumentation {
     @Advice.Pointcut(className = "org.apache.http.client.HttpClient",
                      methodName = "execute",
                      methodParameterTypes = {"org.apache.http.client.methods.HttpUriRequest", ".."},
+                     methodReturnType = "org.apache.http.HttpResponse",
                      nestingGroup = "http-client")
     public static class ExecuteAdvice {
 
@@ -61,7 +62,7 @@ public class ApacheHttpClient4xInstrumentation {
                 return null;
             }
             return Util.startOutgoingSpan(context, request.getMethod(), null,
-                    request.getURI().toString(), URI_REQUEST_SETTER, request, TIMER_NAME);
+                    request.getURI().toString(), REQUEST_SETTER, request, TIMER_NAME);
         }
 
         @Advice.OnMethodReturn
@@ -86,6 +87,7 @@ public class ApacheHttpClient4xInstrumentation {
                      methodParameterTypes = {"org.apache.http.HttpHost",
                              "org.apache.http.HttpRequest",
                              ".."},
+                     methodReturnType = "org.apache.http.HttpResponse",
                      nestingGroup = "http-client")
     public static class ExecuteWithHostAdvice {
 
@@ -100,7 +102,7 @@ public class ApacheHttpClient4xInstrumentation {
             }
             RequestLine requestLine = request.getRequestLine();
             return Util.startOutgoingSpan(context, requestLine.getMethod(),
-                    hostObj == null ? null : hostObj.toURI(), requestLine.getUri(),
+                    hostObj == null ? null : hostObj.toURI(), getUri(hostObj, request, requestLine),
                     REQUEST_SETTER, request, TIMER_NAME);
         }
 
@@ -143,11 +145,25 @@ public class ApacheHttpClient4xInstrumentation {
         }
     }
 
-    private static class HttpUriRequestSetter implements Setter<HttpUriRequest> {
-
-        @Override
-        public void put(HttpUriRequest carrier, String key, String value) {
-            carrier.setHeader(key, value);
+    private static String getUri(@Nullable HttpHost hostObj, HttpRequest request,
+            RequestLine requestLine) {
+        if (request instanceof HttpUriRequest) {
+            URI uriObj = ((HttpUriRequest) request).getURI();
+            if (uriObj.isAbsolute() && hostObj != null) {
+                String query = uriObj.getQuery();
+                String fragment = uriObj.getFragment();
+                if (query == null && fragment == null) {
+                    return uriObj.getPath();
+                } else if (fragment == null) {
+                    return uriObj.getPath() + '?' + query;
+                } else {
+                    return uriObj.getPath() + '?' + query + '#' + fragment;
+                }
+            } else {
+                return uriObj.toString();
+            }
+        } else {
+            return requestLine.getUri();
         }
     }
 

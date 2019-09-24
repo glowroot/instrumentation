@@ -51,7 +51,7 @@ public class Util {
             sb.append(host);
         }
         if (uri != null) {
-            if (sb.length() != 0) {
+            if (sb.length() != 0 && host == null) {
                 sb.append(' ');
             }
             sb.append(stripQueryString(uri));

@@ -15,6 +15,7 @@
  */
 package org.glowroot.instrumentation.apachehttpclient;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.Iterator;
@@ -25,6 +26,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.junit.After;
@@ -75,6 +77,27 @@ public class ApacheHttpClient4xIT {
         assertThat(detail).hasSize(3);
         assertThat(detail).containsEntry("Method", "GET");
         assertThat((String) detail.get("URI")).matches("http://localhost:[0-9]+/hello1\\?q");
+        assertThat(detail).containsEntry("Result", 200);
+
+        assertThat(i.hasNext()).isFalse();
+    }
+
+    @Test
+    public void shouldCaptureHttpGetWithResponseHandler() throws Exception {
+        // when
+        IncomingSpan incomingSpan = container.execute(ExecuteHttpGetWithResponseHandler.class);
+
+        // then
+        Iterator<Span> i = incomingSpan.childSpans().iterator();
+
+        OutgoingSpan outgoingSpan = (OutgoingSpan) i.next();
+        assertThat(outgoingSpan.message())
+                .matches("http client request: GET http://localhost:[0-9]+/hello1\\?q");
+        Map<String, Object> detail = outgoingSpan.detail();
+        assertThat(detail).hasSize(4);
+        assertThat(detail).containsEntry("Method", "GET");
+        assertThat((String) detail.get("Host")).matches("http://localhost:[0-9]+");
+        assertThat(detail).containsEntry("URI", "/hello1?q");
         assertThat(detail).containsEntry("Result", 200);
 
         assertThat(i.hasNext()).isFalse();
@@ -193,6 +216,38 @@ public class ApacheHttpClient4xIT {
         }
     }
 
+    public static class ExecuteHttpGetWithResponseHandler extends ExecuteHttpBase {
+
+        @Override
+        public void transactionMarker() throws Exception {
+            HttpClient httpClient = createHttpClient();
+            HttpGet httpGet = new HttpGet("http://localhost:" + getPort() + "/hello1?q");
+            ResponseData responseData =
+                    httpClient.execute(httpGet, new ResponseHandler<ResponseData>() {
+                        @Override
+                        public ResponseData handleResponse(HttpResponse response)
+                                throws IOException {
+                            int responseStatusCode = response.getStatusLine().getStatusCode();
+                            Header testHeader = response.getFirstHeader("X-Test-Harness");
+                            InputStream content = response.getEntity().getContent();
+                            ByteStreams.exhaust(content);
+                            content.close();
+                            return new ResponseData(responseStatusCode, testHeader);
+                        }
+                    });
+            if (responseData.statusCode != 200) {
+                throw new IllegalStateException(
+                        "Unexpected response status code: " + responseData.statusCode);
+            }
+            // this it to test header propagation by instrumentation
+            Header testHeader = responseData.testHeader;
+            if (testHeader == null || !"Yes".equals(testHeader.getValue())) {
+                throw new IllegalStateException("X-Test-Harness header not recieved");
+            }
+            closeHttpClient(httpClient);
+        }
+    }
+
     public static class ExecuteHttpGetUsingHttpHostArg extends ExecuteHttpBase {
 
         @Override
@@ -264,6 +319,17 @@ public class ApacheHttpClient4xIT {
             ByteStreams.exhaust(content);
             content.close();
             closeHttpClient(httpClient);
+        }
+    }
+
+    private static class ResponseData {
+
+        private final int statusCode;
+        private final Header testHeader;
+
+        private ResponseData(int statusCode, Header testHeader) {
+            this.statusCode = statusCode;
+            this.testHeader = testHeader;
         }
     }
 }
