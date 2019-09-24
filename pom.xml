@@ -5,7 +5,7 @@
 
   <groupId>org.glowroot.instrumentation</groupId>
   <artifactId>instrumentation-parent</artifactId>
-  <version>0.14.6-SNAPSHOT</version>
+  <version>0.14.6</version>
   <packaging>pom</packaging>
 
   <name>Instrumentation Parent Project</name>
