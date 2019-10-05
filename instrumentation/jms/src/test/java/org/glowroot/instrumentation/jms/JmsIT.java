@@ -34,9 +34,9 @@ import org.junit.Test;
 
 import org.glowroot.instrumentation.test.harness.AppUnderTest;
 import org.glowroot.instrumentation.test.harness.Container;
+import org.glowroot.instrumentation.test.harness.Containers;
 import org.glowroot.instrumentation.test.harness.IncomingSpan;
 import org.glowroot.instrumentation.test.harness.TransactionMarker;
-import org.glowroot.instrumentation.test.harness.impl.JavaagentContainer;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,7 +48,7 @@ public class JmsIT {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        container = JavaagentContainer.create();
+        container = Containers.create();
     }
 
     @AfterClass
