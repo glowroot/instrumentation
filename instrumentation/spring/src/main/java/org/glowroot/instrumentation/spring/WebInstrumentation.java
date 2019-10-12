@@ -387,8 +387,8 @@ public class WebInstrumentation {
 
         @Advice.OnMethodBefore
         public static Span onBefore(
-                OptionalThreadContext context,
-                @Bind.MethodMeta ControllerMethodMeta controllerMethodMeta) {
+                @Bind.MethodMeta ControllerMethodMeta controllerMethodMeta,
+                OptionalThreadContext context) {
 
             String transactionName;
             if (useAltTransactionNaming.value()) {

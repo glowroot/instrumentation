@@ -205,10 +205,10 @@ public class Netty3xInstrumentation {
 
         @Advice.OnMethodBefore
         public static Span onBefore(
-                OptionalThreadContext context,
                 @Bind.This ChannelHandlerContextShim channelHandlerContext,
                 // not null, just checked above in isEnabled()
-                @Bind.Argument(0) Object channelEvent) {
+                @Bind.Argument(0) Object channelEvent,
+                OptionalThreadContext context) {
 
             @SuppressWarnings("nullness") // just checked above in isEnabled()
             @NonNull

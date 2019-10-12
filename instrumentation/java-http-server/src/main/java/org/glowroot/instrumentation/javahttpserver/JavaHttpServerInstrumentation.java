@@ -80,17 +80,17 @@ public class JavaHttpServerInstrumentation {
 
         @Advice.OnMethodBefore
         public static @Nullable Span onBefore(
-                OptionalThreadContext context,
-                @Bind.Argument(0) @Nullable HttpExchange exchange) {
+                @Bind.Argument(0) @Nullable HttpExchange exchange,
+                OptionalThreadContext context) {
 
             return onBeforeCommon(exchange, context);
         }
 
         @Advice.OnMethodReturn
         public static void onReturn(
-                OptionalThreadContext context,
                 @Bind.Enter @Nullable Span span,
-                @Bind.Argument(0) @Nullable HttpExchange exchange) {
+                @Bind.Argument(0) @Nullable HttpExchange exchange,
+                OptionalThreadContext context) {
 
             onReturnCommon(span, exchange, context);
         }
@@ -114,17 +114,17 @@ public class JavaHttpServerInstrumentation {
 
         @Advice.OnMethodBefore
         public static @Nullable Span onBefore(
-                OptionalThreadContext context,
-                @Bind.Argument(0) @Nullable HttpExchange exchange) {
+                @Bind.Argument(0) @Nullable HttpExchange exchange,
+                OptionalThreadContext context) {
 
             return onBeforeCommon(exchange, context);
         }
 
         @Advice.OnMethodReturn
         public static void onReturn(
-                OptionalThreadContext context,
                 @Bind.Enter @Nullable Span span,
-                @Bind.Argument(0) @Nullable HttpExchange exchange) {
+                @Bind.Argument(0) @Nullable HttpExchange exchange,
+                OptionalThreadContext context) {
 
             onReturnCommon(span, exchange, context);
         }

@@ -43,11 +43,11 @@ public class WebLogicAppStartupInstrumentation {
 
         @Advice.OnMethodBefore
         public static Span onBefore(
-                OptionalThreadContext context,
-                @Bind.This WebAppServletContextShim webAppServletContext) {
+                @Bind.This WebAppServletContextShim webAppServletContext,
+                OptionalThreadContext context) {
 
             String path = webAppServletContext.getContextPath();
-            return ContainerStartup.onBeforeCommon(context, path, TIMER_NAME);
+            return ContainerStartup.onBeforeCommon(path, TIMER_NAME, context);
         }
 
         @Advice.OnMethodReturn

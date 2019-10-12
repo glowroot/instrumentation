@@ -723,7 +723,7 @@ public class ExecutorInstrumentation {
     // public static class RunnableInitAdvice {
     //
     // @Advice.OnMethodAfter
-    // public static void onAfter(OptionalThreadContext context, @Advice.This Object obj) {
+    // public static void onAfter(@Advice.This Object obj, OptionalThreadContext context) {
     // if (obj instanceof Runnable && inAuxDebugLogging.get() == null) {
     // new Exception(
     // "Init " + Thread.currentThread().getName() + " " + obj.getClass().getName()
@@ -739,7 +739,7 @@ public class ExecutorInstrumentation {
     // public static class RunnableRunAdvice {
     //
     // @Advice.OnMethodBefore
-    // public static void onBefore(OptionalThreadContext context, @Advice.This Runnable obj)
+    // public static void onBefore(@Advice.This Runnable obj, OptionalThreadContext context)
     // {
     // new Exception("Run " + Thread.currentThread().getName() + " " + obj.getClass().getName()
     // + ":" + obj.hashCode() + " " + context.getClass().getName()).printStackTrace();

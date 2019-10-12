@@ -169,9 +169,9 @@ public class Netty4xInstrumentation {
 
         @Advice.OnMethodBefore
         public static @Nullable Span onBefore(
-                OptionalThreadContext context,
                 @Bind.This ChannelHandlerContext channelHandlerContext,
-                @Bind.Argument(0) @Nullable Object msg) {
+                @Bind.Argument(0) @Nullable Object msg,
+                OptionalThreadContext context) {
 
             Channel channel = channelHandlerContext.channel();
             if (channel == null) {

@@ -43,11 +43,11 @@ public class WebSphereAppStartupInstrumentation {
 
         @Advice.OnMethodBefore
         public static Span onBefore(
-                OptionalThreadContext context,
-                @Bind.This WebAppShim webApp) {
+                @Bind.This WebAppShim webApp,
+                OptionalThreadContext context) {
 
             String path = webApp.getContextPath();
-            return ContainerStartup.onBeforeCommon(context, path, TIMER_NAME);
+            return ContainerStartup.onBeforeCommon(path, TIMER_NAME, context);
         }
 
         @Advice.OnMethodReturn

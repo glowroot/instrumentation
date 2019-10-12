@@ -213,10 +213,6 @@ class AdviceBuilder {
         builder.isEnabledAdvice(asmMethod);
         List<AdviceParameter> parameters = getAdviceParameters(adviceMethod.bindAnnotations(),
                 asmMethod.getArgumentTypes(), isEnabledBindAnnotationTypes, IsEnabledType);
-        for (int i = 1; i < parameters.size(); i++) {
-            checkState(parameters.get(i).kind() != ParameterKind.OPTIONAL_THREAD_CONTEXT,
-                    "OptionalThreadContext must be the first argument to @Advice.IsEnabled");
-        }
         builder.addAllIsEnabledParameters(parameters);
         hasIsEnabledAdvice = true;
     }
@@ -229,10 +225,6 @@ class AdviceBuilder {
         builder.onBeforeAdvice(asmMethod);
         List<AdviceParameter> parameters = getAdviceParameters(adviceMethod.bindAnnotations(),
                 asmMethod.getArgumentTypes(), onBeforeBindAnnotationTypes, OnBeforeType);
-        for (int i = 1; i < parameters.size(); i++) {
-            checkState(parameters.get(i).kind() != ParameterKind.OPTIONAL_THREAD_CONTEXT,
-                    "OptionalThreadContext must be the first argument to @Advice.OnMethodBefore");
-        }
         builder.addAllOnBeforeParameters(parameters);
         if (asmMethod.getReturnType().getSort() != Type.VOID) {
             builder.travelerType(asmMethod.getReturnType());
@@ -255,15 +247,6 @@ class AdviceBuilder {
             checkState(parameters.get(i).kind() != ParameterKind.OPTIONAL_RETURN,
                     "@Advice.OptionalReturn must be the first argument to @Advice.OnMethodReturn");
         }
-        boolean isReturnArg =
-                !parameters.isEmpty() && (parameters.get(0).kind() == ParameterKind.RETURN
-                        || parameters.get(0).kind() == ParameterKind.OPTIONAL_RETURN);
-        int startIndex = isReturnArg ? 2 : 1;
-        for (int i = startIndex; i < parameters.size(); i++) {
-            checkState(parameters.get(i).kind() != ParameterKind.OPTIONAL_THREAD_CONTEXT,
-                    "OptionalThreadContext must be the first argument to @Advice.OnMethodReturn"
-                            + " (or second argument if @Advice.Return is present)");
-        }
         builder.onReturnAdvice(asmMethod);
         builder.addAllOnReturnParameters(parameters);
         checkForBindThreadContext(parameters);
@@ -281,14 +264,6 @@ class AdviceBuilder {
         for (int i = 1; i < parameters.size(); i++) {
             checkState(parameters.get(i).kind() != ParameterKind.THROWABLE,
                     "@Advice.Thrown must be the first argument to @Advice.OnMethodThrow");
-        }
-        boolean isThrownArg =
-                !parameters.isEmpty() && parameters.get(0).kind() == ParameterKind.THROWABLE;
-        int startIndex = isThrownArg ? 2 : 1;
-        for (int i = startIndex; i < parameters.size(); i++) {
-            checkState(parameters.get(i).kind() != ParameterKind.OPTIONAL_THREAD_CONTEXT,
-                    "OptionalThreadContext must be the first argument to @Advice.OnMethodThrow"
-                            + " (or second argument if @Advice.Thrown is present)");
         }
         checkState(asmMethod.getReturnType().getSort() == Type.VOID,
                 "@Advice.OnMethodThrow method must return void (for now)");

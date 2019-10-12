@@ -39,8 +39,8 @@ class ContainerStartup {
 
     private ContainerStartup() {}
 
-    static Span onBeforeCommon(OptionalThreadContext context, @Nullable String path,
-            TimerName timerName) {
+    static Span onBeforeCommon(@Nullable String path, TimerName timerName,
+            OptionalThreadContext context) {
         initPlatformMBeanServer();
         String transactionName;
         if (path == null || path.isEmpty()) {

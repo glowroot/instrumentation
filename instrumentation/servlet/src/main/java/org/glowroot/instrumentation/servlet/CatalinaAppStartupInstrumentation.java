@@ -47,11 +47,11 @@ public class CatalinaAppStartupInstrumentation {
 
         @Advice.OnMethodBefore
         public static Span onBefore(
-                OptionalThreadContext context,
-                @Bind.This StandardContextShim standardContext) {
+                @Bind.This StandardContextShim standardContext,
+                OptionalThreadContext context) {
 
             String path = standardContext.getPath();
-            return ContainerStartup.onBeforeCommon(context, path, TIMER_NAME);
+            return ContainerStartup.onBeforeCommon(path, TIMER_NAME, context);
         }
 
         @Advice.OnMethodReturn

@@ -66,20 +66,20 @@ public class ServletInstrumentation {
 
         @Advice.OnMethodBefore
         public static @Nullable Span onBefore(
-                OptionalThreadContext context,
                 @Bind.Argument(0) @Nullable ServletRequest req,
                 @Bind.Argument(1) @Nullable ServletResponse res,
-                @Bind.ClassMeta RequestInvoker requestInvoker) {
+                @Bind.ClassMeta RequestInvoker requestInvoker,
+                OptionalThreadContext context) {
 
             return onBeforeCommon(req, res, null, requestInvoker, context);
         }
 
         @Advice.OnMethodReturn
         public static void onReturn(
-                OptionalThreadContext context,
                 @Bind.Enter @Nullable Span span,
                 @Bind.Argument(1) @Nullable ServletResponse res,
-                @Bind.ClassMeta ResponseInvoker responseInvoker) {
+                @Bind.ClassMeta ResponseInvoker responseInvoker,
+                OptionalThreadContext context) {
 
             onReturnCommon(span, res, responseInvoker, context);
         }
@@ -87,9 +87,9 @@ public class ServletInstrumentation {
         @Advice.OnMethodThrow
         public static void onThrow(
                 @Bind.Thrown Throwable t,
-                OptionalThreadContext context,
                 @Bind.Enter @Nullable Span span,
-                @Bind.Argument(1) @Nullable ServletResponse res) {
+                @Bind.Argument(1) @Nullable ServletResponse res,
+                OptionalThreadContext context) {
 
             onThrowCommon(t, span, res, context);
         }
@@ -105,20 +105,20 @@ public class ServletInstrumentation {
 
         @Advice.OnMethodBefore
         public static @Nullable Span onBefore(
-                OptionalThreadContext context,
                 @Bind.Argument(0) @Nullable ServletRequest req,
                 @Bind.Argument(1) @Nullable ServletResponse res,
-                @Bind.ClassMeta RequestInvoker requestInvoker) {
+                @Bind.ClassMeta RequestInvoker requestInvoker,
+                OptionalThreadContext context) {
 
             return onBeforeCommon(req, res, null, requestInvoker, context);
         }
 
         @Advice.OnMethodReturn
         public static void onReturn(
-                OptionalThreadContext context,
                 @Bind.Enter @Nullable Span span,
                 @Bind.Argument(1) @Nullable ServletResponse res,
-                @Bind.ClassMeta ResponseInvoker responseInvoker) {
+                @Bind.ClassMeta ResponseInvoker responseInvoker,
+                OptionalThreadContext context) {
 
             onReturnCommon(span, res, responseInvoker, context);
         }
@@ -126,9 +126,9 @@ public class ServletInstrumentation {
         @Advice.OnMethodThrow
         public static void onThrow(
                 @Bind.Thrown Throwable t,
-                OptionalThreadContext context,
                 @Bind.Enter @Nullable Span span,
-                @Bind.Argument(1) @Nullable ServletResponse res) {
+                @Bind.Argument(1) @Nullable ServletResponse res,
+                OptionalThreadContext context) {
 
             onThrowCommon(t, span, res, context);
         }
@@ -149,20 +149,20 @@ public class ServletInstrumentation {
 
         @Advice.OnMethodBefore
         public static @Nullable Span onBefore(
-                OptionalThreadContext context,
                 @Bind.Argument(2) @Nullable ServletRequest req,
                 @Bind.Argument(3) @Nullable ServletResponse res,
-                @Bind.ClassMeta RequestInvoker requestInvoker) {
+                @Bind.ClassMeta RequestInvoker requestInvoker,
+                OptionalThreadContext context) {
 
             return onBeforeCommon(req, res, null, requestInvoker, context);
         }
 
         @Advice.OnMethodReturn
         public static void onReturn(
-                OptionalThreadContext context,
                 @Bind.Enter @Nullable Span span,
                 @Bind.Argument(3) @Nullable ServletResponse res,
-                @Bind.ClassMeta ResponseInvoker responseInvoker) {
+                @Bind.ClassMeta ResponseInvoker responseInvoker,
+                OptionalThreadContext context) {
 
             onReturnCommon(span, res, responseInvoker, context);
         }
@@ -170,9 +170,9 @@ public class ServletInstrumentation {
         @Advice.OnMethodThrow
         public static void onThrow(
                 @Bind.Thrown Throwable t,
-                OptionalThreadContext context,
                 @Bind.Enter @Nullable Span span,
-                @Bind.Argument(3) @Nullable ServletResponse res) {
+                @Bind.Argument(3) @Nullable ServletResponse res,
+                OptionalThreadContext context) {
 
             onThrowCommon(t, span, res, context);
         }
@@ -192,20 +192,20 @@ public class ServletInstrumentation {
 
         @Advice.OnMethodBefore
         public static @Nullable Span onBefore(
-                OptionalThreadContext context,
                 @Bind.Argument(0) @Nullable ServletRequest req,
                 @Bind.Argument(1) @Nullable ServletResponse res,
-                @Bind.ClassMeta RequestInvoker requestInvoker) {
+                @Bind.ClassMeta RequestInvoker requestInvoker,
+                OptionalThreadContext context) {
 
             return onBeforeCommon(req, res, "WireMock", requestInvoker, context);
         }
 
         @Advice.OnMethodReturn
         public static void onReturn(
-                OptionalThreadContext context,
                 @Bind.Enter @Nullable Span span,
                 @Bind.Argument(1) @Nullable ServletResponse res,
-                @Bind.ClassMeta ResponseInvoker responseInvoker) {
+                @Bind.ClassMeta ResponseInvoker responseInvoker,
+                OptionalThreadContext context) {
 
             onReturnCommon(span, res, responseInvoker, context);
         }
@@ -213,9 +213,9 @@ public class ServletInstrumentation {
         @Advice.OnMethodThrow
         public static void onThrow(
                 @Bind.Thrown Throwable t,
-                OptionalThreadContext context,
                 @Bind.Enter @Nullable Span span,
-                @Bind.Argument(1) @Nullable ServletResponse res) {
+                @Bind.Argument(1) @Nullable ServletResponse res,
+                OptionalThreadContext context) {
 
             onThrowCommon(t, span, res, context);
         }

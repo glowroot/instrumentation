@@ -962,7 +962,13 @@ class WeavingMethodVisitor extends AdviceAdapter {
                 case OPTIONAL_THREAD_CONTEXT:
                     checkNotNull(threadContextHolderLocal);
                     checkNotNull(threadContextLocal);
-                    loadOptionalThreadContext(nestingGroup, suppressionKey, stack);
+                    Object[] stackPlus = new Object[stack.length + i - startIndex];
+                    System.arraycopy(stack, 0, stackPlus, 0, stack.length);
+                    for (int j = 0; j < i - startIndex; j++) {
+                        stackPlus[stack.length + j] =
+                                convert(parameters.get(startIndex + j).type());
+                    }
+                    loadOptionalThreadContext(nestingGroup, suppressionKey, stackPlus);
                     break;
                 default:
                     // this should have been caught during Advice construction, but just in case:
