@@ -89,8 +89,12 @@ public class OptionalThreadContextImpl implements ThreadContextPlus {
             Span span = agentSPI.startIncomingSpan(operationType, transactionName, getter, carrier,
                     messageSupplier, timerName, threadContextHolder, rootNestingGroupId,
                     rootSuppressionKeyId);
-            threadContext = checkNotNull(threadContextHolder.get());
-            return span;
+            if (span == null) {
+                return NopTransactionService.LOCAL_SPAN;
+            } else {
+                threadContext = checkNotNull(threadContextHolder.get());
+                return span;
+            }
         } else {
             return threadContext.startIncomingSpan(operationType, transactionName, getter, carrier,
                     messageSupplier, timerName, alreadyInTransactionBehavior);

@@ -15,6 +15,8 @@
  */
 package org.glowroot.instrumentation.engine.spi;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import org.glowroot.instrumentation.api.Getter;
 import org.glowroot.instrumentation.api.MessageSupplier;
 import org.glowroot.instrumentation.api.Span;
@@ -23,8 +25,10 @@ import org.glowroot.instrumentation.engine.bytecode.api.ThreadContextThreadLocal
 
 public interface AgentSPI {
 
-    // in addition to returning Span, this method needs to put the newly created thread context into
-    // the threadContextHolder that is passed in
+    // if this returns non-null Span, it must put the newly created thread context into the
+    // threadContextHolder that is passed in, and it must clear the threadContextHolder at the end
+    // of the synchronous part of the span capture
+    @Nullable
     <C> Span startIncomingSpan(String transactionType, String transactionName,
             Getter<C> getter, C carrier, MessageSupplier messageSupplier, TimerName timerName,
             ThreadContextThreadLocal.Holder threadContextHolder, int rootNestingGroupId,
