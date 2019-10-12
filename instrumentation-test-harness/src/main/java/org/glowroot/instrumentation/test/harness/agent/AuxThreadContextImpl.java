@@ -81,8 +81,8 @@ public class AuxThreadContextImpl implements AuxThreadContext {
 
         TwoPartCompletion auxThreadAsyncCompletion = new TwoPartCompletion();
 
-        threadContext = new ThreadContextImpl(threadContextHolder, incomingSpan, currTimerStack,
-                currParentSpanStack, 0, 0, auxThreadAsyncCompletion);
+        threadContext = new ThreadContextImpl(incomingSpan, currTimerStack, currParentSpanStack, 0,
+                0, auxThreadAsyncCompletion);
         threadContextHolder.set(threadContext);
         if (completeAsyncTransaction) {
             threadContext.setTransactionAsyncComplete();

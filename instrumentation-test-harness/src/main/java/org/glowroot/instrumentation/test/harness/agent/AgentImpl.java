@@ -52,9 +52,8 @@ class AgentImpl implements AgentSPI {
                 new IncomingSpanImpl(transactionType, transactionName, messageSupplier,
                         threadContextHolder, mainThreadTimer, currParentSpanStack, startNanoTime);
         currParentSpanStack.push(incomingSpan);
-        ThreadContextImpl threadContext =
-                new ThreadContextImpl(threadContextHolder, incomingSpan, currTimerStack,
-                        currParentSpanStack, rootNestingGroupId, rootSuppressionKeyId, null);
+        ThreadContextImpl threadContext = new ThreadContextImpl(incomingSpan, currTimerStack,
+                currParentSpanStack, rootNestingGroupId, rootSuppressionKeyId, null);
         threadContextHolder.set(threadContext);
 
         return incomingSpan;

@@ -31,7 +31,6 @@ import org.glowroot.instrumentation.api.Setter;
 import org.glowroot.instrumentation.api.Span;
 import org.glowroot.instrumentation.api.TimerName;
 import org.glowroot.instrumentation.engine.bytecode.api.ThreadContextPlus;
-import org.glowroot.instrumentation.engine.bytecode.api.ThreadContextThreadLocal;
 import org.glowroot.instrumentation.engine.impl.TimerNameImpl;
 import org.glowroot.instrumentation.engine.util.TwoPartCompletion;
 import org.glowroot.instrumentation.test.harness.agent.spans.AsyncOutgoingSpanImpl;
@@ -48,8 +47,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ThreadContextImpl implements ThreadContextPlus {
 
-    private final ThreadContextThreadLocal.Holder threadContextHolder;
-
     private final IncomingSpanImpl incomingSpan;
 
     private final Deque<TimerImpl> currTimerStack;
@@ -60,21 +57,15 @@ public class ThreadContextImpl implements ThreadContextPlus {
 
     private final @Nullable TwoPartCompletion auxThreadAsyncCompletion;
 
-    public ThreadContextImpl(ThreadContextThreadLocal.Holder threadContextHolder,
-            IncomingSpanImpl incomingSpan, Deque<TimerImpl> currTimerStack,
+    public ThreadContextImpl(IncomingSpanImpl incomingSpan, Deque<TimerImpl> currTimerStack,
             Deque<ParentSpanImpl> currParentSpanStack, int rootNestingGroupId,
             int rootSuppressionKeyId, @Nullable TwoPartCompletion auxThreadAsyncCompletion) {
-        this.threadContextHolder = threadContextHolder;
         this.incomingSpan = incomingSpan;
         this.currTimerStack = currTimerStack;
         this.currParentSpanStack = currParentSpanStack;
         currentNestingGroupId = rootNestingGroupId;
         currentSuppressionKeyId = rootSuppressionKeyId;
         this.auxThreadAsyncCompletion = auxThreadAsyncCompletion;
-    }
-
-    ThreadContextThreadLocal.Holder getThreadContextHolder() {
-        return threadContextHolder;
     }
 
     @Override
