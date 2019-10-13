@@ -144,13 +144,7 @@ public class Weaver {
         boolean frames = accv.getMajorVersion() >= V1_6;
         int parsingOptions = frames ? ClassReader.EXPAND_FRAMES : ClassReader.SKIP_FRAMES;
         byte[] maybeProcessedBytes = null;
-        if (accv.isConstructorPointcut()) {
-            ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-            ClassVisitor cv = new PointcutClassVisitor(cw);
-            ClassReader cr = new ClassReader(classBytes);
-            cr.accept(new JSRInlinerClassVisitor(cv), parsingOptions);
-            maybeProcessedBytes = cw.toByteArray();
-        } else if (className.equals(ImportantClassNames.JBOSS_WELD_HACK_CLASS_NAME)) {
+        if (className.equals(ImportantClassNames.JBOSS_WELD_HACK_CLASS_NAME)) {
             ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
             ClassVisitor cv = new JBossWeldHackClassVisitor(cw);
             ClassReader cr = new ClassReader(classBytes);

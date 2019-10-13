@@ -146,4 +146,16 @@ public class Bind {
     @Target(PARAMETER)
     @Retention(RUNTIME)
     public @interface Enter {}
+
+    /**
+     * Annotates a parameter to an {@literal @}{@link Advice.OnMethodBefore} method in a
+     * {@literal @}{@link Pointcut} class.
+     * 
+     * This is needed in rare circumstances because constructors cannot have jumps prior to calling
+     * super.
+     */
+    // TODO find a real name for this!
+    @Target(PARAMETER)
+    @Retention(RUNTIME)
+    public @interface Special {}
 }

@@ -184,8 +184,10 @@ public class SomeInstrumentation {
         }
 
         @Advice.OnMethodBefore
-        public static void onBefore() {
-            SomeInstrumentationThreadLocals.onBeforeCount.increment();
+        public static void onBefore(@Bind.Special boolean enabled) {
+            if (enabled) {
+                SomeInstrumentationThreadLocals.onBeforeCount.increment();
+            }
         }
 
         @Advice.OnMethodReturn
@@ -217,9 +219,11 @@ public class SomeInstrumentation {
         }
 
         @Advice.OnMethodBefore
-        public static void onBefore() {
-            SomeInstrumentationThreadLocals.orderedEvents.get().add("onBefore");
-            SomeInstrumentationThreadLocals.onBeforeCount.increment();
+        public static void onBefore(@Bind.Special boolean enabled) {
+            if (enabled) {
+                SomeInstrumentationThreadLocals.orderedEvents.get().add("onBefore");
+                SomeInstrumentationThreadLocals.onBeforeCount.increment();
+            }
         }
 
         @Advice.OnMethodReturn
@@ -1731,8 +1735,10 @@ public class SomeInstrumentation {
         }
 
         @Advice.OnMethodBefore
-        public static void onBefore() {
-            SomeInstrumentationThreadLocals.onBeforeCount.increment();
+        public static void onBefore(@Bind.Special boolean enabled) {
+            if (enabled) {
+                SomeInstrumentationThreadLocals.onBeforeCount.increment();
+            }
         }
 
         @Advice.OnMethodReturn
@@ -1764,8 +1770,10 @@ public class SomeInstrumentation {
         }
 
         @Advice.OnMethodBefore
-        public static void onBefore() {
-            SomeInstrumentationThreadLocals.onBeforeCount.increment();
+        public static void onBefore(@Bind.Special boolean enabled) {
+            if (enabled) {
+                SomeInstrumentationThreadLocals.onBeforeCount.increment();
+            }
         }
 
         @Advice.OnMethodReturn

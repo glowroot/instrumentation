@@ -16,7 +16,6 @@
 package org.glowroot.instrumentation.engine.init;
 
 import java.io.File;
-import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.lang.management.ManagementFactory;
 import java.util.Collections;
@@ -53,7 +52,6 @@ import org.glowroot.instrumentation.engine.weaving.AnalyzedWorld;
 import org.glowroot.instrumentation.engine.weaving.BytecodeServiceImpl;
 import org.glowroot.instrumentation.engine.weaving.BytecodeServiceImpl.OnEnteringMain;
 import org.glowroot.instrumentation.engine.weaving.Java9;
-import org.glowroot.instrumentation.engine.weaving.PointcutClassFileTransformer;
 import org.glowroot.instrumentation.engine.weaving.PreloadSomeSuperTypesCache;
 import org.glowroot.instrumentation.engine.weaving.Weaver;
 import org.glowroot.instrumentation.engine.weaving.WeavingClassFileTransformer;
@@ -137,7 +135,6 @@ public class EngineModule {
                 }
             }
 
-            ClassFileTransformer pointcutClassFileTransformer = null;
             if (instrumentation != null) {
                 for (InstrumentationDescriptor descriptor : instrumentationDescriptors) {
                     File jarFile = descriptor.jarFile();
@@ -145,14 +142,9 @@ public class EngineModule {
                         instrumentation.appendToBootstrapClassLoaderSearch(new JarFile(jarFile));
                     }
                 }
-                pointcutClassFileTransformer = new PointcutClassFileTransformer();
-                instrumentation.addTransformer(pointcutClassFileTransformer);
             }
             adviceCache = new AdviceCache(instrumentationDescriptors, reweavableAdviceConfigs,
                     instrumentation, doNotWeavePrefixes, tmpDir);
-            if (pointcutClassFileTransformer != null) {
-                checkNotNull(instrumentation).removeTransformer(pointcutClassFileTransformer);
-            }
             preloadSomeSuperTypesCache = new PreloadSomeSuperTypesCache(
                     new File(tmpDir, "preload-some-super-types-cache"), 50000);
             analyzedWorld = new AnalyzedWorld(adviceCache.getAdvisorsSupplier(),

@@ -231,10 +231,15 @@ public class ExecutorInstrumentation {
         // OpenJ9, and for good reason since receiver is not initialized before call to super)
         @Advice.OnMethodBefore
         public static boolean onBefore(
+                @Bind.Special boolean enabled,
                 @Bind.Argument(0) ParameterHolder<Runnable> runnableHolder,
                 ThreadContext context) {
 
-            return onThreadInitCommon(runnableHolder, context);
+            if (enabled) {
+                return onThreadInitCommon(runnableHolder, context);
+            } else {
+                return false;
+            }
         }
 
         @Advice.OnMethodReturn
@@ -259,10 +264,15 @@ public class ExecutorInstrumentation {
         // OpenJ9, and for good reason since receiver is not initialized before call to super)
         @Advice.OnMethodBefore
         public static boolean onBefore(
+                @Bind.Special boolean enabled,
                 @Bind.Argument(1) ParameterHolder<Runnable> runnableHolder,
                 ThreadContext context) {
 
-            return onThreadInitCommon(runnableHolder, context);
+            if (enabled) {
+                return onThreadInitCommon(runnableHolder, context);
+            } else {
+                return false;
+            }
         }
 
         @Advice.OnMethodReturn

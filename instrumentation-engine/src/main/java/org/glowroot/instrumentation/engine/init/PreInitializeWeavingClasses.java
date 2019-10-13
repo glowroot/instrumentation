@@ -423,11 +423,6 @@ class PreInitializeWeavingClasses {
                 + "$PointcutAnnotationVisitor$1");
         types.add("org.glowroot.instrumentation.engine.weaving.InstrumentationDetailBuilder"
                 + "$StringArrayAnnotationVisitor");
-        types.add("org.glowroot.instrumentation.engine.weaving.PointcutClassVisitor");
-        types.add("org.glowroot.instrumentation.engine.weaving.PointcutClassVisitor"
-                + "$PointcutAnnotationVisitor");
-        types.add("org.glowroot.instrumentation.engine.weaving.PointcutClassVisitor"
-                + "$PointcutMethodVisitor");
         types.add("org.glowroot.instrumentation.engine.weaving.PreloadSomeSuperTypesCache");
         types.add("org.glowroot.instrumentation.engine.weaving.PreloadSomeSuperTypesCache"
                 + "$CacheValue");
@@ -436,8 +431,6 @@ class PreInitializeWeavingClasses {
         types.add("org.glowroot.instrumentation.engine.weaving.ThinClassVisitor");
         types.add("org.glowroot.instrumentation.engine.weaving.ThinClassVisitor"
                 + "$AnnotationCaptureMethodVisitor");
-        types.add("org.glowroot.instrumentation.engine.weaving.ThinClassVisitor"
-                + "$PointcutAnnotationVisitor");
         types.add("org.glowroot.instrumentation.engine.weaving.ThinClassVisitor"
                 + "$RemoteAnnotationVisitor");
         types.add("org.glowroot.instrumentation.engine.weaving.ThinClassVisitor"
@@ -473,6 +466,7 @@ class PreInitializeWeavingClasses {
         types.add("org.glowroot.instrumentation.api.weaving.Bind$Return");
         types.add("org.glowroot.instrumentation.api.weaving.Bind$Thrown");
         types.add("org.glowroot.instrumentation.api.weaving.Bind$Enter");
+        types.add("org.glowroot.instrumentation.api.weaving.Bind$Special");
         types.add("org.glowroot.instrumentation.api.weaving.Advice$IsEnabled");
         types.add("org.glowroot.instrumentation.api.weaving.Advice$MethodModifier");
         types.add("org.glowroot.instrumentation.api.weaving.Advice$OnMethodAfter");
@@ -617,7 +611,6 @@ class PreInitializeWeavingClasses {
         types.add("org.glowroot.instrumentation.engine.weaving.ThinClassVisitor$1");
         types.add("org.glowroot.instrumentation.engine.weaving.InstrumentationClassRenamer$1");
         types.add("org.glowroot.instrumentation.engine.weaving.InstrumentationDetailBuilder$1");
-        types.add("org.glowroot.instrumentation.engine.weaving.PointcutClassVisitor$1");
         types.add("org.glowroot.instrumentation.engine.weaving.Weaver$1");
         types.add("org.glowroot.instrumentation.engine.weaving.Weaver$2");
         types.add("org.glowroot.instrumentation.engine.weaving.Weaver$FelixOsgiHackClassVisitor$1");

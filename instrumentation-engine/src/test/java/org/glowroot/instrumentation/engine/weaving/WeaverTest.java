@@ -1336,8 +1336,7 @@ public class WeaverTest {
     @Test
     public void shouldHandleConstructorPointcut() throws Exception {
         // given
-        Misc test = newWovenObject(BasicMisc.class, Misc.class,
-                enhanceConstructorAdviceClass(BasicMiscConstructorAdvice.class));
+        Misc test = newWovenObject(BasicMisc.class, Misc.class, BasicMiscConstructorAdvice.class);
         // reset thread locals after instantiated BasicMisc, to avoid counting that constructor call
         SomeInstrumentationThreadLocals.resetThreadLocals();
         // when
@@ -1353,8 +1352,8 @@ public class WeaverTest {
     @Test
     public void shouldVerifyConstructorPointcutsAreNested() throws Exception {
         // given
-        Misc test = newWovenObject(BasicMisc.class, Misc.class,
-                enhanceConstructorAdviceClass(BasicMiscAllConstructorAdvice.class));
+        Misc test =
+                newWovenObject(BasicMisc.class, Misc.class, BasicMiscAllConstructorAdvice.class);
         // reset thread locals after instantiated BasicMisc, to avoid counting that constructor call
         SomeInstrumentationThreadLocals.resetThreadLocals();
         // when
@@ -1741,7 +1740,7 @@ public class WeaverTest {
         LazyDefinedClass implClass =
                 GenerateHackedConstructorBytecode.generateHackedConstructorBytecode();
         newWovenObject(implClass, GenerateHackedConstructorBytecode.Test.class,
-                enhanceConstructorAdviceClass(HackedConstructorBytecodeAdvice.class));
+                HackedConstructorBytecodeAdvice.class);
         // when
         // (advice is on constructor, so already captured above)
         // then
@@ -1758,7 +1757,7 @@ public class WeaverTest {
         LazyDefinedClass implClass =
                 GenerateMoreHackedConstructorBytecode.generateMoreHackedConstructorBytecode();
         newWovenObject(implClass, GenerateMoreHackedConstructorBytecode.Test.class,
-                enhanceConstructorAdviceClass(HackedConstructorBytecodeAdvice.class));
+                HackedConstructorBytecodeAdvice.class);
         // when
         // (advice is on constructor, so already captured above)
         // then
@@ -1779,15 +1778,22 @@ public class WeaverTest {
         Exception exception = null;
         try {
             newWovenObject(implClass, GenerateHackedConstructorBytecode.Test.class,
-                    enhanceConstructorAdviceClass(HackedConstructorBytecodeJumpingAdvice.class));
+                    HackedConstructorBytecodeJumpingAdvice.class);
         } catch (Exception e) {
             exception = e;
+        }
+        Throwable cause = exception.getCause();
+        if (cause == null) {
+            throw exception;
+        }
+        cause = cause.getCause();
+        if (cause == null) {
+            throw exception;
         }
 
         // then
         // this is just to confirm VerifyError is not encountered above due to bad class frames
-        assertThat(exception.getCause().getCause().getMessage())
-                .startsWith("Bytecode service retrieved ");
+        assertThat(cause.getMessage()).startsWith("Bytecode service retrieved ");
     }
 
     // ===================== test mutable parameter =====================
@@ -1900,12 +1906,6 @@ public class WeaverTest {
 
     private static MixinType newMixin(Class<?> clazz) throws Exception {
         return MixinType.create(InstrumentationDetailBuilder.buildMixinClass(clazz));
-    }
-
-    private static Class<?> enhanceConstructorAdviceClass(Class<?> adviceClass)
-            throws ClassNotFoundException {
-        IsolatedWeavingClassLoader isolatedWeavingClassLoader = new IsolatedWeavingClassLoader();
-        return Class.forName(adviceClass.getName(), false, isolatedWeavingClassLoader);
     }
 
     private static void assumeJdk7() {

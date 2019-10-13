@@ -440,7 +440,7 @@ class WeavingMethodVisitor extends AdviceAdapter {
         }
         if (isEnabledAdvice != null) {
             loadMethodParameters(advice.isEnabledParameters(), 0, null, advice.adviceType(),
-                    IsEnabled.class, false, null, nestingGroup, suppressionKey);
+                    IsEnabled.class, false, null, null, nestingGroup, suppressionKey);
             visitMethodInsn(INVOKESTATIC, advice.adviceType().getInternalName(),
                     isEnabledAdvice.getName(), isEnabledAdvice.getDescriptor(), false);
             if (otherEnabledFactorsDisabledEnd == null) {
@@ -600,7 +600,8 @@ class WeavingMethodVisitor extends AdviceAdapter {
         Label onBeforeBlockEnd = null;
         if (enabledLocal != null) {
             if (name.equals("<init>")) {
-                loadLocal(enabledLocal);
+                // this is
+
             } else {
                 onBeforeBlockEnd = new Label();
                 loadLocal(enabledLocal);
@@ -610,17 +611,11 @@ class WeavingMethodVisitor extends AdviceAdapter {
         Map<Integer, Integer> parameterHolderLocals =
                 checkNotNull(this.parameterHolderLocals.get(advice));
         loadMethodParameters(advice.onBeforeParameters(), 0, null, advice.adviceType(),
-                OnMethodBefore.class, false, parameterHolderLocals,
+                OnMethodBefore.class, false, parameterHolderLocals, enabledLocal,
                 advice.pointcut().nestingGroup(),
                 advice.pointcut().suppressionKey());
-        if (enabledLocal != null && name.equals("<init>")) {
-            String descriptor = "(Z" + onBeforeAdvice.getDescriptor().substring(1);
-            visitMethodInsn(INVOKESTATIC, advice.adviceType().getInternalName(),
-                    onBeforeAdvice.getName(), descriptor, false);
-        } else {
-            visitMethodInsn(INVOKESTATIC, advice.adviceType().getInternalName(),
-                    onBeforeAdvice.getName(), onBeforeAdvice.getDescriptor(), false);
-        }
+        visitMethodInsn(INVOKESTATIC, advice.adviceType().getInternalName(),
+                onBeforeAdvice.getName(), onBeforeAdvice.getDescriptor(), false);
         if (travelerLocal != null) {
             storeLocal(travelerLocal);
         }
@@ -743,7 +738,7 @@ class WeavingMethodVisitor extends AdviceAdapter {
             }
             loadMethodParameters(advice.onReturnParameters(), startIndex,
                     travelerLocals.get(advice), advice.adviceType(), OnMethodReturn.class, true,
-                    null,
+                    null, null,
                     advice.pointcut().nestingGroup(), advice.pointcut().suppressionKey(), stack);
         } else if (onReturnAdvice.getReturnType().getSort() != Type.VOID && opcode != RETURN) {
             pop();
@@ -821,7 +816,7 @@ class WeavingMethodVisitor extends AdviceAdapter {
                 stack = new Object[] {"java/lang/Throwable"};
             }
             loadMethodParameters(advice.onThrowParameters(), startIndex, travelerLocals.get(advice),
-                    advice.adviceType(), OnMethodThrow.class, true, null,
+                    advice.adviceType(), OnMethodThrow.class, true, null, null,
                     advice.pointcut().nestingGroup(), advice.pointcut().suppressionKey(), stack);
         }
         visitMethodInsn(INVOKESTATIC, advice.adviceType().getInternalName(),
@@ -848,7 +843,7 @@ class WeavingMethodVisitor extends AdviceAdapter {
         // TODO load return and throwable as needed
 
         loadMethodParameters(advice.onAfterParameters(), 0, travelerLocals.get(advice),
-                advice.adviceType(), OnMethodAfter.class, true, null,
+                advice.adviceType(), OnMethodAfter.class, true, null, null,
                 advice.pointcut().nestingGroup(),
                 advice.pointcut().suppressionKey());
         visitMethodInsn(INVOKESTATIC, advice.adviceType().getInternalName(),
@@ -919,8 +914,8 @@ class WeavingMethodVisitor extends AdviceAdapter {
     private void loadMethodParameters(List<AdviceParameter> parameters, int startIndex,
             @Nullable Integer travelerLocal, Type adviceType,
             Class<? extends Annotation> annotationType, boolean useSavedArgs,
-            @Nullable Map<Integer, Integer> parameterHolderLocals, String nestingGroup,
-            String suppressionKey, Object... stack) {
+            @Nullable Map<Integer, Integer> parameterHolderLocals, @Nullable Integer enabledLocal,
+            String nestingGroup, String suppressionKey, Object... stack) {
         for (int i = startIndex; i < parameters.size(); i++) {
             AdviceParameter parameter = parameters.get(i);
             switch (parameter.kind()) {
@@ -969,6 +964,9 @@ class WeavingMethodVisitor extends AdviceAdapter {
                                 convert(parameters.get(startIndex + j).type());
                     }
                     loadOptionalThreadContext(nestingGroup, suppressionKey, stackPlus);
+                    break;
+                case SPECIAL:
+                    loadLocal(checkNotNull(enabledLocal));
                     break;
                 default:
                     // this should have been caught during Advice construction, but just in case:

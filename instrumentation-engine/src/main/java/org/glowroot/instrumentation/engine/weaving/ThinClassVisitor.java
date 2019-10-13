@@ -36,8 +36,6 @@ class ThinClassVisitor extends ClassVisitor {
 
     private @Nullable ThinClass thinClass;
 
-    private boolean constructorPointcut;
-
     ThinClassVisitor() {
         super(ASM7);
     }
@@ -57,9 +55,7 @@ class ThinClassVisitor extends ClassVisitor {
     @Override
     public @Nullable AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
         thinClassBuilder.addAnnotations(descriptor);
-        if (descriptor.equals("Lorg/glowroot/instrumentation/api/weaving/Advice$Pointcut;")) {
-            return new PointcutAnnotationVisitor();
-        } else if (descriptor.equals("Ljavax/ejb/Remote;")) {
+        if (descriptor.equals("Ljavax/ejb/Remote;")) {
             return new RemoteAnnotationVisitor();
         } else {
             return null;
@@ -91,10 +87,6 @@ class ThinClassVisitor extends ClassVisitor {
 
     ThinClass getThinClass() {
         return checkNotNull(thinClass);
-    }
-
-    boolean isConstructorPointcut() {
-        return constructorPointcut;
     }
 
     @Value.Immutable
@@ -133,20 +125,6 @@ class ThinClassVisitor extends ClassVisitor {
         List<String> exceptions();
 
         List<String> annotations();
-    }
-
-    private class PointcutAnnotationVisitor extends AnnotationVisitor {
-
-        private PointcutAnnotationVisitor() {
-            super(ASM7);
-        }
-
-        @Override
-        public void visit(@Nullable String name, Object value) {
-            if ("methodName".equals(name) && "<init>".equals(value)) {
-                constructorPointcut = true;
-            }
-        }
     }
 
     private class AnnotationCaptureMethodVisitor extends MethodVisitor {

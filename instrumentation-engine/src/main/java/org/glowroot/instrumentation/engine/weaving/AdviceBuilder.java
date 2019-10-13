@@ -67,6 +67,7 @@ class AdviceBuilder {
     private static final Type BindTravelerType = Type.getType(Bind.Enter.class);
     private static final Type BindClassMetaType = Type.getType(Bind.ClassMeta.class);
     private static final Type BindMethodMetaType = Type.getType(Bind.MethodMeta.class);
+    private static final Type BindSpecialType = Type.getType(Bind.Special.class);
 
     private static final Type StringType = Type.getType(String.class);
     private static final Type ThrowableType = Type.getType(Throwable.class);
@@ -76,7 +77,7 @@ class AdviceBuilder {
                     BindMethodNameType, BindClassMetaType, BindMethodMetaType);
     private static final ImmutableList<Type> onBeforeBindAnnotationTypes =
             ImmutableList.of(BindReceiverType, BindParameterType, BindParameterArrayType,
-                    BindMethodNameType, BindClassMetaType, BindMethodMetaType);
+                    BindMethodNameType, BindClassMetaType, BindMethodMetaType, BindSpecialType);
     private static final ImmutableList<Type> onReturnBindAnnotationTypes =
             ImmutableList.of(BindReceiverType, BindParameterType, BindParameterArrayType,
                     BindMethodNameType, BindReturnType, BindOptionalReturnType, BindTravelerType,
@@ -102,6 +103,7 @@ class AdviceBuilder {
                     .put(BindTravelerType, ParameterKind.TRAVELER)
                     .put(BindClassMetaType, ParameterKind.CLASS_META)
                     .put(BindMethodMetaType, ParameterKind.METHOD_META)
+                    .put(BindSpecialType, ParameterKind.SPECIAL)
                     .build();
 
     private final ImmutableAdvice.Builder builder = ImmutableAdvice.builder();
@@ -180,23 +182,43 @@ class AdviceBuilder {
                     classRenamer.buildNonBootstrapLoaderAdvice(builder.build()));
         }
         Advice advice = builder.build();
-        if (pointcut.methodName().equals("<init>") && advice.onBeforeAdvice() != null
-                && advice.hasBindOptionalThreadContext()) {
-            // this is because of the way @Advice.OnMethodBefore advice is handled on constructors,
-            // see WeavingMethodVisitory.invokeOnBefore()
-            throw new IllegalStateException("@BindOptionalThreadContext is not allowed in a"
-                    + " @Advice.Pointcut with methodName \"<init>\" that has an @Advice.OnMethodBefore"
-                    + " method");
-        }
-        if (pointcut.methodName().equals("<init>") && advice.isEnabledAdvice() != null) {
-            for (AdviceParameter parameter : advice.isEnabledParameters()) {
-                if (parameter.kind() == ParameterKind.RECEIVER) {
-                    // @Advice.IsEnabled is called before the super constructor is called, so "this"
-                    // is not
-                    // available yet
-                    throw new IllegalStateException(
-                            "@Advice.This is not allowed on @Advice.IsEnabled for"
-                                    + " a @Advice.Pointcut with methodName \"<init>\"");
+        if (pointcut.methodName().equals("<init>")) {
+            if (advice.onBeforeAdvice() != null && advice.hasBindOptionalThreadContext()) {
+                // this is because of the way @Advice.OnMethodBefore advice is handled on
+                // constructors, see WeavingMethodVisitory.invokeOnBefore()
+                throw new IllegalStateException("@BindOptionalThreadContext is not allowed in a"
+                        + " @Advice.Pointcut with methodName \"<init>\" that has an"
+                        + " @Advice.OnMethodBefore method");
+            }
+            if (advice.isEnabledAdvice() != null) {
+                for (AdviceParameter parameter : advice.isEnabledParameters()) {
+                    if (parameter.kind() == ParameterKind.RECEIVER) {
+                        // @Advice.IsEnabled is called before the super constructor is called, so
+                        // "this" is not available yet
+                        throw new IllegalStateException(
+                                "@Advice.This is not allowed on @Advice.IsEnabled for"
+                                        + " a @Advice.Pointcut with methodName \"<init>\"");
+                    }
+                }
+            }
+            if (hasOnBeforeAdvice) {
+                boolean needsSpecial = hasIsEnabledAdvice || !pointcut.nestingGroup().isEmpty()
+                        || !pointcut.suppressibleUsingKey().isEmpty()
+                        || (advice.hasBindThreadContext()
+                                && !advice.hasBindOptionalThreadContext());
+                boolean hasSpecial = false;
+                for (AdviceParameter parameter : advice.onBeforeParameters()) {
+                    if (parameter.kind() == ParameterKind.SPECIAL) {
+                        hasSpecial = true;
+                        break;
+                    }
+                }
+                if (needsSpecial) {
+                    checkState(hasSpecial, "@Advice.OnMethodBefore for this particular constructor"
+                            + " pointcut requires @Bind.Special");
+                } else {
+                    checkState(!hasSpecial, "@Advice.OnMethodBefore for this particular constructor"
+                            + " pointcut does not require @Bind.Special");
                 }
             }
         }
@@ -365,6 +387,10 @@ class AdviceBuilder {
             Type bindAnnotationType = bindAnnotation.type();
             checkState(validBindAnnotationTypes.contains(bindAnnotationType), "Annotation '"
                     + bindAnnotationType.getClassName() + "' found in an invalid location");
+            if (bindAnnotationType.equals(BindSpecialType)) {
+                checkState(parameterTypes[i].getSort() == Type.BOOLEAN,
+                        "@Bind.Special must be bound to a boolean parameter");
+            }
             parameters.add(getAdviceParameter(bindAnnotationType, parameterTypes[i],
                     bindAnnotation.argIndex()));
         }
