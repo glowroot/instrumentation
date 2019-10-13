@@ -21,12 +21,14 @@ case "$1" in
 
       "test") if [[ "$USE_LOCAL_TEST_HARNESS" == "true" ]]
               then
-                mvn clean install -DargLine="$surefire_jvm_args" \
+                mvn clean install -P play-2.x,play-2.4.x \
+                                  -DargLine="$surefire_jvm_args" \
                                   -Dtest.harness.skipShading \
                                   -Dtest.harness=local \
                                   -B
               else
-                mvn clean install -DargLine="$surefire_jvm_args" \
+                mvn clean install -P play-2.x,play-2.4.x \
+                                  -DargLine="$surefire_jvm_args" \
                                   -B
               fi
               echo running jdbc tests with test.jdbcConnectionType=H2 ...
