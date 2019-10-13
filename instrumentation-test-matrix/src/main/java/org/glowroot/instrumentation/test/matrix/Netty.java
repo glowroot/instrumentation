@@ -32,22 +32,12 @@ public class Netty {
     }
 
     static void runShort() throws Exception {
-        nettyShort();
-        vertxShort();
-    }
-
-    static void runAll() throws Exception {
-        nettyAll();
-        vertxAll();
-    }
-
-    private static void nettyShort() throws Exception {
         runNetty3x("3.3.0.Final");
         runNetty4x("4.0.0.Final");
         runNettyHttp2("4.1.0.Final");
     }
 
-    private static void nettyAll() throws Exception {
+    static void runAll() throws Exception {
         runNetty3x("3.3.0.Final");
         runNetty3x("3.3.1.Final");
         for (int i = 0; i <= 6; i++) {
@@ -87,85 +77,23 @@ public class Netty {
         }
     }
 
-    private static void vertxShort() throws Exception {
-        runVertx1x("1.2.1.final");
-        runVertx2x("2.0.0-final", "4.0.2.Final");
-        runVertx3x("3.0.0", "4.0.28.Final");
-    }
-
-    private static void vertxAll() throws Exception {
-        runVertx1x("1.2.1.final");
-        runVertx1x("1.2.3.final");
-        runVertx1x("1.3.0.final");
-        runVertx1x("1.3.1.final");
-
-        runVertx2x("2.0.0-final", "4.0.2.Final");
-        runVertx2x("2.0.1-final", "4.0.7.Final");
-        runVertx2x("2.0.2-final", "4.0.10.Final");
-
-        runVertx2x("2.1", "4.0.19.Final");
-        runVertx2x("2.1.1", "4.0.20.Final");
-        runVertx2x("2.1.2", "4.0.20.Final");
-        runVertx2x("2.1.3", "4.0.21.Final");
-        runVertx2x("2.1.4", "4.0.21.Final");
-        runVertx2x("2.1.5", "4.0.21.Final");
-        runVertx2x("2.1.6", "4.0.21.Final");
-
-        runVertx3x("3.0.0", "4.0.28.Final");
-        runVertx3x("3.1.0", "4.0.31.Final");
-        runVertx3x("3.2.0", "4.0.33.Final");
-        runVertx3x("3.2.1", "4.0.33.Final");
-        runVertx3x("3.3.0", "4.1.1.Final");
-        runVertx3x("3.3.1", "4.1.1.Final");
-        runVertx3x("3.3.2", "4.1.1.Final");
-        runVertx3x("3.3.3", "4.1.5.Final");
-        runVertx3x("3.4.0", "4.1.8.Final");
-        runVertx3x("3.4.1", "4.1.8.Final");
-        runVertx3x("3.4.2", "4.1.8.Final");
-        runVertx3x("3.5.0", "4.1.15.Final");
-        runVertx3x("3.5.1", "4.1.19.Final");
-        runVertx3x("3.5.2", "4.1.19.Final");
-        runVertx3x("3.5.3", "4.1.19.Final");
-        runVertx3x("3.5.4", "4.1.19.Final");
-        runVertx3x("3.6.0", "4.1.30.Final");
-        runVertx3x("3.6.1", "4.1.30.Final");
-        runVertx3x("3.6.2", "4.1.30.Final");
-    }
-
     private static void runNetty3x(String version) throws Exception {
-        Util.updateLibVersion(MODULE_PATH, "netty.version", version);
-        Util.runTests(MODULE_PATH, "netty-3.x", JAVA8, JAVA7, JAVA6);
+        Util.updateLibVersion(MODULE_PATH, "netty3x.version", version);
+        Util.runTest(MODULE_PATH, "Netty3xIT", JAVA8, JAVA7, JAVA6);
     }
 
     private static void runNetty4x(String version) throws Exception {
-        Util.updateLibVersion(MODULE_PATH, "netty.version", version);
-        Util.runTests(MODULE_PATH, "netty-4.x", JAVA8, JAVA7, JAVA6);
+        Util.updateLibVersion(MODULE_PATH, "netty4x.version", version);
+        Util.runTest(MODULE_PATH, "Netty4xIT", JAVA8, JAVA7, JAVA6);
     }
 
     private static void runNetty4xJava7(String version) throws Exception {
-        Util.updateLibVersion(MODULE_PATH, "netty.version", version);
-        Util.runTests(MODULE_PATH, "netty-4.x", JAVA8, JAVA7);
+        Util.updateLibVersion(MODULE_PATH, "netty4x.version", version);
+        Util.runTest(MODULE_PATH, "Netty4xIT", JAVA8, JAVA7);
     }
 
     private static void runNettyHttp2(String version) throws Exception {
-        Util.updateLibVersion(MODULE_PATH, "netty.version", version);
-        Util.runTests(MODULE_PATH, "netty-http2", JAVA8, JAVA7);
-    }
-
-    private static void runVertx1x(String version) throws Exception {
-        Util.updateLibVersion(MODULE_PATH, "vertx.version", version);
-        Util.runTests(MODULE_PATH, "vertx-1.x", JAVA8, JAVA7);
-    }
-
-    private static void runVertx2x(String vertxVersion, String nettyVersion) throws Exception {
-        Util.updateLibVersion(MODULE_PATH, "vertx.version", vertxVersion);
-        Util.updateLibVersion(MODULE_PATH, "netty.version", nettyVersion);
-        Util.runTests(MODULE_PATH, "vertx-2.x", JAVA8, JAVA7);
-    }
-
-    private static void runVertx3x(String vertxVersion, String nettyVersion) throws Exception {
-        Util.updateLibVersion(MODULE_PATH, "vertx.version", vertxVersion);
-        Util.updateLibVersion(MODULE_PATH, "netty.version", nettyVersion);
-        Util.runTests(MODULE_PATH, "vertx-3.x", JAVA8);
+        Util.updateLibVersion(MODULE_PATH, "netty4x.version", version);
+        Util.runTest(MODULE_PATH, "Netty4xIT", "netty-http2", JAVA8, JAVA7);
     }
 }
