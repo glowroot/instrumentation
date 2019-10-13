@@ -23,14 +23,17 @@ import org.objectweb.asm.Type;
 
 import org.glowroot.instrumentation.api.weaving.Shim;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 @Value.Immutable
 abstract class ShimType {
 
-    static ShimType create(Shim shim, Class<?> iface) {
+    static ShimType create(Class<?> shimInterface) {
+        Shim shim = checkNotNull(shimInterface.getAnnotation(Shim.class));
         ImmutableShimType.Builder builder = ImmutableShimType.builder();
         builder.addTargets(shim.value());
-        builder.iface(Type.getType(iface));
-        for (Method method : iface.getMethods()) {
+        builder.iface(Type.getType(shimInterface));
+        for (Method method : shimInterface.getMethods()) {
             if (method.isAnnotationPresent(Shim.class)) {
                 builder.addShimMethods(method);
             }

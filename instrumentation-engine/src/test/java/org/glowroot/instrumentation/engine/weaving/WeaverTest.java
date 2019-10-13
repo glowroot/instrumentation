@@ -1845,9 +1845,8 @@ public class WeaverTest {
             mixinTypes.add(newMixin(adviceOrShimOrMixinClass));
         }
         List<ShimType> shimTypes = Lists.newArrayList();
-        Shim shim = adviceOrShimOrMixinClass.getAnnotation(Shim.class);
-        if (shim != null) {
-            shimTypes.add(ShimType.create(shim, adviceOrShimOrMixinClass));
+        if (adviceOrShimOrMixinClass.isAnnotationPresent(Shim.class)) {
+            shimTypes.add(ShimType.create(adviceOrShimOrMixinClass));
         }
         Supplier<List<Advice>> advisorsSupplier =
                 Suppliers.<List<Advice>>ofInstance(ImmutableList.copyOf(advisors));
@@ -1881,9 +1880,8 @@ public class WeaverTest {
             mixinTypes.add(newMixin(adviceOrShimOrMixinClass));
         }
         List<ShimType> shimTypes = Lists.newArrayList();
-        Shim shim = adviceOrShimOrMixinClass.getAnnotation(Shim.class);
-        if (shim != null) {
-            shimTypes.add(ShimType.create(shim, adviceOrShimOrMixinClass));
+        if (adviceOrShimOrMixinClass.isAnnotationPresent(Shim.class)) {
+            shimTypes.add(ShimType.create(adviceOrShimOrMixinClass));
         }
         Supplier<List<Advice>> advisorsSupplier =
                 Suppliers.<List<Advice>>ofInstance(ImmutableList.copyOf(advisors));
@@ -1905,7 +1903,7 @@ public class WeaverTest {
     }
 
     private static MixinType newMixin(Class<?> clazz) throws Exception {
-        return MixinType.create(InstrumentationDetailBuilder.buildMixinClass(clazz));
+        return InstrumentationDetailBuilder.buildMixinType(clazz);
     }
 
     private static void assumeJdk7() {

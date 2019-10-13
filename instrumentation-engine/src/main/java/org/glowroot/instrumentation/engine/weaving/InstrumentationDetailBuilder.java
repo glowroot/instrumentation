@@ -26,6 +26,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.Resources;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassReader;
@@ -37,10 +38,8 @@ import org.slf4j.LoggerFactory;
 
 import org.glowroot.instrumentation.api.weaving.Advice.MethodModifier;
 import org.glowroot.instrumentation.api.weaving.Advice.Pointcut;
-import org.glowroot.instrumentation.api.weaving.Mixin;
 import org.glowroot.instrumentation.engine.config.InstrumentationDescriptor;
 import org.glowroot.instrumentation.engine.util.OnlyUsedByTests;
-import org.glowroot.instrumentation.engine.weaving.InstrumentationDetail.MixinClass;
 import org.glowroot.instrumentation.engine.weaving.InstrumentationDetail.PointcutClass;
 import org.glowroot.instrumentation.engine.weaving.InstrumentationDetail.PointcutMethod;
 
@@ -58,7 +57,7 @@ class InstrumentationDetailBuilder {
         this.instrumentationDescriptor = instrumentationDescriptor;
     }
 
-    InstrumentationDetail build() throws IOException {
+    InstrumentationDetail build() throws IOException, ClassNotFoundException {
         ImmutableInstrumentationDetail.Builder builder = ImmutableInstrumentationDetail.builder();
         for (String clazz : instrumentationDescriptor.classes()) {
             String internalName = ClassNames.toInternalName(clazz);
@@ -74,11 +73,11 @@ class InstrumentationDetailBuilder {
                             mcv.buildPointcutClass(bytes, instrumentationDescriptor.collocate(),
                                     instrumentationDescriptor.jarFile()));
                 } else if (mcv.mixinAnnotationVisitor != null) {
-                    builder.addMixinClasses(
-                            mcv.buildMixinClass(instrumentationDescriptor.collocate(), bytes));
+                    builder.addMixinTypes(
+                            mcv.buildMixinType(instrumentationDescriptor.collocate(), bytes));
                 } else if (mcv.shim) {
-                    builder.addShimClasses(
-                            mcv.buildShimClass(instrumentationDescriptor.collocate()));
+                    builder.addShimTypes(
+                            mcv.buildShimType(instrumentationDescriptor.collocate()));
                 }
             }
         }
@@ -110,13 +109,13 @@ class InstrumentationDetailBuilder {
     }
 
     @OnlyUsedByTests
-    static MixinClass buildMixinClass(Class<?> clazz) throws IOException {
+    static MixinType buildMixinType(Class<?> clazz) throws IOException {
         URL url = checkNotNull(InstrumentationDetailBuilder.class
                 .getResource("/" + ClassNames.toInternalName(clazz.getName()) + ".class"));
         byte[] bytes = Resources.asByteSource(url).read();
         MemberClassVisitor mcv = new MemberClassVisitor();
         new ClassReader(bytes).accept(mcv, ClassReader.SKIP_CODE);
-        return mcv.buildMixinClass(false, bytes);
+        return mcv.buildMixinType(false, bytes);
     }
 
     private static PointcutClass buildAdviceClassLookAtSuperClass(String internalName)
@@ -158,7 +157,7 @@ class InstrumentationDetailBuilder {
 
     private static class MemberClassVisitor extends ClassVisitor {
 
-        private @Nullable String name;
+        private @MonotonicNonNull String name;
         private @Nullable String superName;
         private String /*@Nullable*/ [] interfaces;
         private @Nullable PointcutAnnotationVisitor pointcutAnnotationVisitor;
@@ -226,7 +225,7 @@ class InstrumentationDetailBuilder {
                     .build();
         }
 
-        private ImmutableMixinClass buildMixinClass(boolean collocateInClassLoader, byte[] bytes) {
+        private MixinType buildMixinType(boolean collocateInClassLoader, byte[] bytes) {
             String initMethodName = null;
             for (MixinMethodVisitor methodVisitor : mixinMethodVisitors) {
                 if (methodVisitor.init) {
@@ -236,8 +235,7 @@ class InstrumentationDetailBuilder {
                     initMethodName = methodVisitor.name;
                 }
             }
-            ImmutableMixinClass.Builder builder = ImmutableMixinClass.builder()
-                    .type(Type.getObjectType(checkNotNull(name)));
+            ImmutableMixinType.Builder builder = ImmutableMixinType.builder();
             if (interfaces != null) {
                 for (String iface : interfaces) {
                     if (collocateInClassLoader
@@ -249,22 +247,23 @@ class InstrumentationDetailBuilder {
                     builder.addInterfaces(Type.getObjectType(iface));
                 }
             }
-            return builder.mixin(checkNotNull(mixinAnnotationVisitor).build())
-                    .initMethodName(initMethodName)
-                    .bytes(bytes)
-                    .build();
+            builder.addAllTargets(checkNotNull(mixinAnnotationVisitor).build());
+            builder.initMethodName(initMethodName);
+            builder.implementationBytes(bytes);
+            return builder.build();
         }
 
-        private ImmutableShimClass buildShimClass(boolean collocateInClassLoader) {
-            if (collocateInClassLoader
-                    && !checkNotNull(name).endsWith(InstrumentationClassRenamer.SHIM_SUFFIX)) {
+        private ShimType buildShimType(boolean collocateInClassLoader)
+                throws ClassNotFoundException {
+            checkNotNull(name);
+            if (collocateInClassLoader && !name.endsWith(InstrumentationClassRenamer.SHIM_SUFFIX)) {
                 // see InstrumentationClassRenamer.hack() for reason why consistent Shim suffix is
                 // important
                 logger.warn("shim interface name should end with \"Shim\": {}", name);
             }
-            return ImmutableShimClass.builder()
-                    .type(Type.getObjectType(checkNotNull(name)))
-                    .build();
+            Class<?> clazz = Class.forName(ClassNames.fromInternalName(name), false,
+                    MemberClassVisitor.class.getClassLoader());
+            return ShimType.create(clazz);
         }
     }
 
@@ -491,17 +490,8 @@ class InstrumentationDetailBuilder {
             }
         }
 
-        private Mixin build() {
-            return new Mixin() {
-                @Override
-                public Class<? extends Annotation> annotationType() {
-                    return Mixin.class;
-                }
-                @Override
-                public String[] value() {
-                    return Iterables.toArray(values, String.class);
-                }
-            };
+        private List<String> build() {
+            return values;
         }
     }
 

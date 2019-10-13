@@ -20,19 +20,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.immutables.value.Value;
 import org.objectweb.asm.Type;
 
-import org.glowroot.instrumentation.engine.weaving.InstrumentationDetail.MixinClass;
-
 @Value.Immutable
 abstract class MixinType {
-
-    static MixinType create(MixinClass mixinClass) {
-        return ImmutableMixinType.builder()
-                .addTargets(mixinClass.mixin().value())
-                .addAllInterfaces(mixinClass.interfaces())
-                .initMethodName(mixinClass.initMethodName())
-                .implementationBytes(mixinClass.bytes())
-                .build();
-    }
 
     abstract ImmutableList<String> targets();
 

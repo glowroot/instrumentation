@@ -26,16 +26,15 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.Method;
 
 import org.glowroot.instrumentation.api.weaving.Advice.Pointcut;
-import org.glowroot.instrumentation.api.weaving.Mixin;
 
 @Value.Immutable
 interface InstrumentationDetail {
 
     List<PointcutClass> pointcutClasses();
 
-    List<MixinClass> mixinClasses();
+    List<MixinType> mixinTypes();
 
-    List<ShimClass> shimClasses();
+    List<ShimType> shimTypes();
 
     @Value.Immutable
     abstract class PointcutClass {
@@ -76,25 +75,5 @@ interface InstrumentationDetail {
         abstract Type type();
 
         abstract int argIndex(); // only used for @Bind.Argument
-    }
-
-    @Value.Immutable
-    abstract class MixinClass {
-
-        abstract Type type();
-
-        abstract List<Type> interfaces();
-
-        abstract Mixin mixin();
-
-        abstract @Nullable String initMethodName();
-
-        abstract byte[] bytes();
-    }
-
-    @Value.Immutable
-    abstract class ShimClass {
-
-        abstract Type type();
     }
 }

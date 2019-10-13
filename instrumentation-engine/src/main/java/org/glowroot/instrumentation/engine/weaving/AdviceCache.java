@@ -35,13 +35,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.glowroot.instrumentation.api.weaving.Shim;
 import org.glowroot.instrumentation.engine.config.AdviceConfig;
 import org.glowroot.instrumentation.engine.config.InstrumentationDescriptor;
 import org.glowroot.instrumentation.engine.weaving.ClassLoaders.LazyDefinedClass;
-import org.glowroot.instrumentation.engine.weaving.InstrumentationDetail.MixinClass;
 import org.glowroot.instrumentation.engine.weaving.InstrumentationDetail.PointcutClass;
-import org.glowroot.instrumentation.engine.weaving.InstrumentationDetail.ShimClass;
 import org.glowroot.instrumentation.engine.weaving.Reweaving.PointcutClassName;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -75,8 +72,8 @@ public class AdviceCache {
             InstrumentationDetail detail = builder.build();
 
             nonReweavableAdvisors.addAll(getAdvisors(detail.pointcutClasses()));
-            mixinTypes.addAll(getMixinTypes(detail.mixinClasses()));
-            shimTypes.addAll(getShimTypes(detail.shimClasses()));
+            mixinTypes.addAll(detail.mixinTypes());
+            shimTypes.addAll(detail.shimTypes());
 
             List<AdviceConfig> configs = descriptor.adviceConfigs();
             for (AdviceConfig config : configs) {
@@ -176,28 +173,6 @@ public class AdviceCache {
             }
         }
         return advisors;
-    }
-
-    private static List<MixinType> getMixinTypes(List<MixinClass> mixinClasses) {
-        List<MixinType> mixinTypes = Lists.newArrayList();
-        for (MixinClass mixinClass : mixinClasses) {
-            mixinTypes.add(MixinType.create(mixinClass));
-        }
-        return mixinTypes;
-    }
-
-    private static List<ShimType> getShimTypes(List<ShimClass> shimClasses)
-            throws ClassNotFoundException {
-        List<ShimType> shimTypes = Lists.newArrayList();
-        for (ShimClass shimClass : shimClasses) {
-            Class<?> clazz = Class.forName(shimClass.type().getClassName(), false,
-                    AdviceCache.class.getClassLoader());
-            Shim shim = clazz.getAnnotation(Shim.class);
-            if (shim != null) {
-                shimTypes.add(ShimType.create(shim, clazz));
-            }
-        }
-        return shimTypes;
     }
 
     private static ImmutableList<Advice> createReweavableAdvisors(
