@@ -464,7 +464,7 @@ class InstrumentationDetailBuilder {
                 bindAnnotation.argIndex((Integer) value);
             } else {
                 throw new IllegalStateException(
-                        "Unexpected @Advice.Argument attribute name: " + name);
+                        "Unexpected @Bind.Argument attribute name: " + name);
             }
         }
     }

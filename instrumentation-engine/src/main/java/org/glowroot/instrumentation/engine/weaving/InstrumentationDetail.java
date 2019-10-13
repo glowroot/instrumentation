@@ -75,7 +75,7 @@ interface InstrumentationDetail {
 
         abstract Type type();
 
-        abstract int argIndex(); // only used for @Advice.Argument
+        abstract int argIndex(); // only used for @Bind.Argument
     }
 
     @Value.Immutable

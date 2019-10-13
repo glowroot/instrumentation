@@ -232,7 +232,7 @@ public class WeaverTest {
         assertThat(SomeInstrumentationThreadLocals.onAfterCount.get()).isEqualTo(0);
     }
 
-    // ===================== @Advice.This =====================
+    // ===================== @Bind.This =====================
 
     @Test
     public void shouldBindReceiver() throws Exception {
@@ -265,7 +265,7 @@ public class WeaverTest {
         assertThat(SomeInstrumentationThreadLocals.onAfterReceiver.get()).isEqualTo(test);
     }
 
-    // ===================== @Advice.Argument =====================
+    // ===================== @Bind.Argument =====================
 
     @Test
     public void shouldBindParameters() throws Exception {
@@ -300,7 +300,7 @@ public class WeaverTest {
         assertThat(SomeInstrumentationThreadLocals.onAfterParams.get()).isEqualTo(parameters);
     }
 
-    // ===================== @Advice.AllArguments =====================
+    // ===================== @Bind.AllArguments =====================
 
     @Test
     public void shouldBindParameterArray() throws Exception {
@@ -335,7 +335,7 @@ public class WeaverTest {
         assertThat(SomeInstrumentationThreadLocals.onAfterParams.get()).isEqualTo(parameters);
     }
 
-    // ===================== @Advice.Enter =====================
+    // ===================== @Bind.Enter =====================
 
     @Test
     public void shouldBindTraveler() throws Exception {
@@ -389,7 +389,7 @@ public class WeaverTest {
         assertThat(SomeInstrumentationThreadLocals.onAfterTraveler.get()).isEqualTo("a traveler");
     }
 
-    // ===================== @Advice.ClassMeta =====================
+    // ===================== @Bind.ClassMeta =====================
 
     @Test
     public void shouldBindClassMeta() throws Exception {
@@ -436,7 +436,7 @@ public class WeaverTest {
                 .isEqualTo(ThrowingMisc.class.getName());
     }
 
-    // ===================== @Advice.MethodMeta =====================
+    // ===================== @Bind.MethodMeta =====================
 
     @Test
     public void shouldBindMethodMeta() throws Exception {
@@ -547,7 +547,7 @@ public class WeaverTest {
                 .isEqualTo(testMethodMeta);
     }
 
-    // ===================== @Advice.Return =====================
+    // ===================== @Bind.Return =====================
 
     @Test
     public void shouldBindReturn() throws Exception {
@@ -581,7 +581,7 @@ public class WeaverTest {
         assertThat(SomeInstrumentationThreadLocals.returnValue.get()).isEqualTo(4);
     }
 
-    // ===================== @Advice.OptionalReturn =====================
+    // ===================== @Bind.OptionalReturn =====================
 
     @Test
     public void shouldBindOptionalReturn() throws Exception {
@@ -620,7 +620,7 @@ public class WeaverTest {
                 .isEqualTo(Integer.valueOf(4));
     }
 
-    // ===================== @Advice.Thrown =====================
+    // ===================== @Bind.Thrown =====================
 
     @Test
     public void shouldBindThrowable() throws Exception {
@@ -636,7 +636,7 @@ public class WeaverTest {
         assertThat(SomeInstrumentationThreadLocals.onThrowCount.get()).isEqualTo(1);
     }
 
-    // ===================== @Advice.MethodName =====================
+    // ===================== @Bind.MethodName =====================
 
     @Test
     public void shouldBindMethodName() throws Exception {

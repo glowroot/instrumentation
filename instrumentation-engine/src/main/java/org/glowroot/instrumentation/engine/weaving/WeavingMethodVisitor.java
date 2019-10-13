@@ -697,7 +697,7 @@ class WeavingMethodVisitor extends AdviceAdapter {
 
     private void weaveOnReturnAdvice(int opcode, Advice advice, Method onReturnAdvice) {
         if (onReturnAdvice.getArgumentTypes().length > 0) {
-            // @Advice.Return must be the first argument to @Advice.OnMethodReturn (if present)
+            // @Bind.Return must be the first argument to @Advice.OnMethodReturn (if present)
             int startIndex;
             Object[] stack;
             AdviceParameter parameter = advice.onReturnParameters().get(0);
@@ -722,7 +722,7 @@ class WeavingMethodVisitor extends AdviceAdapter {
                     }
                     break;
                 default:
-                    // first argument is not @Advice.Return (which means there is no @Advice.Return)
+                    // first argument is not @Bind.Return (which means there is no @Advice.Return)
                     startIndex = 0;
                     if (opcode == RETURN) {
                         stack = new Object[] {};
@@ -752,7 +752,7 @@ class WeavingMethodVisitor extends AdviceAdapter {
 
     private void loadNonOptionalReturnValue(int opcode, AdviceParameter parameter, boolean dup) {
         if (opcode == RETURN) {
-            logger.warn("cannot use @Advice.Return on a @Advice.Pointcut returning void");
+            logger.warn("cannot use @Bind.Return on a @Advice.Pointcut returning void");
             pushDefault(parameter.type());
         } else {
             boolean primitive = parameter.type().getSort() < Type.ARRAY;
@@ -807,7 +807,7 @@ class WeavingMethodVisitor extends AdviceAdapter {
             int startIndex;
             Object[] stack;
             if (advice.onThrowParameters().get(0).kind() == ParameterKind.THROWABLE) {
-                // @Advice.Thrown must be the first argument to @Advice.OnMethodThrow (if present)
+                // @Bind.Thrown must be the first argument to @Advice.OnMethodThrow (if present)
                 visitInsn(DUP);
                 startIndex = 1;
                 stack = new Object[] {"java/lang/Throwable", "java/lang/Throwable"};

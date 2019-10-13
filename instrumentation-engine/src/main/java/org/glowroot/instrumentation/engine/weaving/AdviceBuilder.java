@@ -196,8 +196,8 @@ class AdviceBuilder {
                         // @Advice.IsEnabled is called before the super constructor is called, so
                         // "this" is not available yet
                         throw new IllegalStateException(
-                                "@Advice.This is not allowed on @Advice.IsEnabled for"
-                                        + " a @Advice.Pointcut with methodName \"<init>\"");
+                                "@Bind.This is not allowed on @Advice.IsEnabled for an"
+                                        + " @Advice.Pointcut with methodName \"<init>\"");
                     }
                 }
             }
@@ -265,9 +265,9 @@ class AdviceBuilder {
                 asmMethod.getArgumentTypes(), onReturnBindAnnotationTypes, OnReturnType);
         for (int i = 1; i < parameters.size(); i++) {
             checkState(parameters.get(i).kind() != ParameterKind.RETURN,
-                    "@Advice.Return must be the first argument to @Advice.OnMethodReturn");
+                    "@Bind.Return must be the first argument to @Advice.OnMethodReturn");
             checkState(parameters.get(i).kind() != ParameterKind.OPTIONAL_RETURN,
-                    "@Advice.OptionalReturn must be the first argument to @Advice.OnMethodReturn");
+                    "@Bind.OptionalReturn must be the first argument to @Advice.OnMethodReturn");
         }
         builder.onReturnAdvice(asmMethod);
         builder.addAllOnReturnParameters(parameters);
@@ -285,7 +285,7 @@ class AdviceBuilder {
                 asmMethod.getArgumentTypes(), onThrowBindAnnotationTypes, OnThrowType);
         for (int i = 1; i < parameters.size(); i++) {
             checkState(parameters.get(i).kind() != ParameterKind.THROWABLE,
-                    "@Advice.Thrown must be the first argument to @Advice.OnMethodThrow");
+                    "@Bind.Thrown must be the first argument to @Advice.OnMethodThrow");
         }
         checkState(asmMethod.getReturnType().getSort() == Type.VOID,
                 "@Advice.OnMethodThrow method must return void (for now)");
@@ -402,11 +402,11 @@ class AdviceBuilder {
         checkState(
                 !validBindAnnotationType.equals(BindMethodNameType)
                         || parameterType.equals(StringType),
-                "@Advice.MethodName parameter type must be java.lang.String");
+                "@Bind.MethodName parameter type must be java.lang.String");
         checkState(
                 !validBindAnnotationType.equals(BindThrowableType)
                         || parameterType.equals(ThrowableType),
-                "@Advice.MethodName parameter type must be java.lang.Throwable");
+                "@Bind.MethodName parameter type must be java.lang.Throwable");
         ParameterKind parameterKind = parameterKindMap.get(validBindAnnotationType);
         // parameterKind should never be null since all bind annotations have a mapping in
         // parameterKindMap
