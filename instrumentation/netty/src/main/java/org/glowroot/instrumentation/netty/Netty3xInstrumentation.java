@@ -20,7 +20,6 @@ import java.net.SocketAddress;
 
 import org.glowroot.instrumentation.api.Agent;
 import org.glowroot.instrumentation.api.AuxThreadContext;
-import org.glowroot.instrumentation.api.Getter;
 import org.glowroot.instrumentation.api.OptionalThreadContext;
 import org.glowroot.instrumentation.api.Span;
 import org.glowroot.instrumentation.api.ThreadContext;
@@ -31,13 +30,12 @@ import org.glowroot.instrumentation.api.weaving.Advice;
 import org.glowroot.instrumentation.api.weaving.Bind;
 import org.glowroot.instrumentation.api.weaving.Mixin;
 import org.glowroot.instrumentation.api.weaving.Shim;
+import org.glowroot.instrumentation.netty.boot.RequestInvoker;
 import org.glowroot.instrumentation.netty.boot.Util;
 
 public class Netty3xInstrumentation {
 
     private static final TimerName TIMER_NAME = Agent.getTimerName("http request");
-
-    private static final Getter<HttpRequestShim> CARRIER = new GetterImpl();
 
     // the field and method names are verbose since they will be mixed in to existing classes
     @Mixin("org.jboss.netty.channel.Channel")
@@ -129,10 +127,6 @@ public class Netty3xInstrumentation {
 
         @Nullable
         String getUri();
-
-        @Shim("org.jboss.netty.handler.codec.http.HttpHeaders headers()")
-        @Nullable
-        HttpHeadersShim glowroot$headers();
     }
 
     @Shim("org.jboss.netty.handler.codec.http.HttpMethod")
@@ -208,6 +202,7 @@ public class Netty3xInstrumentation {
                 @Bind.This ChannelHandlerContextShim channelHandlerContext,
                 // not null, just checked above in isEnabled()
                 @Bind.Argument(0) Object channelEvent,
+                @Bind.ClassMeta RequestInvoker requestInvoker,
                 OptionalThreadContext context) {
 
             @SuppressWarnings("nullness") // just checked above in isEnabled()
@@ -223,8 +218,7 @@ public class Netty3xInstrumentation {
             HttpRequestShim request = (HttpRequestShim) msg;
             HttpMethodShim method = request.glowroot$getMethod();
             String requestMethod = method == null ? null : method.getName();
-            HttpHeadersShim headers = request.glowroot$headers();
-            String host = headers == null ? null : headers.get("host");
+            String host = requestInvoker.getHeader(request, "host");
             if (host == null) {
                 SocketAddress socketAddress = ((ChannelShim) channel).getLocalAddress();
                 if (socketAddress instanceof InetSocketAddress) {
@@ -234,7 +228,7 @@ public class Netty3xInstrumentation {
             }
             channel.glowroot$setCompleteAsyncTransaction(true);
             return Util.startAsyncTransaction(context, requestMethod, channel.glowroot$isSsl(),
-                    host, request.getUri(), CARRIER, request, TIMER_NAME);
+                    host, request.getUri(), requestInvoker, request, TIMER_NAME);
         }
 
         @Advice.OnMethodReturn
@@ -378,19 +372,6 @@ public class Netty3xInstrumentation {
         ChannelMixin channel = channelHandlerContext.glowroot$getChannel();
         if (channel != null) {
             channel.glowroot$setCompleteAsyncTransaction(false);
-        }
-    }
-
-    private static class GetterImpl implements Getter<HttpRequestShim> {
-
-        @Override
-        public @Nullable String get(HttpRequestShim carrier, String key) {
-
-            HttpHeadersShim headers = carrier.glowroot$headers();
-            if (headers == null) {
-                return null;
-            }
-            return headers.get(key);
         }
     }
 }
