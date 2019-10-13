@@ -20,7 +20,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.Message;
 
 import org.glowroot.instrumentation.api.Agent;
-import org.glowroot.instrumentation.api.ThreadContext;
+import org.glowroot.instrumentation.api.OptionalThreadContext;
 import org.glowroot.instrumentation.api.Timer;
 import org.glowroot.instrumentation.api.TimerName;
 import org.glowroot.instrumentation.api.checker.Nullable;
@@ -55,7 +55,7 @@ public class Log4j2xInstrumentation {
                 @Bind.Argument(1) @Nullable Level level,
                 @Bind.Argument(3) @Nullable Message message,
                 @Bind.Argument(4) @Nullable Throwable t,
-                ThreadContext context) {
+                OptionalThreadContext context) {
 
             String formattedMessage =
                     message == null ? "" : nullToEmpty(message.getFormattedMessage());

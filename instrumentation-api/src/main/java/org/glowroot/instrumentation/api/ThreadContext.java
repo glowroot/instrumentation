@@ -50,8 +50,6 @@ public interface ThreadContext {
     <C> AsyncSpan startAsyncOutgoingSpan(String type, String text, Setter<C> setter, C carrier,
             MessageSupplier messageSupplier, TimerName timerName);
 
-    void captureLoggerSpan(MessageSupplier messageSupplier, @Nullable Throwable throwable);
-
     /**
      * Starts a timer for the specified timer name. If a timer is already running for the specified
      * timer name, it will keep an internal counter of the number of starts, and it will only end

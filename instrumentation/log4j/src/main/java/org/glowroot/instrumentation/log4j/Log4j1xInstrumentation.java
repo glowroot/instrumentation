@@ -19,7 +19,7 @@ import org.apache.log4j.Category;
 import org.apache.log4j.Priority;
 
 import org.glowroot.instrumentation.api.Agent;
-import org.glowroot.instrumentation.api.ThreadContext;
+import org.glowroot.instrumentation.api.OptionalThreadContext;
 import org.glowroot.instrumentation.api.Timer;
 import org.glowroot.instrumentation.api.TimerName;
 import org.glowroot.instrumentation.api.checker.Nullable;
@@ -52,7 +52,7 @@ public class Log4j1xInstrumentation {
                 @Bind.Argument(1) @Nullable Priority level,
                 @Bind.Argument(2) @Nullable Object message,
                 @Bind.Argument(3) @Nullable Throwable t,
-                ThreadContext context) {
+                OptionalThreadContext context) {
 
             String messageText = String.valueOf(message);
             int lvl = level == null ? 0 : level.toInt();

@@ -159,7 +159,9 @@ public class OptionalThreadContextImpl implements ThreadContextPlus {
 
     @Override
     public void captureLoggerSpan(MessageSupplier messageSupplier, @Nullable Throwable throwable) {
-        if (threadContext != null) {
+        if (threadContext == null) {
+            agentSPI.captureLoggerSpan(messageSupplier, throwable);
+        } else {
             threadContext.captureLoggerSpan(messageSupplier, throwable);
         }
     }

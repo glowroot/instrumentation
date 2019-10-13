@@ -21,7 +21,7 @@ import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.classic.spi.ThrowableProxy;
 
 import org.glowroot.instrumentation.api.Agent;
-import org.glowroot.instrumentation.api.ThreadContext;
+import org.glowroot.instrumentation.api.OptionalThreadContext;
 import org.glowroot.instrumentation.api.Timer;
 import org.glowroot.instrumentation.api.TimerName;
 import org.glowroot.instrumentation.api.checker.Nullable;
@@ -54,7 +54,7 @@ public class LogbackInstrumentation {
         @Advice.OnMethodBefore
         public static @Nullable Timer onBefore(
                 @Bind.Argument(0) ILoggingEvent loggingEvent,
-                ThreadContext context) {
+                OptionalThreadContext context) {
 
             String formattedMessage = nullToEmpty(loggingEvent.getFormattedMessage());
             Level level = loggingEvent.getLevel();
@@ -106,7 +106,7 @@ public class LogbackInstrumentation {
                 @Bind.This Object logger,
                 @Bind.Argument(0) LoggingEvent loggingEvent,
                 @Bind.ClassMeta LoggingEventInvoker invoker,
-                ThreadContext context) {
+                OptionalThreadContext context) {
 
             String formattedMessage = invoker.getFormattedMessage(loggingEvent);
             Level level = loggingEvent.getLevel();

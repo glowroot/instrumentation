@@ -33,4 +33,6 @@ public interface AgentSPI {
             Getter<C> getter, C carrier, MessageSupplier messageSupplier, TimerName timerName,
             ThreadContextThreadLocal.Holder threadContextHolder, int rootNestingGroupId,
             int rootSuppressionKeyId);
+
+    void captureLoggerSpan(MessageSupplier messageSupplier, @Nullable Throwable throwable);
 }

@@ -18,6 +18,7 @@ package org.glowroot.instrumentation.test.harness.agent;
 import java.util.Deque;
 
 import com.google.common.collect.Queues;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import org.glowroot.instrumentation.api.Getter;
 import org.glowroot.instrumentation.api.MessageSupplier;
@@ -58,4 +59,7 @@ class AgentImpl implements AgentSPI {
 
         return incomingSpan;
     }
+
+    @Override
+    public void captureLoggerSpan(MessageSupplier messageSupplier, @Nullable Throwable throwable) {}
 }

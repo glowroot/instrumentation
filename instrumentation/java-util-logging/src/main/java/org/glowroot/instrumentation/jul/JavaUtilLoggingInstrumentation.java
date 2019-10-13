@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 import org.glowroot.instrumentation.api.Agent;
 import org.glowroot.instrumentation.api.Message;
 import org.glowroot.instrumentation.api.MessageSupplier;
-import org.glowroot.instrumentation.api.ThreadContext;
+import org.glowroot.instrumentation.api.OptionalThreadContext;
 import org.glowroot.instrumentation.api.Timer;
 import org.glowroot.instrumentation.api.TimerName;
 import org.glowroot.instrumentation.api.checker.Nullable;
@@ -57,7 +57,7 @@ public class JavaUtilLoggingInstrumentation {
         public static @Nullable Timer onBefore(
                 @Bind.Argument(0) LogRecord record,
                 @Bind.This Object logger,
-                ThreadContext context) {
+                OptionalThreadContext context) {
 
             Level level = record.getLevel();
             if (!((Logger) logger).isLoggable(level)) {
@@ -91,7 +91,7 @@ public class JavaUtilLoggingInstrumentation {
         @Advice.OnMethodBefore
         public static @Nullable Timer onBefore(
                 @Bind.Argument(0) LogRecord record,
-                ThreadContext context) {
+                OptionalThreadContext context) {
 
             return onBeforeCommon(record, record.getLevel(), context);
         }
@@ -105,7 +105,8 @@ public class JavaUtilLoggingInstrumentation {
         }
     }
 
-    private static Timer onBeforeCommon(LogRecord record, Level level, ThreadContext context) {
+    private static Timer onBeforeCommon(LogRecord record, Level level,
+            OptionalThreadContext context) {
         // cannot check Logger.getFilter().isLoggable(LogRecord) because the Filter object
         // could be stateful and might alter its state (e.g.
         // com.sun.mail.util.logging.DurationFilter)

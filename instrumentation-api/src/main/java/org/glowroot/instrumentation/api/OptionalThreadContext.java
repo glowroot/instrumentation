@@ -15,6 +15,8 @@
  */
 package org.glowroot.instrumentation.api;
 
+import org.glowroot.instrumentation.api.checker.Nullable;
+
 public interface OptionalThreadContext extends ThreadContext {
 
     boolean isInTransaction();
@@ -22,6 +24,8 @@ public interface OptionalThreadContext extends ThreadContext {
     <C> Span startIncomingSpan(String transactionType, String transactionName,
             Getter<C> getter, C carrier, MessageSupplier messageSupplier, TimerName timerName,
             AlreadyInTransactionBehavior alreadyInTransactionBehavior);
+
+    void captureLoggerSpan(MessageSupplier messageSupplier, @Nullable Throwable throwable);
 
     enum AlreadyInTransactionBehavior {
         CAPTURE_LOCAL_SPAN, CAPTURE_NEW_TRANSACTION
