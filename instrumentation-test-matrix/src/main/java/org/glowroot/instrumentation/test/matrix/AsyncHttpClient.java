@@ -124,32 +124,32 @@ public class AsyncHttpClient {
 
     private static void run1x(String version) throws Exception {
         updateLibVersion("asynchttpclient1x.version", version);
-        run("AsyncHttpClient1xIT", "async-http-client-1.x");
+        run("AsyncHttpClient1xIT");
     }
 
     private static void run1xJava7(String version) throws Exception {
         updateLibVersion("asynchttpclient1x.version", version);
-        runJava7("AsyncHttpClient1xIT", "async-http-client-1.x");
+        runJava7("AsyncHttpClient1xIT");
     }
 
     private static void run2x(String version) throws Exception {
         updateLibVersion("asynchttpclient2x.version", version);
-        runJava8("AsyncHttpClient2xIT", "async-http-client-2.x");
+        runJava8("AsyncHttpClient2xIT");
     }
 
     private static void updateLibVersion(String property, String version) throws IOException {
         Util.updateLibVersion(MODULE_PATH, property, version);
     }
 
-    private static void run(String test, String profile) throws Exception {
-        Util.runTest(MODULE_PATH, test, profile, JAVA8, JAVA7, JAVA6);
+    private static void run(String test) throws Exception {
+        Util.runTest(MODULE_PATH, test, JAVA8, JAVA7, JAVA6);
     }
 
-    private static void runJava7(String test, String profile) throws Exception {
-        Util.runTest(MODULE_PATH, test, profile, JAVA8, JAVA7);
+    private static void runJava7(String test) throws Exception {
+        Util.runTest(MODULE_PATH, test, JAVA8, JAVA7);
     }
 
-    private static void runJava8(String test, String profile) throws Exception {
-        Util.runTest(MODULE_PATH, test, profile, JAVA8);
+    private static void runJava8(String test) throws Exception {
+        Util.runTest(MODULE_PATH, test, JAVA8);
     }
 }

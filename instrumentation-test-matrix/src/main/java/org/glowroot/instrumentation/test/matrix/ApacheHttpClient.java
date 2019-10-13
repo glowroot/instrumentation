@@ -33,7 +33,7 @@ public class ApacheHttpClient {
 
     static void runShort() throws Exception {
         run3x("3.0");
-        run4x("4.0", "apache-httpclient-pre-4.2");
+        run4x("4.0");
         run4x("4.2");
     }
 
@@ -41,13 +41,13 @@ public class ApacheHttpClient {
         run3x("3.0");
         run3x("3.0.1");
         run3x("3.1");
-        run4x("4.0", "apache-httpclient-pre-4.2");
+        run4x("4.0");
         for (int i = 1; i <= 3; i++) {
-            run4x("4.0." + i, "apache-httpclient-pre-4.2");
+            run4x("4.0." + i);
         }
-        run4x("4.1", "apache-httpclient-pre-4.2");
+        run4x("4.1");
         for (int i = 1; i <= 3; i++) {
-            run4x("4.1." + i, "apache-httpclient-pre-4.2");
+            run4x("4.1." + i);
         }
         run4x("4.2");
         for (int i = 1; i <= 6; i++) {
@@ -68,13 +68,13 @@ public class ApacheHttpClient {
         run4x("4.5.6");
     }
 
-    private static void run3x(String version, String... profiles) throws Exception {
+    private static void run3x(String version) throws Exception {
         Util.updateLibVersion(MODULE_PATH, "apachehttpclient3x.version", version);
-        Util.runTest(MODULE_PATH, "ApacheHttpClient3xIT", profiles, JAVA8, JAVA7, JAVA6);
+        Util.runTest(MODULE_PATH, "ApacheHttpClient3xIT", JAVA8, JAVA7, JAVA6);
     }
 
-    private static void run4x(String version, String... profiles) throws Exception {
+    private static void run4x(String version) throws Exception {
         Util.updateLibVersion(MODULE_PATH, "apachehttpclient4x.version", version);
-        Util.runTest(MODULE_PATH, "ApacheHttpClient4xIT", profiles, JAVA8, JAVA7, JAVA6);
+        Util.runTest(MODULE_PATH, "ApacheHttpClient4xIT", JAVA8, JAVA7, JAVA6);
     }
 }
