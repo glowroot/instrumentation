@@ -30,10 +30,10 @@ import org.objectweb.asm.MethodVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.glowroot.instrumentation.api.Descriptor.CaptureKind;
+import org.glowroot.instrumentation.api.OptionalThreadContext.AlreadyInTransactionBehavior;
 import org.glowroot.instrumentation.api.ThreadContext.Priority;
 import org.glowroot.instrumentation.engine.config.AdviceConfig;
-import org.glowroot.instrumentation.engine.config.AdviceConfig.AlreadyInTransactionBehavior;
-import org.glowroot.instrumentation.engine.config.AdviceConfig.CaptureKind;
 import org.glowroot.instrumentation.engine.weaving.ClassLoaders.LazyDefinedClass;
 
 import static com.google.common.base.Preconditions.checkNotNull;

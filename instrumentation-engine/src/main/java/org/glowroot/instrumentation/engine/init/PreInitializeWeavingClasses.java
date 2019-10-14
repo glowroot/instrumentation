@@ -293,9 +293,6 @@ class PreInitializeWeavingClasses {
         types.add("org.glowroot.instrumentation.engine.config.ImmutableAdviceConfig$Builder");
         types.add("org.glowroot.instrumentation.engine.config.ImmutableAdviceConfig$InitShim");
         types.add("org.glowroot.instrumentation.engine.config.AdviceConfig");
-        types.add("org.glowroot.instrumentation.engine.config.AdviceConfig$CaptureKind");
-        types.add("org.glowroot.instrumentation.engine.config.AdviceConfig"
-                + "$AlreadyInTransactionBehavior");
         types.add("org.glowroot.instrumentation.engine.util.IterableWithSelfRemovableEntries");
         types.add("org.glowroot.instrumentation.engine.util.IterableWithSelfRemovableEntries"
                 + "$ElementIterator");
@@ -451,8 +448,11 @@ class PreInitializeWeavingClasses {
     private static List<String> getInstrumentationApiUsedTypes() {
         List<String> types = Lists.newArrayList();
         types.add("org.glowroot.instrumentation.api.ClassInfo");
+        types.add("org.glowroot.instrumentation.api.Descriptor$CaptureKind");
         types.add("org.glowroot.instrumentation.api.MethodInfo");
         types.add("org.glowroot.instrumentation.api.OptionalThreadContext");
+        types.add("org.glowroot.instrumentation.api.OptionalThreadContext"
+                + "$AlreadyInTransactionBehavior");
         types.add("org.glowroot.instrumentation.api.ParameterHolder");
         types.add("org.glowroot.instrumentation.api.ThreadContext");
         types.add("org.glowroot.instrumentation.api.internal.ParameterHolderImpl");

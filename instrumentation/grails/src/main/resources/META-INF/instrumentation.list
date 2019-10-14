@@ -1,1 +1,1 @@
-instrumentation.grails.json
+org.glowroot.instrumentation.grails.InstrumentationDescriptor

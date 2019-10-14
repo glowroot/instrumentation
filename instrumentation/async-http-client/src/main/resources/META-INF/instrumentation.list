@@ -1,1 +1,1 @@
-instrumentation.async-http-client.json
+org.glowroot.instrumentation.asynchttpclient.InstrumentationDescriptor

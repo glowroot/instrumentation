@@ -1,1 +1,1 @@
-instrumentation.okhttp.json
+org.glowroot.instrumentation.okhttp.InstrumentationDescriptor

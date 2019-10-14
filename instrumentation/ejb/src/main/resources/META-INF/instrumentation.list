@@ -1,1 +1,1 @@
-instrumentation.ejb.json
+org.glowroot.instrumentation.ejb.InstrumentationDescriptor

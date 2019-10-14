@@ -1,1 +1,1 @@
-instrumentation.test-harness.json
+org.glowroot.instrumentation.test.harness.InstrumentationDescriptor

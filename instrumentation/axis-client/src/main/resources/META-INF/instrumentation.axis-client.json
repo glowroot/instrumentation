@@ -1,8 +1,0 @@
-{
-  "name": "Axis Client",
-  "id": "axis-client",
-  "classes": [
-    "org.glowroot.instrumentation.axisclient.AxisClientInstrumentation"
-  ],
-  "collocate": true
-}

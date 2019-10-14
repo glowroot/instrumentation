@@ -40,12 +40,6 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.immutables</groupId>
-      <artifactId>gson</artifactId>
-      <!-- immutables is only needed at compile time -->
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <!-- this dependency is needed for generating Java 6 compatible classes -->
       <groupId>org.immutables</groupId>
       <artifactId>android-stub</artifactId>
@@ -87,11 +81,6 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-    </dependency>
-    <dependency>
-      <!-- using gson instead of jackson to keep the jar size down (180kb compared to 1380kb) -->
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

@@ -1,1 +1,1 @@
-instrumentation.kafka.json
+org.glowroot.instrumentation.kafka.InstrumentationDescriptor

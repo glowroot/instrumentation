@@ -1,7 +1,0 @@
-{
-  "name": "HttpURLConnection",
-  "id": "http-url-connection",
-  "classes": [
-    "org.glowroot.instrumentation.httpurlconnection.HttpURLConnectionInstrumentation"
-  ]
-}

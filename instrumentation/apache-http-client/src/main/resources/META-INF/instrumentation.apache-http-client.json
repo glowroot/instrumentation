@@ -1,9 +1,0 @@
-{
-  "name": "Apache HttpClient",
-  "id": "apache-http-client",
-  "classes": [
-    "org.glowroot.instrumentation.apachehttpclient.ApacheHttpClient4xInstrumentation",
-    "org.glowroot.instrumentation.apachehttpclient.ApacheHttpClient3xInstrumentation"
-  ],
-  "collocate": true
-}

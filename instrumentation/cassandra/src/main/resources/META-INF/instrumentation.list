@@ -1,1 +1,1 @@
-instrumentation.cassandra.json
+org.glowroot.instrumentation.cassandra.InstrumentationDescriptor

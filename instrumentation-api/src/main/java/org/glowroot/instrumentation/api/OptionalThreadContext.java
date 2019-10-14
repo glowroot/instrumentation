@@ -28,6 +28,6 @@ public interface OptionalThreadContext extends ThreadContext {
     void captureLoggerSpan(MessageSupplier messageSupplier, @Nullable Throwable throwable);
 
     enum AlreadyInTransactionBehavior {
-        CAPTURE_LOCAL_SPAN, CAPTURE_NEW_TRANSACTION
+        CAPTURE_LOCAL_SPAN, CAPTURE_NEW_TRANSACTION, DO_NOTHING
     }
 }

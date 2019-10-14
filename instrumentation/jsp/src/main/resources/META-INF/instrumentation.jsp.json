@@ -1,7 +1,0 @@
-{
-  "name": "JSP",
-  "id": "jsp",
-  "classes": [
-    "org.glowroot.instrumentation.jsp.JspInstrumentation"
-  ]
-}

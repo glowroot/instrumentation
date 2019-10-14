@@ -1,8 +1,0 @@
-{
-  "name": "Redis",
-  "id": "redis",
-  "classes": [
-    "org.glowroot.instrumentation.redis.RedisInstrumentation"
-  ],
-  "collocate": true
-}

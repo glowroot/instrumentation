@@ -1,7 +1,0 @@
-{
-  "name": "Grails",
-  "id": "grails",
-  "classes": [
-    "org.glowroot.instrumentation.grails.GrailsInstrumentation"
-  ]
-}

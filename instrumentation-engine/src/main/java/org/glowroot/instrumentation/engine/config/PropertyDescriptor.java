@@ -18,16 +18,13 @@ package org.glowroot.instrumentation.engine.config;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.annotations.SerializedName;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.glowroot.instrumentation.engine.config.DefaultValue.PropertyType;
+import org.glowroot.instrumentation.api.Descriptor.PropertyType;
 
-@Gson.TypeAdapters
 @Value.Immutable
 public abstract class PropertyDescriptor {
 
@@ -37,7 +34,6 @@ public abstract class PropertyDescriptor {
 
     public abstract PropertyType type();
 
-    @SerializedName("default")
     public abstract @Nullable DefaultValue defaultValue();
 
     public abstract String label();
@@ -52,7 +48,6 @@ public abstract class PropertyDescriptor {
         return "";
     }
 
-    @Gson.Ignore
     public DefaultValue getValidatedNonNullDefaultValue() {
         DefaultValue defaultValue = defaultValue();
         if (defaultValue == null) {

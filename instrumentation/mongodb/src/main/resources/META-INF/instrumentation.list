@@ -1,1 +1,1 @@
-instrumentation.mongodb.json
+org.glowroot.instrumentation.mongodb.InstrumentationDescriptor

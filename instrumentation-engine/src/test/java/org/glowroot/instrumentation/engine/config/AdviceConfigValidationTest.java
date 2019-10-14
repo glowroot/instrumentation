@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import org.glowroot.instrumentation.engine.config.AdviceConfig.CaptureKind;
+import org.glowroot.instrumentation.api.Descriptor.CaptureKind;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

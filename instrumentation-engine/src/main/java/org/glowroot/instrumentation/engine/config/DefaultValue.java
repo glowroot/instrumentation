@@ -15,14 +15,6 @@
  */
 package org.glowroot.instrumentation.engine.config;
 
-import java.io.IOException;
-import java.util.List;
-
-import com.google.common.collect.Lists;
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
-import com.google.gson.stream.JsonWriter;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class DefaultValue {
@@ -36,40 +28,5 @@ public class DefaultValue {
 
     public @Nullable Object value() {
         return value;
-    }
-
-    public enum PropertyType {
-        STRING, BOOLEAN, DOUBLE, LIST
-    }
-
-    static class PropertyValueTypeAdapter extends TypeAdapter<DefaultValue> {
-
-        @Override
-        public DefaultValue read(JsonReader in) throws IOException {
-            JsonToken token = in.peek();
-            switch (token) {
-                case BOOLEAN:
-                    return new DefaultValue(in.nextBoolean());
-                case NUMBER:
-                    return new DefaultValue(in.nextDouble());
-                case STRING:
-                    return new DefaultValue(in.nextString());
-                case BEGIN_ARRAY:
-                    List<String> list = Lists.newArrayList();
-                    in.beginArray();
-                    while (in.peek() != JsonToken.END_ARRAY) {
-                        list.add(in.nextString());
-                    }
-                    in.endArray();
-                    return new DefaultValue(list);
-                default:
-                    throw new AssertionError("Unexpected json type: " + token);
-            }
-        }
-
-        @Override
-        public void write(JsonWriter out, DefaultValue value) {
-            throw new UnsupportedOperationException("This should not be needed");
-        }
     }
 }

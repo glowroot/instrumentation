@@ -1,8 +1,0 @@
-{
-  "name": "Apache HttpAsyncClient",
-  "id": "apache-http-async-client",
-  "classes": [
-    "org.glowroot.instrumentation.apachehttpasyncclient.ApacheHttpAsyncClientInstrumentation"
-  ],
-  "collocate": true
-}

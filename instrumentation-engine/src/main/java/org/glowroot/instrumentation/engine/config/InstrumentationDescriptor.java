@@ -18,12 +18,9 @@ package org.glowroot.instrumentation.engine.config;
 import java.io.File;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.annotations.SerializedName;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 
-@Gson.TypeAdapters
 @Value.Immutable
 public abstract class InstrumentationDescriptor {
 
@@ -33,7 +30,6 @@ public abstract class InstrumentationDescriptor {
 
     public abstract ImmutableList<PropertyDescriptor> properties();
 
-    @SerializedName("advice")
     public abstract ImmutableList<AdviceConfig> adviceConfigs();
 
     public abstract ImmutableList<String> classes();
@@ -43,6 +39,5 @@ public abstract class InstrumentationDescriptor {
         return false;
     }
 
-    @Gson.Ignore
     public abstract @Nullable File jarFile();
 }

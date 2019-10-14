@@ -1,1 +1,1 @@
-instrumentation.struts.json
+org.glowroot.instrumentation.struts.InstrumentationDescriptor

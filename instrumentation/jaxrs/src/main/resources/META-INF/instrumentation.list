@@ -1,1 +1,1 @@
-instrumentation.jaxrs.json
+org.glowroot.instrumentation.jaxrs.InstrumentationDescriptor

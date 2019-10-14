@@ -1,1 +1,1 @@
-instrumentation.play.json
+org.glowroot.instrumentation.play.InstrumentationDescriptor

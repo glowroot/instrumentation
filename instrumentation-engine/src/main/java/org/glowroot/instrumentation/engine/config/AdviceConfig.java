@@ -23,12 +23,14 @@ import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Gson.TypeAdapters
+import org.glowroot.instrumentation.api.Descriptor.CaptureKind;
+import org.glowroot.instrumentation.api.OptionalThreadContext.AlreadyInTransactionBehavior;
+import org.glowroot.instrumentation.api.weaving.Advice.MethodModifier;
+
 @Value.Immutable
 public abstract class AdviceConfig {
 
@@ -117,7 +119,6 @@ public abstract class AdviceConfig {
     public abstract @Nullable AlreadyInTransactionBehavior alreadyInTransactionBehavior();
 
     // corrected for data prior to 0.10.10
-    @Gson.Ignore
     @Value.Derived
     public @Nullable AlreadyInTransactionBehavior alreadyInTransactionBehaviorCorrected() {
         if (captureKind() == CaptureKind.TRANSACTION) {
@@ -158,26 +159,22 @@ public abstract class AdviceConfig {
         return "";
     }
 
-    @Gson.Ignore
     @Value.Derived
     public boolean isTimerOrGreater() {
         return captureKind() == CaptureKind.TIMER || captureKind() == CaptureKind.LOCAL_SPAN
                 || captureKind() == CaptureKind.TRANSACTION;
     }
 
-    @Gson.Ignore
     @Value.Derived
     public boolean isLocalSpanOrGreater() {
         return captureKind() == CaptureKind.LOCAL_SPAN || captureKind() == CaptureKind.TRANSACTION;
     }
 
-    @Gson.Ignore
     @Value.Derived
     public boolean isTransaction() {
         return captureKind() == CaptureKind.TRANSACTION;
     }
 
-    @Gson.Ignore
     @Value.Derived
     public ImmutableList<String> validationErrors() {
         List<String> errors = Lists.newArrayList();
@@ -214,17 +211,5 @@ public abstract class AdviceConfig {
             logger.error("invalid instrumentation config: {} - {}", Joiner.on(", ").join(errors),
                     this);
         }
-    }
-
-    public enum MethodModifier {
-        PUBLIC, STATIC, NOT_STATIC;
-    }
-
-    public enum CaptureKind {
-        TRANSACTION, LOCAL_SPAN, TIMER, OTHER
-    }
-
-    public enum AlreadyInTransactionBehavior {
-        CAPTURE_LOCAL_SPAN, CAPTURE_NEW_TRANSACTION, DO_NOTHING
     }
 }

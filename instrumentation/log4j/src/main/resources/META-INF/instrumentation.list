@@ -1,1 +1,1 @@
-instrumentation.log4j.json
+org.glowroot.instrumentation.log4j.InstrumentationDescriptor

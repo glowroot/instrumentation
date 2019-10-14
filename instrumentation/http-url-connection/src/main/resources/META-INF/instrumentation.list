@@ -1,1 +1,1 @@
-instrumentation.http-url-connection.json
+org.glowroot.instrumentation.httpurlconnection.InstrumentationDescriptor

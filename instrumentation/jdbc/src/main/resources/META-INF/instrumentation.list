@@ -1,1 +1,1 @@
-instrumentation.jdbc.json
+org.glowroot.instrumentation.jdbc.InstrumentationDescriptor

@@ -1,8 +1,0 @@
-{
-  "name": "Wiremock HttpClient",
-  "id": "wiremock-http-client",
-  "classes": [
-    "org.glowroot.instrumentation.wiremockhttpclient.WiremockHttpClientInstrumentation"
-  ],
-  "collocate": true
-}

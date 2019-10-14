@@ -17,47 +17,27 @@ package org.glowroot.instrumentation.engine.config;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.io.Resources;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
-import com.google.gson.TypeAdapterFactory;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
-import com.google.gson.stream.JsonWriter;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import org.glowroot.instrumentation.engine.config.DefaultValue.PropertyValueTypeAdapter;
+import org.glowroot.instrumentation.api.Descriptor;
+import org.glowroot.instrumentation.api.Descriptor.DefaultValue;
 
 import static com.google.common.base.Charsets.ISO_8859_1;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class InstrumentationDescriptors {
 
-    private static final Gson gson;
-
-    static {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapterFactory(new GsonAdaptersInstrumentationDescriptor());
-        gsonBuilder.registerTypeAdapterFactory(new GsonAdaptersPropertyDescriptor());
-        gsonBuilder.registerTypeAdapterFactory(new GsonAdaptersAdviceConfig());
-        gsonBuilder.registerTypeAdapter(DefaultValue.class, new PropertyValueTypeAdapter());
-        gsonBuilder.registerTypeAdapterFactory(new EnumTypeAdapterFactory());
-        gson = gsonBuilder.create();
-    }
-
     private InstrumentationDescriptors() {}
 
-    public static List<InstrumentationDescriptor> read() throws IOException {
+    public static List<InstrumentationDescriptor> read()
+            throws IOException, ClassNotFoundException {
         List<URL> resources = getResources("META-INF/instrumentation.list");
         List<InstrumentationDescriptor> descriptors = Lists.newArrayList();
         for (URL resource : resources) {
@@ -66,19 +46,71 @@ public class InstrumentationDescriptors {
                 if (jsonFile.isEmpty()) {
                     continue;
                 }
-                URL url = InstrumentationDescriptors.class.getResource("/META-INF/" + jsonFile);
-                if (url == null) {
-                    throw new IllegalStateException("No such resource: /META-INF/" + jsonFile);
-                }
-                descriptors.add(read(url));
+                Class<?> clazz = Class.forName(jsonFile, false,
+                        InstrumentationDescriptors.class.getClassLoader());
+                Descriptor descriptor = checkNotNull(clazz.getAnnotation(Descriptor.class));
+                descriptors.add(read(descriptor));
             }
         }
         return checkNotNull(descriptors);
     }
 
-    public static InstrumentationDescriptor read(URL url) throws IOException {
-        String json = Resources.toString(url, ISO_8859_1);
-        return checkNotNull(gson.fromJson(json, ImmutableInstrumentationDescriptor.class));
+    private static InstrumentationDescriptor read(Descriptor descriptor) {
+        ImmutableInstrumentationDescriptor.Builder builder =
+                ImmutableInstrumentationDescriptor.builder()
+                        .id(descriptor.id())
+                        .name(descriptor.name());
+        for (Descriptor.Property property : descriptor.properties()) {
+            ImmutablePropertyDescriptor.Builder propertyBuilder =
+                    ImmutablePropertyDescriptor.builder()
+                            .name(property.name())
+                            .type(property.type());
+            DefaultValue[] defaultValues = property.defaultValue();
+            if (defaultValues.length > 0) {
+                DefaultValue defaultValue = defaultValues[0];
+                propertyBuilder
+                        .defaultValue(new org.glowroot.instrumentation.engine.config.DefaultValue(
+                                getValue(property, defaultValue)));
+            }
+            builder.addProperties(propertyBuilder
+                    .label(property.label())
+                    .checkboxLabel(property.checkboxLabel())
+                    .description(property.description())
+                    .build());
+        }
+        for (Descriptor.Advice advice : descriptor.advice()) {
+            builder.addAdviceConfigs(ImmutableAdviceConfig.builder()
+                    .className(advice.className())
+                    .classAnnotation(advice.classAnnotation())
+                    .subTypeRestriction(advice.subTypeRestriction())
+                    .superTypeRestriction(advice.superTypeRestriction())
+                    .methodName(advice.methodName())
+                    .methodAnnotation(advice.methodAnnotation())
+                    .addMethodParameterTypes(advice.methodParameterTypes())
+                    .methodReturnType(advice.methodReturnType())
+                    .addMethodModifiers(advice.methodModifiers())
+                    .nestingGroup(advice.nestingGroup())
+                    .order(advice.order())
+                    .captureKind(advice.captureKind())
+                    .transactionType(advice.transactionType())
+                    .transactionNameTemplate(advice.transactionNameTemplate())
+                    .transactionUserTemplate(advice.transactionUserTemplate())
+                    .transactionSlowThresholdMillis(
+                            toNullableInteger(advice.transactionSlowThresholdMillis()))
+                    .alreadyInTransactionBehavior(advice.alreadyInTransactionBehavior())
+                    .spanMessageTemplate(advice.spanMessageTemplate())
+                    .spanStackThresholdMillis(toNullableInteger(advice.spanStackThresholdMillis()))
+                    .spanCaptureSelfNested(advice.spanCaptureSelfNested())
+                    .timerName(advice.timerName())
+                    .enabledProperty(advice.enabledProperty())
+                    .localSpanEnabledProperty(advice.localSpanEnabledProperty())
+                    .build());
+        }
+        for (Class<?> clazz : descriptor.classes()) {
+            builder.addClasses(clazz.getName());
+        }
+        return builder.collocate(descriptor.collocate())
+                .build();
     }
 
     private static List<URL> getResources(String resourceName) throws IOException {
@@ -92,37 +124,22 @@ public class InstrumentationDescriptors {
         }
     }
 
-    private static class EnumTypeAdapterFactory implements TypeAdapterFactory {
-
-        @Override
-        public <T> /*@Nullable*/ TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
-            @SuppressWarnings("unchecked")
-            Class<T> rawType = (Class<T>) type.getRawType();
-            if (!rawType.isEnum()) {
-                return null;
-            }
-            final Map<String, T> enumConstants = Maps.newHashMap();
-            for (T enumConstant : rawType.getEnumConstants()) {
-                enumConstants.put(((Enum<?>) enumConstant).name().replace('_', '-')
-                        .toLowerCase(Locale.ENGLISH), enumConstant);
-            }
-            return new TypeAdapter<T>() {
-
-                @Override
-                public @Nullable T read(JsonReader in) throws IOException {
-                    if (in.peek() == JsonToken.NULL) {
-                        in.nextNull();
-                        return null;
-                    } else {
-                        return enumConstants.get(in.nextString());
-                    }
-                }
-
-                @Override
-                public void write(JsonWriter out, T value) throws IOException {
-                    throw new UnsupportedOperationException("This should not be needed");
-                }
-            };
+    private static Object getValue(Descriptor.Property property, DefaultValue defaultValue) {
+        switch (property.type()) {
+            case STRING:
+                return defaultValue.stringValue();
+            case BOOLEAN:
+                return defaultValue.booleanValue();
+            case DOUBLE:
+                return defaultValue.doubleValue();
+            case LIST:
+                return Arrays.asList(defaultValue.listValue());
+            default:
+                throw new IllegalStateException("Unexpected property type: " + property.type());
         }
+    }
+
+    private static @Nullable Integer toNullableInteger(int value) {
+        return value == -1 ? null : value;
     }
 }
