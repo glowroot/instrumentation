@@ -230,8 +230,6 @@ public class EngineModule {
                 logger.warn(e.getMessage(), e);
             }
         }
-
-        initInstrumentation(instrumentationDescriptors);
     }
 
     public void addOnEnteringMain(OnEnteringMain onEnteringMain) {
@@ -300,22 +298,6 @@ public class EngineModule {
         } else {
             logLoadedImportantClassWarning(loadedImportantClassNames, agentJarFile, preCheck);
             return true;
-        }
-    }
-
-    // now init instrumentation to give them a chance to do something in their static initializer
-    // e.g. append their package to jboss.modules.system.pkgs
-    private static void initInstrumentation(
-            List<InstrumentationDescriptor> instrumentationDescriptors) {
-        for (InstrumentationDescriptor descriptor : instrumentationDescriptors) {
-            for (String clazz : descriptor.classes()) {
-                try {
-                    Class.forName(clazz, true, EngineModule.class.getClassLoader());
-                } catch (ClassNotFoundException e) {
-                    // this would have already been logged as a warning during advice construction
-                    logger.debug(e.getMessage(), e);
-                }
-            }
         }
     }
 
