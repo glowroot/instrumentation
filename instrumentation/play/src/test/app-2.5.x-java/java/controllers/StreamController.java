@@ -40,8 +40,8 @@ public class StreamController extends Controller {
                     }
                     sourceActor.tell(ByteString.fromString("foo"), null);
                     sourceActor.tell(ByteString.fromString("bar"), null);
-                    sourceActor.tell(new Status.Success(NotUsed.getInstance()), null);
                     TestSpans.createLocalSpan();
+                    sourceActor.tell(new Status.Success(NotUsed.getInstance()), null);
                     return null;
                 });
         return ok().chunked(source);
