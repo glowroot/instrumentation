@@ -62,7 +62,9 @@ public class AuxThreadContextImpl implements AuxThreadContext {
     private Span start(boolean completeAsyncTransaction) {
         ThreadContextThreadLocal.Holder threadContextHolder = Global.getThreadContextHolder();
         ThreadContextPlus threadContext = threadContextHolder.get();
-        if (threadContext != null) {
+        if (threadContext != null
+                && ((ThreadContextImpl) threadContext).isSameParentSpan(parentSpan)) {
+
             if (completeAsyncTransaction) {
                 threadContext.setTransactionAsyncComplete();
             }

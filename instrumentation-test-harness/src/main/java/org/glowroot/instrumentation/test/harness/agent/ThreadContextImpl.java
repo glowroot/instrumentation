@@ -272,6 +272,10 @@ public class ThreadContextImpl implements ThreadContextPlus {
         this.currentSuppressionKeyId = suppressionKeyId;
     }
 
+    public boolean isSameParentSpan(ParentSpanImpl parentSpan) {
+        return getCurrParentSpan() == parentSpan;
+    }
+
     private void addChildSpan(SpanImpl span) {
         getCurrParentSpan().addChildSpan(span);
         if (span instanceof ParentSpanImpl) {
