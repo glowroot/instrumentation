@@ -52,7 +52,7 @@ public class RequestInvoker implements Getter<HttpRequestShim> {
 
     @Nullable
     public String getHeader(Object request, String name) {
-        if (headersGetMethod != null && headersGetMethod != null) {
+        if (getHeaderMethod != null) {
             return Reflection.invoke(getHeaderMethod, request, name);
         } else if (headersMethod != null) {
             Object headers = Reflection.invoke(headersMethod, request);
