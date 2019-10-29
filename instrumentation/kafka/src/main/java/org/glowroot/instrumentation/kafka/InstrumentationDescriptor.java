@@ -19,7 +19,8 @@ import org.glowroot.instrumentation.api.Descriptor.CaptureKind;
                                        timerName = "kafka poll")
             },
             classes = {
-                    ProducerInstrumentation.class
+                    ProducerInstrumentation.class,
+                    ConsumerInstrumentation.class
             },
             collocate = true)
 public class InstrumentationDescriptor {}

@@ -19,18 +19,28 @@ import org.glowroot.instrumentation.test.harness.util.Docker;
 
 class KafkaWrapper {
 
-    private static String containerName;
+    private static String networkName;
+    private static String zookeeperContainerName;
+    private static String kafkaContainerName;
 
     static int start() throws Exception {
-        // TODO find out why this only works with port 9092, or switch to another image (which may
-        // involve running zookeeper separately, or using docker-compose)
-        int port = 9092;
-        containerName = Docker.start("spotify/kafka", "-p", port + ":9092", "--env",
-                "ADVERTISED_HOST=127.0.0.1", "--env", "ADVERTISED_PORT=" + port);
-        return port;
+        networkName = Docker.createNetwork();
+        zookeeperContainerName = Docker.start("confluentinc/cp-zookeeper", "--net=" + networkName,
+                "-p", "2181", "--env", "ZOOKEEPER_CLIENT_PORT=2181");
+        // need to give zookeeper a few seconds head start to avoid sporadic failures
+        Thread.sleep(5000);
+        int kafkaPort = 9092;
+        kafkaContainerName = Docker.start("confluentinc/cp-kafka", "--net=" + networkName,
+                "-p", kafkaPort + ":9092",
+                "--env", "KAFKA_ZOOKEEPER_CONNECT=" + zookeeperContainerName + ":2181",
+                "--env", "KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:" + kafkaPort,
+                "--env", "KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1");
+        return kafkaPort;
     }
 
     static void stop() throws Exception {
-        Docker.stop(containerName);
+        Docker.stop(kafkaContainerName);
+        Docker.stop(zookeeperContainerName);
+        Docker.removeNetwork(networkName);
     }
 }

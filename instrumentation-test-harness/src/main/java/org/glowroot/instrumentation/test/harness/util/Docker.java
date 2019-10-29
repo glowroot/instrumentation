@@ -39,21 +39,45 @@ public class Docker {
             command.add(arg);
         }
         command.add(image);
-        ProcessBuilder processBuilder = new ProcessBuilder(command);
-        processBuilder.redirectErrorStream(true);
-        Process process = processBuilder.start();
-        ConsoleOutputPipe consoleOutputPipe =
-                new ConsoleOutputPipe(process.getInputStream(), System.out);
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.submit(consoleOutputPipe);
+        startProcess(command);
         return name;
     }
 
-    public static void stop(String name) throws IOException {
+    public static void stop(String name) throws Exception {
         List<String> command = Lists.newArrayList();
         command.add("docker");
         command.add("stop");
         command.add(name);
+        Process process = startProcess(command);
+        process.waitFor();
+    }
+
+    public static String createNetwork() throws IOException {
+        List<String> command = Lists.newArrayList();
+        command.add("docker");
+        command.add("network");
+        command.add("create");
+        String name = uniqueName();
+        command.add(name);
+        startProcess(command);
+        return name;
+    }
+
+    public static void removeNetwork(String networkName) throws Exception {
+        List<String> command = Lists.newArrayList();
+        command.add("docker");
+        command.add("network");
+        command.add("rm");
+        command.add(networkName);
+        Process process = startProcess(command);
+        process.waitFor();
+    }
+
+    private static String uniqueName() {
+        return "test-" + new Random().nextInt(Integer.MAX_VALUE);
+    }
+
+    private static Process startProcess(List<String> command) throws IOException {
         ProcessBuilder processBuilder = new ProcessBuilder(command);
         processBuilder.redirectErrorStream(true);
         Process process = processBuilder.start();
@@ -61,9 +85,6 @@ public class Docker {
                 new ConsoleOutputPipe(process.getInputStream(), System.out);
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.submit(consoleOutputPipe);
-    }
-
-    private static String uniqueName() {
-        return "test-" + new Random().nextInt(Integer.MAX_VALUE);
+        return process;
     }
 }

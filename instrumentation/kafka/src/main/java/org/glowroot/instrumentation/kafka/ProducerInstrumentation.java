@@ -15,6 +15,8 @@
  */
 package org.glowroot.instrumentation.kafka;
 
+import java.io.UnsupportedEncodingException;
+
 import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
@@ -28,12 +30,14 @@ import org.glowroot.instrumentation.api.TimerName;
 import org.glowroot.instrumentation.api.checker.Nullable;
 import org.glowroot.instrumentation.api.weaving.Advice;
 import org.glowroot.instrumentation.api.weaving.Bind;
+import org.glowroot.instrumentation.kafka.boot.VersionClassMeta;
 
 public class ProducerInstrumentation {
 
     private static final TimerName TIMER_NAME = Agent.getTimerName("kafka send");
 
-    private static final Setter<ProducerRecord<?, ?>> SETTER = new NopSetter();
+    private static final Setter<ProducerRecord<?, ?>> SETTER = new ProducerRecordSetter();
+    private static final Setter<ProducerRecord<?, ?>> NOP_SETTER = new NopSetter();
 
     @Advice.Pointcut(className = "org.apache.kafka.clients.producer.KafkaProducer",
                      methodName = "send",
@@ -46,6 +50,7 @@ public class ProducerInstrumentation {
         public static @Nullable AsyncSpan onBefore(
                 @Bind.Argument(0) @Nullable ProducerRecord<?, ?> record,
                 @Bind.Argument(1) ParameterHolder<Callback> callbackHolder,
+                @Bind.ClassMeta VersionClassMeta versionClassMeta,
                 ThreadContext context) {
 
             if (record == null) {
@@ -55,7 +60,9 @@ public class ProducerInstrumentation {
             if (topic == null) {
                 topic = "";
             }
-            AsyncSpan span = context.startAsyncOutgoingSpan("Kafka", topic, SETTER, record,
+            Setter<ProducerRecord<?, ?>> setter =
+                    versionClassMeta.producerSupportsHeaders() ? SETTER : NOP_SETTER;
+            AsyncSpan span = context.startAsyncOutgoingSpan("Kafka", topic, setter, record,
                     MessageSupplier.create("kafka send: {}", topic), TIMER_NAME);
             Callback callback = callbackHolder.get();
             if (callback == null) {
@@ -87,11 +94,23 @@ public class ProducerInstrumentation {
         }
     }
 
-    private static class NopSetter implements Setter<ProducerRecord<?, ?>> {
+    private static class ProducerRecordSetter implements Setter<ProducerRecord<?, ?>> {
 
         @Override
         public void put(ProducerRecord<?, ?> carrier, String key, String value) {
-            // TODO
+            try {
+                carrier.headers().add(key, value.getBytes("UTF-8"));
+            } catch (IllegalStateException e) {
+                // TODO log once
+            } catch (UnsupportedEncodingException e) {
+                // TODO log once
+            }
         }
+    }
+
+    private static class NopSetter implements Setter<ProducerRecord<?, ?>> {
+
+        @Override
+        public void put(ProducerRecord<?, ?> carrier, String key, String value) {}
     }
 }
