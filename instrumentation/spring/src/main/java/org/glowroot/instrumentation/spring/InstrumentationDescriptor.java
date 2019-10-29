@@ -3,7 +3,6 @@ package org.glowroot.instrumentation.spring;
 import org.glowroot.instrumentation.api.Descriptor;
 import org.glowroot.instrumentation.api.Descriptor.CaptureKind;
 import org.glowroot.instrumentation.api.Descriptor.PropertyType;
-import org.glowroot.instrumentation.api.OptionalThreadContext.AlreadyInTransactionBehavior;
 
 @Descriptor(
             id = "spring",
@@ -26,7 +25,6 @@ import org.glowroot.instrumentation.api.OptionalThreadContext.AlreadyInTransacti
                                        captureKind = CaptureKind.TRANSACTION,
                                        transactionType = "Background",
                                        transactionNameTemplate = "Spring Batch: {{this.name}}",
-                                       alreadyInTransactionBehavior = AlreadyInTransactionBehavior.CAPTURE_LOCAL_SPAN,
                                        timerName = "spring batch"),
                     @Descriptor.Advice(
                                        className = "org.springframework.jms.listener.SessionAwareMessageListener",
@@ -39,7 +37,6 @@ import org.glowroot.instrumentation.api.OptionalThreadContext.AlreadyInTransacti
                                        captureKind = CaptureKind.TRANSACTION,
                                        transactionType = "Background",
                                        transactionNameTemplate = "JMS Message: {{this.class.simpleName}}",
-                                       alreadyInTransactionBehavior = AlreadyInTransactionBehavior.CAPTURE_LOCAL_SPAN,
                                        timerName = "jms message"),
                     @Descriptor.Advice(
                                        classAnnotation = "org.springframework.stereotype.Component|org.springframework.stereotype.Controller|org.springframework.stereotype.Repository|org.springframework.stereotype.Service|org.springframework.web.bind.annotation.RestController",
@@ -50,7 +47,6 @@ import org.glowroot.instrumentation.api.OptionalThreadContext.AlreadyInTransacti
                                        captureKind = CaptureKind.TRANSACTION,
                                        transactionType = "Background",
                                        transactionNameTemplate = "Spring scheduled: {{this.class.simpleName}}#{{methodName}}",
-                                       alreadyInTransactionBehavior = AlreadyInTransactionBehavior.CAPTURE_LOCAL_SPAN,
                                        spanMessageTemplate = "Spring scheduled: {{this.class.name}}.{{methodName}}()",
                                        timerName = "spring scheduled"),
                     @Descriptor.Advice(

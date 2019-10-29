@@ -2,7 +2,6 @@ package org.glowroot.instrumentation.camel;
 
 import org.glowroot.instrumentation.api.Descriptor;
 import org.glowroot.instrumentation.api.Descriptor.CaptureKind;
-import org.glowroot.instrumentation.api.OptionalThreadContext.AlreadyInTransactionBehavior;
 
 @Descriptor(
             id = "camel",
@@ -19,7 +18,6 @@ import org.glowroot.instrumentation.api.OptionalThreadContext.AlreadyInTransacti
                                        captureKind = CaptureKind.TRANSACTION,
                                        transactionType = "Background",
                                        transactionNameTemplate = "Camel pipeline",
-                                       alreadyInTransactionBehavior = AlreadyInTransactionBehavior.CAPTURE_LOCAL_SPAN,
                                        spanMessageTemplate = "camel pipeline => {{_}}",
                                        timerName = "camel pipeline")
             })

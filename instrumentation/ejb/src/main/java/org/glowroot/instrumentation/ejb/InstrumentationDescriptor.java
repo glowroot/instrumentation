@@ -17,7 +17,6 @@ import org.glowroot.instrumentation.api.OptionalThreadContext.AlreadyInTransacti
                                        captureKind = CaptureKind.TRANSACTION,
                                        transactionType = "Background",
                                        transactionNameTemplate = "EJB timer: {{this.class.simpleName}}#{{methodName}}",
-                                       alreadyInTransactionBehavior = AlreadyInTransactionBehavior.CAPTURE_LOCAL_SPAN,
                                        spanMessageTemplate = "EJB timer: {{this.class.name}}.{{methodName}}()",
                                        timerName = "ejb timer")
             })

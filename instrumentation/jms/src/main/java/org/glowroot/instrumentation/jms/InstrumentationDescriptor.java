@@ -18,7 +18,6 @@ import org.glowroot.instrumentation.api.OptionalThreadContext.AlreadyInTransacti
                                        captureKind = CaptureKind.TRANSACTION,
                                        transactionType = "Background",
                                        transactionNameTemplate = "JMS Message: {{this.class.simpleName}}",
-                                       alreadyInTransactionBehavior = AlreadyInTransactionBehavior.CAPTURE_LOCAL_SPAN,
                                        timerName = "jms message"),
                     @Descriptor.Advice(
                                        className = "javax.jms.MessageProducer",

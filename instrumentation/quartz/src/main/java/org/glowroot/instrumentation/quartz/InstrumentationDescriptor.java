@@ -2,7 +2,6 @@ package org.glowroot.instrumentation.quartz;
 
 import org.glowroot.instrumentation.api.Descriptor;
 import org.glowroot.instrumentation.api.Descriptor.CaptureKind;
-import org.glowroot.instrumentation.api.OptionalThreadContext.AlreadyInTransactionBehavior;
 
 @Descriptor(
             id = "quartz",
@@ -17,7 +16,6 @@ import org.glowroot.instrumentation.api.OptionalThreadContext.AlreadyInTransacti
                                        captureKind = CaptureKind.TRANSACTION,
                                        transactionType = "Background",
                                        transactionNameTemplate = "Quartz job: {{0.jobDetail.name}}",
-                                       alreadyInTransactionBehavior = AlreadyInTransactionBehavior.CAPTURE_LOCAL_SPAN,
                                        timerName = "quartz job")
             })
 public class InstrumentationDescriptor {}

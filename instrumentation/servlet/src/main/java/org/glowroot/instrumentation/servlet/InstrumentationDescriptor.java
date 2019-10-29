@@ -3,7 +3,6 @@ package org.glowroot.instrumentation.servlet;
 import org.glowroot.instrumentation.api.Descriptor;
 import org.glowroot.instrumentation.api.Descriptor.CaptureKind;
 import org.glowroot.instrumentation.api.Descriptor.PropertyType;
-import org.glowroot.instrumentation.api.OptionalThreadContext.AlreadyInTransactionBehavior;
 
 @Descriptor(
             id = "servlet",
@@ -125,7 +124,6 @@ import org.glowroot.instrumentation.api.OptionalThreadContext.AlreadyInTransacti
                                        captureKind = CaptureKind.TRANSACTION,
                                        transactionType = "Startup",
                                        transactionNameTemplate = "Listener init: {{this.class.name}}",
-                                       alreadyInTransactionBehavior = AlreadyInTransactionBehavior.CAPTURE_LOCAL_SPAN,
                                        timerName = "listener init"),
                     @Descriptor.Advice(
                                        className = "javax.servlet.Servlet",
@@ -136,7 +134,6 @@ import org.glowroot.instrumentation.api.OptionalThreadContext.AlreadyInTransacti
                                        captureKind = CaptureKind.TRANSACTION,
                                        transactionType = "Startup",
                                        transactionNameTemplate = "Servlet init: {{this.class.name}}",
-                                       alreadyInTransactionBehavior = AlreadyInTransactionBehavior.CAPTURE_LOCAL_SPAN,
                                        timerName = "servlet init"),
                     @Descriptor.Advice(
                                        className = "javax.servlet.Filter",
@@ -147,7 +144,6 @@ import org.glowroot.instrumentation.api.OptionalThreadContext.AlreadyInTransacti
                                        captureKind = CaptureKind.TRANSACTION,
                                        transactionType = "Startup",
                                        transactionNameTemplate = "Filter init: {{this.class.name}}",
-                                       alreadyInTransactionBehavior = AlreadyInTransactionBehavior.CAPTURE_LOCAL_SPAN,
                                        timerName = "filter init"),
                     @Descriptor.Advice(
                                        className = "javax.servlet.ServletContainerInitializer",
@@ -159,7 +155,6 @@ import org.glowroot.instrumentation.api.OptionalThreadContext.AlreadyInTransacti
                                        captureKind = CaptureKind.TRANSACTION,
                                        transactionType = "Startup",
                                        transactionNameTemplate = "Container initializer: {{this.class.name}}",
-                                       alreadyInTransactionBehavior = AlreadyInTransactionBehavior.CAPTURE_LOCAL_SPAN,
                                        timerName = "container initializer"),
                     @Descriptor.Advice(
                                        className = "org.wildfly.extension.undertow.deployment.UndertowDeploymentService",
@@ -169,7 +164,6 @@ import org.glowroot.instrumentation.api.OptionalThreadContext.AlreadyInTransacti
                                        captureKind = CaptureKind.TRANSACTION,
                                        transactionType = "Startup",
                                        transactionNameTemplate = "Servlet context: {{this.deploymentInfoInjectedValue.value.contextPath}}",
-                                       alreadyInTransactionBehavior = AlreadyInTransactionBehavior.CAPTURE_LOCAL_SPAN,
                                        timerName = "application startup"),
                     @Descriptor.Advice(
                                        className = "org.eclipse.jetty.webapp.WebAppContext",
@@ -179,7 +173,6 @@ import org.glowroot.instrumentation.api.OptionalThreadContext.AlreadyInTransacti
                                        captureKind = CaptureKind.TRANSACTION,
                                        transactionType = "Startup",
                                        transactionNameTemplate = "Servlet context: {{this.contextPath}}",
-                                       alreadyInTransactionBehavior = AlreadyInTransactionBehavior.CAPTURE_LOCAL_SPAN,
                                        timerName = "application startup")
             },
             classes = {
