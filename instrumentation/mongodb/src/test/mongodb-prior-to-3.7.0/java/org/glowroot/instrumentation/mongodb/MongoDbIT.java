@@ -22,6 +22,7 @@ import com.google.common.base.Stopwatch;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.Mongo;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -163,7 +164,10 @@ public class MongoDbIT {
             @SuppressWarnings("deprecation")
             DB database = mongoClient.getDB("testdb");
             DBCollection collection = database.getCollection("test");
-            collection.find();
+            DBCursor i = collection.find();
+            while (i.hasNext()) {
+                i.next();
+            }
         }
     }
 

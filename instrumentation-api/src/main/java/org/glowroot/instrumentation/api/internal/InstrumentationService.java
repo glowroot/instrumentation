@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.glowroot.instrumentation.api.ThreadContext;
 import org.glowroot.instrumentation.api.TimerName;
 import org.glowroot.instrumentation.api.checker.Nullable;
 import org.glowroot.instrumentation.api.config.ConfigService;
@@ -29,6 +30,9 @@ public interface InstrumentationService {
     TimerName getTimerName(String name);
 
     ConfigService getConfigService(String instrumentationId);
+
+    @Nullable
+    ThreadContext getThreadContext();
 
     <E> List<E> toImmutableList(Collection<E> elements);
 

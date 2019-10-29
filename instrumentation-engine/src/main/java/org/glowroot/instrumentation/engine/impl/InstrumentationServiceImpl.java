@@ -34,9 +34,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.glowroot.instrumentation.api.ThreadContext;
 import org.glowroot.instrumentation.api.TimerName;
 import org.glowroot.instrumentation.api.config.ConfigService;
 import org.glowroot.instrumentation.api.internal.InstrumentationService;
+import org.glowroot.instrumentation.engine.bytecode.api.BytecodeServiceHolder;
 import org.glowroot.instrumentation.engine.weaving.Beans;
 
 public class InstrumentationServiceImpl implements InstrumentationService {
@@ -67,6 +69,11 @@ public class InstrumentationServiceImpl implements InstrumentationService {
     @Override
     public ConfigService getConfigService(String instrumentationId) {
         return configServices.getUnchecked(instrumentationId);
+    }
+
+    @Override
+    public @Nullable ThreadContext getThreadContext() {
+        return BytecodeServiceHolder.get().getCurrentThreadContextHolder().get();
     }
 
     public interface ConfigServiceFactory {

@@ -15,6 +15,7 @@
  */
 package org.glowroot.instrumentation.api;
 
+import org.glowroot.instrumentation.api.checker.Nullable;
 import org.glowroot.instrumentation.api.config.ConfigService;
 import org.glowroot.instrumentation.api.internal.InstrumentationService;
 import org.glowroot.instrumentation.api.internal.InstrumentationServiceHolder;
@@ -37,5 +38,9 @@ public class Agent {
      */
     public static ConfigService getConfigService(String instrumentationId) {
         return service.getConfigService(instrumentationId);
+    }
+
+    public static @Nullable ThreadContext getThreadContext() {
+        return service.getThreadContext();
     }
 }

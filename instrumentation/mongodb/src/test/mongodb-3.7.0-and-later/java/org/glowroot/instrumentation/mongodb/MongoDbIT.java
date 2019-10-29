@@ -17,6 +17,7 @@ package org.glowroot.instrumentation.mongodb;
 
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.Random;
 
 import com.google.common.collect.ImmutableList;
 import com.mongodb.client.MongoClient;
@@ -115,7 +116,6 @@ public class MongoDbIT {
         OutgoingSpan outgoingSpan = (OutgoingSpan) i.next();
         assertThat(outgoingSpan.type()).isEqualTo("MongoDB");
         assertThat(outgoingSpan.message()).isEqualTo("find testdb.test");
-        assertThat(outgoingSpan.detail()).containsEntry("rows", 0L);
 
         assertThat(i.hasNext()).isFalse();
     }
@@ -131,7 +131,46 @@ public class MongoDbIT {
         OutgoingSpan outgoingSpan = (OutgoingSpan) i.next();
         assertThat(outgoingSpan.type()).isEqualTo("MongoDB");
         assertThat(outgoingSpan.message()).isEqualTo("find testdb.test");
-        assertThat(outgoingSpan.detail()).containsEntry("rows", 1L);
+
+        assertThat(i.hasNext()).isFalse();
+    }
+
+    @Test
+    public void shouldCaptureFindWithFilter() throws Exception {
+        // when
+        IncomingSpan incomingSpan = container.execute(ExecuteFindWithFilter.class, mongoPort);
+
+        // then
+        Iterator<Span> i = incomingSpan.childSpans().iterator();
+
+        OutgoingSpan outgoingSpan = (OutgoingSpan) i.next();
+        assertThat(outgoingSpan.type()).isEqualTo("MongoDB");
+        String message = outgoingSpan.message();
+        System.out.println(message);
+        if (!message.equals("find testdb.test {\"test3\": \"?\"}")) {
+            // versions 3.7.0 through 3.9.x have extra spaces
+            assertThat(message).isEqualTo("find testdb.test { \"test3\" : \"?\" }");
+        }
+
+        assertThat(i.hasNext()).isFalse();
+    }
+
+    @Test
+    public void shouldCaptureFindAndGetMoreRecords() throws Exception {
+        // when
+        IncomingSpan incomingSpan =
+                container.execute(ExecuteFindAndGetMoreRecords.class, mongoPort);
+
+        // then
+        Iterator<Span> i = incomingSpan.childSpans().iterator();
+
+        OutgoingSpan outgoingSpan = (OutgoingSpan) i.next();
+        assertThat(outgoingSpan.type()).isEqualTo("MongoDB");
+        assertThat(outgoingSpan.message()).isEqualTo("find testdb.test");
+
+        outgoingSpan = (OutgoingSpan) i.next();
+        assertThat(outgoingSpan.type()).isEqualTo("MongoDB");
+        assertThat(outgoingSpan.message()).isEqualTo("getMore testdb.test");
 
         assertThat(i.hasNext()).isFalse();
     }
@@ -170,7 +209,9 @@ public class MongoDbIT {
         public void transactionMarker() {
             MongoDatabase database = mongoClient.getDatabase("testdb");
             MongoCollection<Document> collection = database.getCollection("test");
-            collection.distinct("abc", String.class);
+            MongoCursor<String> i = collection.distinct("abc", String.class).iterator();
+            while (i.hasNext()) {
+            }
         }
     }
 
@@ -208,13 +249,71 @@ public class MongoDbIT {
         }
     }
 
+    public static class ExecuteFindWithFilter extends DoMongoDB {
+
+        @Override
+        protected void beforeTransactionMarker() {
+            MongoDatabase database = mongoClient.getDatabase("testdb");
+            MongoCollection<Document> collection = database.getCollection("test");
+            Document document = new Document("test1", "test2")
+                    .append("test3", "test4");
+            collection.insertOne(document);
+        }
+
+        @Override
+        public void transactionMarker() throws InterruptedException {
+            MongoDatabase database = mongoClient.getDatabase("testdb");
+            MongoCollection<Document> collection = database.getCollection("test");
+            Document filter = new Document();
+            filter.append("test3", "test4");
+            MongoCursor<Document> i = collection.find(filter).iterator();
+            while (i.hasNext()) {
+                i.next();
+            }
+        }
+    }
+
+    public static class ExecuteFindAndGetMoreRecords extends DoMongoDB {
+
+        @Override
+        protected void beforeTransactionMarker() {
+            MongoDatabase database = mongoClient.getDatabase("testdb");
+            MongoCollection<Document> collection = database.getCollection("test");
+            int size = 1024 * 1024;
+            StringBuilder sb = new StringBuilder(size);
+            Random random = new Random();
+            for (int i = 0; i < 10; i++) {
+                sb.setLength(0);
+                for (int j = 0; j < size; j++) {
+                    sb.append('a' + random.nextInt(26));
+                }
+                Document document = new Document("test1", "test2")
+                        .append("test3", sb.toString());
+                collection.insertOne(document);
+            }
+        }
+
+        @Override
+        public void transactionMarker() throws InterruptedException {
+            MongoDatabase database = mongoClient.getDatabase("testdb");
+            MongoCollection<Document> collection = database.getCollection("test");
+            MongoCursor<Document> i = collection.find().iterator();
+            while (i.hasNext()) {
+                i.next();
+            }
+        }
+    }
+
     public static class ExecuteAggregate extends DoMongoDB {
 
         @Override
         public void transactionMarker() {
             MongoDatabase database = mongoClient.getDatabase("testdb");
             MongoCollection<Document> collection = database.getCollection("test");
-            collection.aggregate(ImmutableList.<Bson>of());
+            MongoCursor<Document> i = collection.aggregate(ImmutableList.<Bson>of()).iterator();
+            while (i.hasNext()) {
+                i.next();
+            }
         }
     }
 

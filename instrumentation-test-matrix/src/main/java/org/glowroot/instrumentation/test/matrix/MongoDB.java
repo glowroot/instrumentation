@@ -32,68 +32,11 @@ public class MongoDB {
     }
 
     static void runShort() throws Exception {
-        runPriorTo37("0.11");
+        runPriorTo37("3.1.0");
         run("3.7.0");
     }
 
     static void runAll() throws Exception {
-        runPriorTo37("0.11");
-        runPriorTo37("1.0");
-        runPriorTo37("1.1");
-        runPriorTo37("1.2");
-        runPriorTo37("1.2.1");
-        runPriorTo37("1.3");
-        runPriorTo37("1.4");
-        runPriorTo37("2.0");
-        runPriorTo37("2.1");
-        runPriorTo37("2.2");
-        runPriorTo37("2.3");
-        runPriorTo37("2.4");
-        runPriorTo37("2.5");
-        runPriorTo37("2.5.1");
-        runPriorTo37("2.5.2");
-        runPriorTo37("2.5.3");
-        runPriorTo37("2.6");
-        runPriorTo37("2.6.1");
-        runPriorTo37("2.6.2");
-        runPriorTo37("2.6.3");
-        runPriorTo37("2.6.5");
-        runPriorTo37("2.7.0");
-        runPriorTo37("2.7.1");
-        runPriorTo37("2.7.2");
-        runPriorTo37("2.7.3");
-        runPriorTo37("2.8.0");
-        runPriorTo37("2.9.0");
-        runPriorTo37("2.9.1");
-        runPriorTo37("2.9.2");
-        runPriorTo37("2.9.3");
-        runPriorTo37("2.10.0");
-        runPriorTo37("2.10.1");
-        runPriorTo37("2.11.0");
-        runPriorTo37("2.11.1");
-        runPriorTo37("2.11.2");
-        runPriorTo37("2.11.3");
-        runPriorTo37("2.11.4");
-        runPriorTo37("2.12.0");
-        runPriorTo37("2.12.1");
-        runPriorTo37("2.12.2");
-        runPriorTo37("2.12.3");
-        runPriorTo37("2.12.4");
-        runPriorTo37("2.12.5");
-        runPriorTo37("2.13.0");
-        runPriorTo37("2.13.1");
-        runPriorTo37("2.13.2");
-        runPriorTo37("2.13.3");
-        runPriorTo37("2.14.0");
-        runPriorTo37("2.14.1");
-        runPriorTo37("2.14.2");
-        runPriorTo37("2.14.3");
-
-        runPriorTo37("3.0.0");
-        runPriorTo37("3.0.1");
-        runPriorTo37("3.0.2");
-        runPriorTo37("3.0.3");
-        runPriorTo37("3.0.4");
         runPriorTo37("3.1.0");
         runPriorTo37("3.1.1");
         runPriorTo37("3.2.0");
@@ -115,6 +58,13 @@ public class MongoDB {
         run("3.8.0");
         run("3.8.1");
         run("3.8.2");
+        run("3.9.0");
+        run("3.9.1");
+        run("3.10.0");
+        run("3.10.1");
+        run("3.10.2");
+        run("3.11.0");
+        run("3.11.1");
     }
 
     private static void runPriorTo37(String version) throws Exception {

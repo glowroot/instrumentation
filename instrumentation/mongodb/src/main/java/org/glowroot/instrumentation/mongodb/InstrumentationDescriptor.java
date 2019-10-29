@@ -18,9 +18,7 @@ import org.glowroot.instrumentation.api.Descriptor.PropertyType;
                                          description = "Any query that exceeds this threshold will have a stack trace captured and attached to it. An empty value will not collect any stack traces, a zero value will collect a stack trace for every query.")
             },
             classes = {
-                    DBCollectionInstrumentation.class,
-                    MongoCollectionInstrumentation.class,
-                    MongoIterableInstrumentation.class,
-                    MongoCursorInstrumentation.class
-            })
+                    MongoDbInstrumentation.class
+            },
+            collocate = true)
 public class InstrumentationDescriptor {}

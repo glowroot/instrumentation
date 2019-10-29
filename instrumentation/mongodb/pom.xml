@@ -25,7 +25,7 @@
   </licenses>
 
   <properties>
-    <mongodb.driver.version>3.10.2</mongodb.driver.version>
+    <mongodb.driver.version>3.11.1</mongodb.driver.version>
   </properties>
 
   <dependencies>
@@ -33,6 +33,12 @@
       <groupId>org.glowroot.instrumentation</groupId>
       <artifactId>instrumentation-api</artifactId>
       <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mongodb</groupId>
+      <artifactId>mongo-java-driver</artifactId>
+      <version>${mongodb.driver.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -54,12 +60,6 @@
       <groupId>org.glowroot.instrumentation</groupId>
       <artifactId>instrumentation-test-harness</artifactId>
       <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mongodb</groupId>
-      <artifactId>mongo-java-driver</artifactId>
-      <version>${mongodb.driver.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
