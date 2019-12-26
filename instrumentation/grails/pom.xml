@@ -67,7 +67,7 @@
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-core</artifactId>
       <!-- tomcat 8.0.0+ requires Java 7+ -->
-      <version>7.0.91</version>
+      <version>7.0.99</version>
       <scope>test</scope>
     </dependency>
     <dependency>
